@@ -28,6 +28,7 @@
 		0CE88500152E377E003EAFEA /* SBJsonTokeniser.m in Sources */ = {isa = PBXBuildFile; fileRef = 0CE884F2152E377E003EAFEA /* SBJsonTokeniser.m */; };
 		0CE88501152E377E003EAFEA /* SBJsonUTF8Stream.m in Sources */ = {isa = PBXBuildFile; fileRef = 0CE884F4152E377E003EAFEA /* SBJsonUTF8Stream.m */; };
 		0CE88502152E377E003EAFEA /* SBJsonWriter.m in Sources */ = {isa = PBXBuildFile; fileRef = 0CE884F6152E377E003EAFEA /* SBJsonWriter.m */; };
+		0CE88517152E3F41003EAFEA /* CSocketConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = 0CE88516152E3F41003EAFEA /* CSocketConnection.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -71,6 +72,8 @@
 		0CE884F4152E377E003EAFEA /* SBJsonUTF8Stream.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBJsonUTF8Stream.m; sourceTree = "<group>"; };
 		0CE884F5152E377E003EAFEA /* SBJsonWriter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBJsonWriter.h; sourceTree = "<group>"; };
 		0CE884F6152E377E003EAFEA /* SBJsonWriter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBJsonWriter.m; sourceTree = "<group>"; };
+		0CE88515152E3F41003EAFEA /* CSocketConnection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CSocketConnection.h; sourceTree = "<group>"; };
+		0CE88516152E3F41003EAFEA /* CSocketConnection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CSocketConnection.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -118,7 +121,7 @@
 			isa = PBXGroup;
 			children = (
 				0CE884DC152E36CD003EAFEA /* SBJSON */,
-				0CE884D8152E356F003EAFEA /* TransmissionStructure */,
+				0CE884D8152E356F003EAFEA /* NetTransmission */,
 				0C7131C0152E2C8F0001BFEF /* AppDelegate.h */,
 				0C7131C1152E2C8F0001BFEF /* AppDelegate.m */,
 				0C7131C3152E2C8F0001BFEF /* MasterViewController.h */,
@@ -140,13 +143,13 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
-		0CE884D8152E356F003EAFEA /* TransmissionStructure */ = {
+		0CE884D8152E356F003EAFEA /* NetTransmission */ = {
 			isa = PBXGroup;
 			children = (
-				0CE884D9152E3601003EAFEA /* CTransmissionStructure.h */,
-				0CE884DA152E3601003EAFEA /* CTransmissionStructure.m */,
+				0CE88514152E3F12003EAFEA /* CTransmissionStructure */,
+				0CE88513152E3EE6003EAFEA /* SocketConnection */,
 			);
-			name = TransmissionStructure;
+			name = NetTransmission;
 			sourceTree = "<group>";
 		};
 		0CE884DC152E36CD003EAFEA /* SBJSON */ = {
@@ -187,6 +190,24 @@
 				0CE884F6152E377E003EAFEA /* SBJsonWriter.m */,
 			);
 			path = Classes;
+			sourceTree = "<group>";
+		};
+		0CE88513152E3EE6003EAFEA /* SocketConnection */ = {
+			isa = PBXGroup;
+			children = (
+				0CE88515152E3F41003EAFEA /* CSocketConnection.h */,
+				0CE88516152E3F41003EAFEA /* CSocketConnection.m */,
+			);
+			name = SocketConnection;
+			sourceTree = "<group>";
+		};
+		0CE88514152E3F12003EAFEA /* CTransmissionStructure */ = {
+			isa = PBXGroup;
+			children = (
+				0CE884D9152E3601003EAFEA /* CTransmissionStructure.h */,
+				0CE884DA152E3601003EAFEA /* CTransmissionStructure.m */,
+			);
+			name = CTransmissionStructure;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -268,6 +289,7 @@
 				0CE88500152E377E003EAFEA /* SBJsonTokeniser.m in Sources */,
 				0CE88501152E377E003EAFEA /* SBJsonUTF8Stream.m in Sources */,
 				0CE88502152E377E003EAFEA /* SBJsonWriter.m in Sources */,
+				0CE88517152E3F41003EAFEA /* CSocketConnection.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
