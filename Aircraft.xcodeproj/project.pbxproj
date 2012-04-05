@@ -14,9 +14,7 @@
 		0C7131BE152E2C8F0001BFEF /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C7131BD152E2C8F0001BFEF /* main.m */; };
 		0C7131C2152E2C8F0001BFEF /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C7131C1152E2C8F0001BFEF /* AppDelegate.m */; };
 		0C7131C5152E2C8F0001BFEF /* MasterViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C7131C4152E2C8F0001BFEF /* MasterViewController.m */; };
-		0C7131C8152E2C8F0001BFEF /* DetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C7131C7152E2C8F0001BFEF /* DetailViewController.m */; };
 		0C7131CB152E2C8F0001BFEF /* MasterViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0C7131C9152E2C8F0001BFEF /* MasterViewController.xib */; };
-		0C7131CE152E2C8F0001BFEF /* DetailViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0C7131CC152E2C8F0001BFEF /* DetailViewController.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -24,18 +22,15 @@
 		0C7131B1152E2C8F0001BFEF /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		0C7131B3152E2C8F0001BFEF /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		0C7131B5152E2C8F0001BFEF /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
-		0C7131B9152E2C8F0001BFEF /* Aircraft-Info.plist */ = {isa = PBXFileReference; path = "Aircraft-Info.plist"; sourceTree = "<group>"; };
+		0C7131B9152E2C8F0001BFEF /* Aircraft-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Aircraft-Info.plist"; sourceTree = "<group>"; };
 		0C7131BB152E2C8F0001BFEF /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		0C7131BD152E2C8F0001BFEF /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
-		0C7131BF152E2C8F0001BFEF /* Aircraft-Prefix.pch */ = {isa = PBXFileReference; path = "Aircraft-Prefix.pch"; sourceTree = "<group>"; };
-		0C7131C0152E2C8F0001BFEF /* AppDelegate.h */ = {isa = PBXFileReference; path = AppDelegate.h; sourceTree = "<group>"; };
+		0C7131BF152E2C8F0001BFEF /* Aircraft-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Aircraft-Prefix.pch"; sourceTree = "<group>"; };
+		0C7131C0152E2C8F0001BFEF /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		0C7131C1152E2C8F0001BFEF /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
-		0C7131C3152E2C8F0001BFEF /* MasterViewController.h */ = {isa = PBXFileReference; path = MasterViewController.h; sourceTree = "<group>"; };
+		0C7131C3152E2C8F0001BFEF /* MasterViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MasterViewController.h; sourceTree = "<group>"; };
 		0C7131C4152E2C8F0001BFEF /* MasterViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MasterViewController.m; sourceTree = "<group>"; };
-		0C7131C6152E2C8F0001BFEF /* DetailViewController.h */ = {isa = PBXFileReference; path = DetailViewController.h; sourceTree = "<group>"; };
-		0C7131C7152E2C8F0001BFEF /* DetailViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DetailViewController.m; sourceTree = "<group>"; };
 		0C7131CA152E2C8F0001BFEF /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/MasterViewController.xib; sourceTree = "<group>"; };
-		0C7131CD152E2C8F0001BFEF /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/DetailViewController.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -86,10 +81,7 @@
 				0C7131C1152E2C8F0001BFEF /* AppDelegate.m */,
 				0C7131C3152E2C8F0001BFEF /* MasterViewController.h */,
 				0C7131C4152E2C8F0001BFEF /* MasterViewController.m */,
-				0C7131C6152E2C8F0001BFEF /* DetailViewController.h */,
-				0C7131C7152E2C8F0001BFEF /* DetailViewController.m */,
 				0C7131C9152E2C8F0001BFEF /* MasterViewController.xib */,
-				0C7131CC152E2C8F0001BFEF /* DetailViewController.xib */,
 				0C7131B8152E2C8F0001BFEF /* Supporting Files */,
 			);
 			path = Aircraft;
@@ -159,7 +151,6 @@
 			files = (
 				0C7131BC152E2C8F0001BFEF /* InfoPlist.strings in Resources */,
 				0C7131CB152E2C8F0001BFEF /* MasterViewController.xib in Resources */,
-				0C7131CE152E2C8F0001BFEF /* DetailViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -173,7 +164,6 @@
 				0C7131BE152E2C8F0001BFEF /* main.m in Sources */,
 				0C7131C2152E2C8F0001BFEF /* AppDelegate.m in Sources */,
 				0C7131C5152E2C8F0001BFEF /* MasterViewController.m in Sources */,
-				0C7131C8152E2C8F0001BFEF /* DetailViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -194,14 +184,6 @@
 				0C7131CA152E2C8F0001BFEF /* en */,
 			);
 			name = MasterViewController.xib;
-			sourceTree = "<group>";
-		};
-		0C7131CC152E2C8F0001BFEF /* DetailViewController.xib */ = {
-			isa = PBXVariantGroup;
-			children = (
-				0C7131CD152E2C8F0001BFEF /* en */,
-			);
-			name = DetailViewController.xib;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
@@ -293,6 +275,7 @@
 				0C7131D3152E2C8F0001BFEF /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

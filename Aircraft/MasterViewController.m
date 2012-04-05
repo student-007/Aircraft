@@ -8,17 +8,17 @@
 
 #import "MasterViewController.h"
 
-#import "DetailViewController.h"
 
 @implementation MasterViewController
 
-@synthesize detailViewController = _detailViewController;
+//@synthesize detailViewController = _detailViewController;
+@synthesize arryTableContent = _arryTableContent;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
-        self.title = NSLocalizedString(@"Master", @"Master");
+        self.title = NSLocalizedString(@"Aircraft", @"MasterViewTitle");
     }
     return self;
 }
@@ -34,7 +34,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-	// Do any additional setup after loading the view, typically from a nib.
+	_arryTableContent = [NSArray arrayWithObjects:@"Play Online", @"Play Offline", @"How to Play", nil];
 }
 
 - (void)viewDidUnload
@@ -69,22 +69,33 @@
     // Return YES for supported orientations
     return (interfaceOrientation != UIInterfaceOrientationPortraitUpsideDown);
 }
+#pragma mark - table view delegate
+
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    return 60;
+}
 
 // Customize the number of sections in the table view.
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    return 1;
+    return 2;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return 1;
+    if (section == 0)
+        return _arryTableContent.count;
+    else if (section == 1)
+        return 1;// login or sign up [Yufei Lang 4/5/2012]
+    else
+        return 0;// error
 }
 
 // Customize the appearance of table view cells.
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    static NSString *CellIdentifier = @"Cell";
+    static NSString *CellIdentifier = @"MsterViewCell";
     
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     if (cell == nil) {
@@ -92,8 +103,12 @@
         cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
     }
 
-    // Configure the cell.
-    cell.textLabel.text = NSLocalizedString(@"Detail", @"Detail");
+    if (indexPath.section == 0) {
+        cell.textLabel.text = [_arryTableContent objectAtIndex:indexPath.row];
+    }
+    else if (indexPath.section == 1)
+        cell.textLabel.text = NSLocalizedString(@"Login/SignUp", @"Login/SignUp");
+    
     return cell;
 }
 
@@ -137,10 +152,11 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if (!self.detailViewController) {
-        self.detailViewController = [[DetailViewController alloc] initWithNibName:@"DetailViewController" bundle:nil];
-    }
-    [self.navigationController pushViewController:self.detailViewController animated:YES];
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];// leave it there for now [Yufei Lang 4/5/2012]
+//    if (!self.detailViewController) {
+//        self.detailViewController = [[DetailViewController alloc] initWithNibName:@"DetailViewController" bundle:nil];
+//    }
+//    [self.navigationController pushViewController:self.detailViewController animated:YES];
 }
 
 @end

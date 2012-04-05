@@ -10,8 +10,10 @@
 
 @class DetailViewController;
 
-@interface MasterViewController : UITableViewController
+@interface MasterViewController : UITableViewController <UITableViewDelegate>
+{
+    
+}
 
-@property (strong, nonatomic) DetailViewController *detailViewController;
-
+@property (strong, nonatomic) NSArray *arryTableContent;// whats in section one. play online or play with computer
 @end
