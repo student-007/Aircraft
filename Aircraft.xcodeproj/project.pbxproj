@@ -15,6 +15,9 @@
 		0C7131C2152E2C8F0001BFEF /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C7131C1152E2C8F0001BFEF /* AppDelegate.m */; };
 		0C7131C5152E2C8F0001BFEF /* MasterViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C7131C4152E2C8F0001BFEF /* MasterViewController.m */; };
 		0C7131CB152E2C8F0001BFEF /* MasterViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0C7131C9152E2C8F0001BFEF /* MasterViewController.xib */; };
+		0CDF5F81152F787700C1D2F8 /* AsyncSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = 0CDF5F7E152F787700C1D2F8 /* AsyncSocket.m */; };
+		0CDF5F82152F787700C1D2F8 /* AsyncUdpSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = 0CDF5F80152F787700C1D2F8 /* AsyncUdpSocket.m */; };
+		0CDF5F89152F78B000C1D2F8 /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0CDF5F88152F78B000C1D2F8 /* CFNetwork.framework */; };
 		0CE884DB152E3601003EAFEA /* CTransmissionStructure.m in Sources */ = {isa = PBXBuildFile; fileRef = 0CE884DA152E3601003EAFEA /* CTransmissionStructure.m */; };
 		0CE884F7152E377E003EAFEA /* NSObject+SBJson.m in Sources */ = {isa = PBXBuildFile; fileRef = 0CE884DF152E377E003EAFEA /* NSObject+SBJson.m */; };
 		0CE884F8152E377E003EAFEA /* SBJsonParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 0CE884E2152E377E003EAFEA /* SBJsonParser.m */; };
@@ -45,6 +48,11 @@
 		0C7131C3152E2C8F0001BFEF /* MasterViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MasterViewController.h; sourceTree = "<group>"; };
 		0C7131C4152E2C8F0001BFEF /* MasterViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MasterViewController.m; sourceTree = "<group>"; };
 		0C7131CA152E2C8F0001BFEF /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/MasterViewController.xib; sourceTree = "<group>"; };
+		0CDF5F7D152F787700C1D2F8 /* AsyncSocket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AsyncSocket.h; sourceTree = "<group>"; };
+		0CDF5F7E152F787700C1D2F8 /* AsyncSocket.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AsyncSocket.m; sourceTree = "<group>"; };
+		0CDF5F7F152F787700C1D2F8 /* AsyncUdpSocket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AsyncUdpSocket.h; sourceTree = "<group>"; };
+		0CDF5F80152F787700C1D2F8 /* AsyncUdpSocket.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AsyncUdpSocket.m; sourceTree = "<group>"; };
+		0CDF5F88152F78B000C1D2F8 /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
 		0CE884D9152E3601003EAFEA /* CTransmissionStructure.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CTransmissionStructure.h; sourceTree = "<group>"; };
 		0CE884DA152E3601003EAFEA /* CTransmissionStructure.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CTransmissionStructure.m; sourceTree = "<group>"; };
 		0CE884DE152E377E003EAFEA /* NSObject+SBJson.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSObject+SBJson.h"; sourceTree = "<group>"; };
@@ -81,6 +89,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0CDF5F89152F78B000C1D2F8 /* CFNetwork.framework in Frameworks */,
 				0C7131B2152E2C8F0001BFEF /* UIKit.framework in Frameworks */,
 				0C7131B4152E2C8F0001BFEF /* Foundation.framework in Frameworks */,
 				0C7131B6152E2C8F0001BFEF /* CoreGraphics.framework in Frameworks */,
@@ -110,6 +119,7 @@
 		0C7131B0152E2C8F0001BFEF /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				0CDF5F88152F78B000C1D2F8 /* CFNetwork.framework */,
 				0C7131B1152E2C8F0001BFEF /* UIKit.framework */,
 				0C7131B3152E2C8F0001BFEF /* Foundation.framework */,
 				0C7131B5152E2C8F0001BFEF /* CoreGraphics.framework */,
@@ -195,6 +205,10 @@
 		0CE88513152E3EE6003EAFEA /* SocketConnection */ = {
 			isa = PBXGroup;
 			children = (
+				0CDF5F7D152F787700C1D2F8 /* AsyncSocket.h */,
+				0CDF5F7E152F787700C1D2F8 /* AsyncSocket.m */,
+				0CDF5F7F152F787700C1D2F8 /* AsyncUdpSocket.h */,
+				0CDF5F80152F787700C1D2F8 /* AsyncUdpSocket.m */,
 				0CE88515152E3F41003EAFEA /* CSocketConnection.h */,
 				0CE88516152E3F41003EAFEA /* CSocketConnection.m */,
 			);
@@ -290,6 +304,8 @@
 				0CE88501152E377E003EAFEA /* SBJsonUTF8Stream.m in Sources */,
 				0CE88502152E377E003EAFEA /* SBJsonWriter.m in Sources */,
 				0CE88517152E3F41003EAFEA /* CSocketConnection.m in Sources */,
+				0CDF5F81152F787700C1D2F8 /* AsyncSocket.m in Sources */,
+				0CDF5F82152F787700C1D2F8 /* AsyncUdpSocket.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

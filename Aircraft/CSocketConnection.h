@@ -9,8 +9,9 @@
 #import <Foundation/Foundation.h>
 #import <netdb.h>
 #import <arpa/inet.h>
+#import "AsyncSocket.h"
 
-@interface CSocketConnection : NSObject
+@interface CSocketConnection : NSObject <AsyncSocketDelegate>
 {
     NSInteger _iSockfd;
     struct sockaddr_in _their_addr; // Socket address, internet style [Yufei Lang 4/5/2012]

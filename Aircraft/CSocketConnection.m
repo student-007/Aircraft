@@ -8,8 +8,8 @@
 
 #import "CSocketConnection.h"
 
-#define STR_HOST_NAME @"192.168.53.13"
-#define I_PORT 5180
+#define STR_HOST_NAME @"www.baidu.com"
+#define I_PORT 80
 #define I_BLOCK_SIZE 512
 
 @implementation CSocketConnection
@@ -19,8 +19,32 @@
     self = [super init];
     if (self) {
         [self makeConnection];
+        //AsyncSocket *socket = [[AsyncSocket alloc] initWithDelegate:self];
+        //NSError *error;
+        //[socket connectToHost:STR_HOST_NAME onPort:I_PORT withTimeout:5 error:&error];
+        //[socket connectToHost:STR_HOST_NAME onPort:I_PORT error:&error];
+        //NSLog(@"%@", error);
+        
     }
     return self;
+}
+
+/**
+ * Called when a socket connects and is ready for reading and writing.
+ * The host parameter will be an IP address, not a DNS name.
+ **/
+- (void)onSocket:(AsyncSocket *)sock didConnectToHost:(NSString *)host port:(UInt16)port
+{
+    NSLog(@"did connected to host");
+}
+
+/**
+ * Called when a socket has completed reading the requested data into memory.
+ * Not called if there is an error.
+ **/
+- (void)onSocket:(AsyncSocket *)sock didReadData:(NSData *)data withTag:(long)tag
+{
+    NSLog(@"did recv data");
 }
 
 - (NSString *) getIPAddressForHost: (NSString *)strHost // get host's ip address (string type), return NULL if not found [Yufei Lang 4/5/2012]
@@ -43,13 +67,14 @@
 - (NSString *) makeConnection
 {
     if ((_iSockfd = socket(AF_INET, SOCK_STREAM, 0) == -1)) {
-        herror("error making socket connection.");
+        herror("error making socket.");
         return NULL;
     }
     
+    memset(&_their_addr, 0, sizeof(_their_addr));
     _their_addr.sin_family = AF_INET; // set as internet type [Yufei Lang 4/5/2012]
     _their_addr.sin_addr.s_addr = inet_addr([[self getIPAddressForHost:STR_HOST_NAME] UTF8String]); // giving ip address to _their_addr [Yufei Lang 4/5/2012]
-    _their_addr.sin_port = htons(I_PORT);
+    _their_addr.sin_port = htons(80);
     
     bzero(&(_their_addr.sin_zero), 8);
     
