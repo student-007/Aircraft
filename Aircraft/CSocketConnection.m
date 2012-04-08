@@ -28,7 +28,6 @@
     }
     return self;
 }
-
 /**
  * Called when a socket connects and is ready for reading and writing.
  * The host parameter will be an IP address, not a DNS name.

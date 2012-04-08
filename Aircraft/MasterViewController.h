@@ -7,7 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "CSocketConnection.h"
+#import "PlayViewController.h"
 
 @class DetailViewController;
 

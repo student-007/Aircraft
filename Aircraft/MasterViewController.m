@@ -152,8 +152,9 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    CSocketConnection *socketConn = [[CSocketConnection alloc] init];
-    
+    PlayViewController *playView = [[PlayViewController alloc] initWithNibName:@"PlayViewController" bundle:nil];
+    [self.navigationController pushViewController:playView animated:YES];
+    [self.navigationController setNavigationBarHidden:YES animated:YES];
     //    [tableView deselectRowAtIndexPath:indexPath animated:YES];// leave it there for now [Yufei Lang 4/5/2012]
 //    if (!self.detailViewController) {
 //        self.detailViewController = [[DetailViewController alloc] initWithNibName:@"DetailViewController" bundle:nil];
