@@ -93,16 +93,24 @@
 
 
 #pragma mark TapDetectingImageViewDelegate methods
-#warning useless gesture recognizer
-- (void)handleSingleTap:(UIGestureRecognizer *)gestureRecognizer {
-    NSLog(@"gesture recognizer worked!");
-}
+//#warning useless gesture recognizer
+//- (void)handleSingleTap:(UIGestureRecognizer *)gestureRecognizer {
+//    NSLog(@"gesture recognizer worked!");
+//}
 
 #pragma touches actions
 
 - (void)delegateTouchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
 {
     NSLog(@"touched_delegate");
+    
+    // pass what i selected view to _tempAircraftView in order to move and end touch actions [Yufei Lang 4/6/2012]
+    UITouch *touch = [touches anyObject];
+    _tempAircraftView = (TapDetectingImageView*)touch.view;
+    
+    // disable scroll view's scrolling availability [Yufei Lang 4/6/2012]
+    _scrollView_BattleField.scrollEnabled = NO;
+    
     [self touchesBegan:touches withEvent:event];
 }
 
@@ -114,14 +122,31 @@
 
 - (void)delegateTouchesEnded:(NSSet *)touches withEvent:(UIEvent *)event
 {
+    // able scroll view's scrolling availability [Yufei Lang 4/6/2012]
+    _scrollView_BattleField.scrollEnabled = YES;
     NSLog(@"touch ended_delegate");
     [self touchesEnded:touches withEvent:event];
 }
 
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
 {
-    
-    UITouch *touch = [[event touchesForView:_view_AircraftHolder] anyObject];
+    UITouch *touch = [touches anyObject];
+    if (touch != NULL && touch.view == _tempAircraftView) 
+    {
+        // set up a new animation block [Yufei Lang 4/5/2012]
+        [UIView beginAnimations:nil context:NULL];
+        [UIView setAnimationDuration:0.5];
+        
+        // adjust views (animation) [Yufei Lang 4/5/2012]
+        _tempAircraftView.alpha = 0.7;
+        CGPoint currentPoint = [touch locationInView:self.view];
+        currentPoint.y -= _tempAircraftView.frame.size.height / 2.0;;
+        _tempAircraftView.center = currentPoint;
+        
+        // end and commit animation [Yufei Lang 4/5/2012]
+        [UIView commitAnimations];
+    }
+    touch = [[event touchesForView:_view_AircraftHolder] anyObject];
     if (touch != NULL && [touch locationInView:touch.view].x < (50 * 4)) // act only when touches aircrafts [Yufei Lang 4/6/2012]
     {
         _tempAircraftView = [[TapDetectingImageView alloc] initWithImage:[UIImage imageNamed:@"Aircraft.png"]];
@@ -192,6 +217,7 @@
 
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event
 {
+    // when placing a new aircraft [Yufei Lang 4/6/2012]
     UITouch *touch = [[event touchesForView:_view_AircraftHolder] anyObject];
     if (touch != NULL) 
     {
@@ -216,6 +242,7 @@
         }
     }
     
+    // when adjusting placed aircraft position [Yufei Lang 4/6/2012]
     touch = [[event touchesForView:_tempAircraftView] anyObject];
     if (touch != NULL) 
     {
@@ -227,7 +254,6 @@
         if ((int)(targetPoint.y - _tempAircraftView.frame.size.height) % 29 >= 29 / 2)
             iY += 1;
         [_tempAircraftView setFrame:CGRectMake(iX * 29, iY * 29, _tempAircraftView.frame.size.width, _tempAircraftView.frame.size.height)];
-        _iNumberOfAircraftsPlaced++;
     }
 }
 
