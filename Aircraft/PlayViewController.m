@@ -102,22 +102,25 @@
 
 - (void)delegateTouchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
 {
+    NSLog(@"touched_delegate");
     [self touchesBegan:touches withEvent:event];
 }
 
 - (void)delegateTouchesMoved:(NSSet *)touches withEvent:(UIEvent *)event
 {
+    NSLog(@"touch moved_delegate");
     [self touchesMoved:touches withEvent:event];
 }
 
 - (void)delegateTouchesEnded:(NSSet *)touches withEvent:(UIEvent *)event
 {
+    NSLog(@"touch ended_delegate");
     [self touchesEnded:touches withEvent:event];
 }
 
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
 {
-    NSLog(@"touched");
+    
     UITouch *touch = [[event touchesForView:_view_AircraftHolder] anyObject];
     if (touch != NULL && [touch locationInView:touch.view].x < (50 * 4)) // act only when touches aircrafts [Yufei Lang 4/6/2012]
     {
@@ -173,8 +176,14 @@
 - (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event
 {
     UITouch *touch = [[event touchesForView:_view_AircraftHolder] anyObject];
-    //UITouch *touch = [touches anyObject];
     if (touch != NULL) {
+        CGPoint currentPoint = [touch locationInView:self.view];
+        currentPoint.y -= _tempAircraftView.frame.size.height / 2.0;;
+        _tempAircraftView.center = currentPoint;
+    }
+    touch = [[event touchesForView:_tempAircraftView] anyObject];
+    if (touch != NULL) 
+    {
         CGPoint currentPoint = [touch locationInView:self.view];
         currentPoint.y -= _tempAircraftView.frame.size.height / 2.0;;
         _tempAircraftView.center = currentPoint;
@@ -196,15 +205,29 @@
         [_tempAircraftView removeFromSuperview];
         if (_iNumberOfAircraftsPlaced < 3) // if all the aircrafts have been placed then stopping putting it in my battle view [Yufei Lang 4/6/2012]
         {
-#warning useless gesture recognizer
-            UITapGestureRecognizer *singleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleSingleTap:)];
-            [_tempAircraftView addGestureRecognizer:singleTap];
+//#warning useless gesture recognizer
+//            UITapGestureRecognizer *singleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleSingleTap:)];
+//            [_tempAircraftView addGestureRecognizer:singleTap];
             _tempAircraftView.delegate = self;
 //            [_arryImgView_PlacedAircrafts addObject:_tempAircraftView];
             [_view_MyBattleField addSubview:_tempAircraftView];
             [_tempAircraftView setFrame:CGRectMake(iX * 29, iY * 29, _tempAircraftView.frame.size.width, _tempAircraftView.frame.size.height)];
             _iNumberOfAircraftsPlaced++;
         }
+    }
+    
+    touch = [[event touchesForView:_tempAircraftView] anyObject];
+    if (touch != NULL) 
+    {
+        CGPoint targetPoint = [touch locationInView:self.view];
+        int iX = (targetPoint.x - _tempAircraftView.frame.size.width / 2) / 29;
+        int iY = (targetPoint.y - _tempAircraftView.frame.size.height) / 29;
+        if ((int)(targetPoint.x - _tempAircraftView.frame.size.width / 2) % 29 >= 29 / 2)
+            iX += 1;
+        if ((int)(targetPoint.y - _tempAircraftView.frame.size.height) % 29 >= 29 / 2)
+            iY += 1;
+        [_tempAircraftView setFrame:CGRectMake(iX * 29, iY * 29, _tempAircraftView.frame.size.width, _tempAircraftView.frame.size.height)];
+        _iNumberOfAircraftsPlaced++;
     }
 }
 
@@ -222,8 +245,8 @@
     [super viewDidLoad];
     
     [self initAllViews];
-    CSocketConnection *socketConn = [[CSocketConnection alloc] init];
-    [socketConn makeConnection];
+//    CSocketConnection *socketConn = [[CSocketConnection alloc] init];
+//    [socketConn makeConnection];
     
 }
 

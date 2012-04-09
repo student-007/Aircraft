@@ -56,7 +56,7 @@
 		0C7131C3152E2C8F0001BFEF /* MasterViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MasterViewController.h; sourceTree = "<group>"; };
 		0C7131C4152E2C8F0001BFEF /* MasterViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MasterViewController.m; sourceTree = "<group>"; };
 		0C7131CA152E2C8F0001BFEF /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/MasterViewController.xib; sourceTree = "<group>"; };
-		0C8E761A153343D6000DFFF1 /* Aircraft.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Aircraft.png; sourceTree = "<group>"; };
+		0C8E761A153343D6000DFFF1 /* Aircraft.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Aircraft.png; sourceTree = SOURCE_ROOT; };
 		0CDF5F7D152F787700C1D2F8 /* AsyncSocket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AsyncSocket.h; sourceTree = "<group>"; };
 		0CDF5F7E152F787700C1D2F8 /* AsyncSocket.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AsyncSocket.m; sourceTree = "<group>"; };
 		0CDF5F7F152F787700C1D2F8 /* AsyncUdpSocket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AsyncUdpSocket.h; sourceTree = "<group>"; };
@@ -65,8 +65,8 @@
 		0CDF5F8E152F818F00C1D2F8 /* PlayViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PlayViewController.h; sourceTree = "<group>"; };
 		0CDF5F8F152F819000C1D2F8 /* PlayViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PlayViewController.m; sourceTree = "<group>"; };
 		0CDF5F90152F819000C1D2F8 /* PlayViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PlayViewController.xib; sourceTree = "<group>"; };
-		0CE463A11531239B0039FE63 /* blueSky.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = blueSky.png; sourceTree = "<group>"; };
-		0CE463A21531239B0039FE63 /* blueSky@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "blueSky@2x.png"; sourceTree = "<group>"; };
+		0CE463A11531239B0039FE63 /* blueSky.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = blueSky.png; path = ../blueSky.png; sourceTree = "<group>"; };
+		0CE463A21531239B0039FE63 /* blueSky@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "blueSky@2x.png"; path = "../blueSky@2x.png"; sourceTree = "<group>"; };
 		0CE884D9152E3601003EAFEA /* CTransmissionStructure.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CTransmissionStructure.h; sourceTree = "<group>"; };
 		0CE884DA152E3601003EAFEA /* CTransmissionStructure.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CTransmissionStructure.m; sourceTree = "<group>"; };
 		0CE884DE152E377E003EAFEA /* NSObject+SBJson.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSObject+SBJson.h"; sourceTree = "<group>"; };
@@ -113,12 +113,19 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		0C7131A2152E2C8E0001BFEF = {
+		0C711A241533473F00D2020B /* Images */ = {
 			isa = PBXGroup;
 			children = (
 				0CE463A11531239B0039FE63 /* blueSky.png */,
 				0CE463A21531239B0039FE63 /* blueSky@2x.png */,
 				0C8E761A153343D6000DFFF1 /* Aircraft.png */,
+			);
+			name = Images;
+			sourceTree = "<group>";
+		};
+		0C7131A2152E2C8E0001BFEF = {
+			isa = PBXGroup;
+			children = (
 				0C7131B7152E2C8F0001BFEF /* Aircraft */,
 				0C7131B0152E2C8F0001BFEF /* Frameworks */,
 				0C7131AE152E2C8F0001BFEF /* Products */,
@@ -147,8 +154,7 @@
 		0C7131B7152E2C8F0001BFEF /* Aircraft */ = {
 			isa = PBXGroup;
 			children = (
-				0C70400A1532365B00B7F91F /* TapDetectingImageView.h */,
-				0C70400B1532365B00B7F91F /* TapDetectingImageView.m */,
+				0C711A241533473F00D2020B /* Images */,
 				0CE884DC152E36CD003EAFEA /* SBJSON */,
 				0CE884D8152E356F003EAFEA /* NetTransmission */,
 				0C7131C0152E2C8F0001BFEF /* AppDelegate.h */,
@@ -159,6 +165,8 @@
 				0CDF5F8E152F818F00C1D2F8 /* PlayViewController.h */,
 				0CDF5F8F152F819000C1D2F8 /* PlayViewController.m */,
 				0CDF5F90152F819000C1D2F8 /* PlayViewController.xib */,
+				0C70400A1532365B00B7F91F /* TapDetectingImageView.h */,
+				0C70400B1532365B00B7F91F /* TapDetectingImageView.m */,
 				0C7131B8152E2C8F0001BFEF /* Supporting Files */,
 			);
 			path = Aircraft;
