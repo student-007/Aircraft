@@ -46,22 +46,37 @@
  Copyright (C) 2010 Apple Inc. All Rights Reserved.
  
  */
+#import <stdio.h>
 
 @protocol TapDetectingImageViewDelegate;
 
+typedef enum {
+    Up,
+    Down,
+    Left,
+    Right,
+} AircraftDirection;
 
 @interface TapDetectingImageView : UIImageView {
 	
-//    id <TapDetectingImageViewDelegate> _delegate;
+//    id <TapDetectingImageViewDelegate> _delegate; // in a non-ARC model
+    
+    int _int2D_aircraft[5][5];
+    AircraftDirection _direction;
+    CGMutablePathRef _pathRef_AircraftUp;
     
     // Touch detection
     CGPoint tapLocation;         // Needed to record location of single tap, which will only be registered after delayed perform.
     BOOL multipleTouches;        // YES if a touch event contains more than one touch; reset when all fingers are lifted.
     BOOL twoFingerTapIsPossible; // Set to NO when 2-finger tap can be ruled out (e.g. 3rd finger down, fingers touch down too far apart, etc).
+
+    
 }
 
 @property (nonatomic, weak) id <TapDetectingImageViewDelegate> delegate;
 
+// methods [Yufei Lang 4/9/2012]
+- (void)setAircraftWithDirection: (AircraftDirection) direction;
 @end
 
 

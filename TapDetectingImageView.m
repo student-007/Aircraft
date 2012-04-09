@@ -69,92 +69,150 @@ CGPoint midpointBetweenPoints(CGPoint a, CGPoint b);
         [self setMultipleTouchEnabled:YES];
         twoFingerTapIsPossible = YES;
         multipleTouches = NO;
+        
+        // making a path just like aircraft, use for detecting whether user is tapping in the aircraft or not(the aircraft but in the view) [Yufei Lang 4/9/2012]
+        _pathRef_AircraftUp=CGPathCreateMutable();
+        CGPathMoveToPoint(_pathRef_AircraftUp, NULL, 0, 29);
+        CGPathAddLineToPoint(_pathRef_AircraftUp, NULL, 58, 29);
+        CGPathAddLineToPoint(_pathRef_AircraftUp, NULL, 58, 0);
+        CGPathAddLineToPoint(_pathRef_AircraftUp, NULL, 87, 0);
+        CGPathAddLineToPoint(_pathRef_AircraftUp, NULL, 87, 29);
+        CGPathAddLineToPoint(_pathRef_AircraftUp, NULL, 145, 29);
+        CGPathAddLineToPoint(_pathRef_AircraftUp, NULL, 145, 58);
+        CGPathAddLineToPoint(_pathRef_AircraftUp, NULL, 87, 58);
+        CGPathAddLineToPoint(_pathRef_AircraftUp, NULL, 87, 87);
+        CGPathAddLineToPoint(_pathRef_AircraftUp, NULL, 116, 87);
+        CGPathAddLineToPoint(_pathRef_AircraftUp, NULL, 116, 116);
+        CGPathAddLineToPoint(_pathRef_AircraftUp, NULL, 29, 116);
+        CGPathAddLineToPoint(_pathRef_AircraftUp, NULL, 29, 87);
+        CGPathAddLineToPoint(_pathRef_AircraftUp, NULL, 58, 87);
+        CGPathAddLineToPoint(_pathRef_AircraftUp, NULL, 58, 58);
+        CGPathAddLineToPoint(_pathRef_AircraftUp, NULL, 0, 58);
+        CGPathAddLineToPoint(_pathRef_AircraftUp, NULL, 0, 29);
+        CGPathCloseSubpath(_pathRef_AircraftUp);
     }
     return self;
 }
 
+- (void)setAircraftWithDirection: (AircraftDirection) direction
+{
+    switch (direction) {
+        case Up:
+        {
+            int iTemp[5][5] =  {0,0,9,0,0,
+                                1,1,1,1,1,
+                                0,0,1,0,0,
+                                0,1,1,1,0,
+                                0,0,0,0,0};
+            memcpy(_int2D_aircraft, iTemp, sizeof(int)*25);
+            _direction = Up;
+        }
+            break;
+        case Down:
+        {
+            int iTemp[5][5] =  {0,1,1,1,0,
+                                0,0,1,0,0,
+                                1,1,1,1,1,
+                                0,0,9,0,0,
+                                0,0,0,0,0};
+            memcpy(_int2D_aircraft, iTemp, sizeof(int)*25);
+            self.transform = CGAffineTransformMakeRotation(M_PI);
+            _direction = Down;
+        }
+            break;
+        case Left:
+        {
+            int iTemp[5][5] =  {0,1,9,0,0,
+                                0,1,0,1,0,
+                                9,1,1,1,0,
+                                0,1,0,1,0,
+                                0,1,0,0,0};
+            memcpy(_int2D_aircraft, iTemp, sizeof(int)*25);
+            self.transform = CGAffineTransformMakeRotation(-M_PI_2);
+            _direction = Left;
+        }
+            break;
+        case Right:
+        {
+            int iTemp[5][5] =  {0,0,1,0,0,
+                                1,0,1,0,0,
+                                1,1,1,9,0,
+                                1,0,1,0,0,
+                                0,0,1,0,0};
+            memcpy(_int2D_aircraft, iTemp, sizeof(int)*25);
+            self.transform = CGAffineTransformMakeRotation(M_PI_2);
+            _direction = Right;
+        }
+            break;
+        default:
+            break;
+    }
+}
+
+- (BOOL)isTouch:(NSSet *)touches withEvent:(UIEvent *)event
+{
+    UITouch *touch = [[event touchesForView:self] anyObject];
+    CGPoint touchedPoint = [touch locationInView:self];
+    switch (_direction) {
+        case Up:
+        {
+            if (CGPathContainsPoint(_pathRef_AircraftUp, NULL, touchedPoint, NO))
+                return YES;
+            else
+                return NO;
+        }
+        case Down:
+        {
+            CGAffineTransform transf = CGAffineTransformMakeRotation(M_PI);
+            if (CGPathContainsPoint(_pathRef_AircraftUp, &transf, touchedPoint, NO))
+                return YES;
+            else
+                return NO;
+        }
+            break;
+        case Left:
+        {
+            CGAffineTransform transf = CGAffineTransformMakeRotation(-M_PI_2);
+            if (CGPathContainsPoint(_pathRef_AircraftUp, &transf, touchedPoint, NO))
+                return YES;
+            else
+                return NO;
+        }
+            break;
+        case Right:
+        {
+            CGAffineTransform transf = CGAffineTransformMakeRotation(M_PI_2);
+            if (
+                (_pathRef_AircraftUp, &transf, touchedPoint, NO))
+                return YES;
+            else
+                return NO;
+        }
+            break;
+        default:
+            return NO;
+    }
+}
+
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
 {
-    [_delegate delegateTouchesBegan:touches withEvent:event];
-//    NSLog(@"tap detecting img view touches function worked.");
-//    // cancel any pending handleSingleTap messages 
-//    [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(handleSingleTap) object:nil];
-//    
-//    // update our touch state
-//    if ([[event touchesForView:self] count] > 1)
-//        multipleTouches = YES;
-//    if ([[event touchesForView:self] count] > 2)
-//        twoFingerTapIsPossible = NO;
+    if ([self isTouch:touches withEvent:event])
+        [_delegate delegateTouchesBegan:touches withEvent:event];
 }
 
 - (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event
 {
-    [_delegate delegateTouchesMoved:touches withEvent:event];
+    //if ([self isTouch:touches withEvent:event])
+        [_delegate delegateTouchesMoved:touches withEvent:event];
 }
 
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event
 {
-    [_delegate delegateTouchesEnded:touches withEvent:event];
-//    BOOL allTouchesEnded = ([touches count] == [[event touchesForView:self] count]);
-//    
-//    // first check for plain single/double tap, which is only possible if we haven't seen multiple touches
-//    if (!multipleTouches) {
-//        UITouch *touch = [touches anyObject];
-//        tapLocation = [touch locationInView:self];
-//        
-//        if ([touch tapCount] == 1) {
-//            [self performSelector:@selector(handleSingleTap) withObject:nil afterDelay:DOUBLE_TAP_DELAY];
-//        } else if([touch tapCount] == 2) {
-//            [self handleDoubleTap];
-//        }
-//    }    
-//    
-//    // check for 2-finger tap if we've seen multiple touches and haven't yet ruled out that possibility
-//    else if (multipleTouches && twoFingerTapIsPossible) { 
-//        
-//        // case 1: this is the end of both touches at once 
-//        if ([touches count] == 2 && allTouchesEnded) {
-//            int i = 0; 
-//            int tapCounts[2]; CGPoint tapLocations[2];
-//            for (UITouch *touch in touches) {
-//                tapCounts[i]    = [touch tapCount];
-//                tapLocations[i] = [touch locationInView:self];
-//                i++;
-//            }
-//            if (tapCounts[0] == 1 && tapCounts[1] == 1) { // it's a two-finger tap if they're both single taps
-//                tapLocation = midpointBetweenPoints(tapLocations[0], tapLocations[1]);
-//                [self handleTwoFingerTap];
-//            }
-//        }
-//        
-//        // case 2: this is the end of one touch, and the other hasn't ended yet
-//        else if ([touches count] == 1 && !allTouchesEnded) {
-//            UITouch *touch = [touches anyObject];
-//            if ([touch tapCount] == 1) {
-//                // if touch is a single tap, store its location so we can average it with the second touch location
-//                tapLocation = [touch locationInView:self];
-//            } else {
-//                twoFingerTapIsPossible = NO;
-//            }
-//        }
-//
-//        // case 3: this is the end of the second of the two touches
-//        else if ([touches count] == 1 && allTouchesEnded) {
-//            UITouch *touch = [touches anyObject];
-//            if ([touch tapCount] == 1) {
-//                // if the last touch up is a single tap, this was a 2-finger tap
-//                tapLocation = midpointBetweenPoints(tapLocation, [touch locationInView:self]);
-//                [self handleTwoFingerTap];
-//            }
-//        }
-//    }
-//        
-//    // if all touches are up, reset touch monitoring state
-//    if (allTouchesEnded) {
-//        twoFingerTapIsPossible = YES;
-//        multipleTouches = NO;
-//    }
+    //if ([self isTouch:touches withEvent:event])
+        [_delegate delegateTouchesEnded:touches withEvent:event];
 }
+
+
 
 - (void)touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event {
     twoFingerTapIsPossible = YES;

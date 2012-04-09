@@ -30,10 +30,10 @@
 @property (strong, nonatomic) IBOutlet UIView *view_EnemyBattleField;
 
 // properties - IBOutlet aircrafts images in holder [Yufei Lang 4/5/2012]
-@property (strong, nonatomic) IBOutlet UIImageView *imgView_AircraftUp;
-@property (strong, nonatomic) IBOutlet UIImageView *imgView_AircraftDown;
-@property (strong, nonatomic) IBOutlet UIImageView *imgView_AircraftLeft;
-@property (strong, nonatomic) IBOutlet UIImageView *imgView_AircraftRight;
+@property (strong, nonatomic) IBOutlet TapDetectingImageView *imgView_AircraftUp;
+@property (strong, nonatomic) IBOutlet TapDetectingImageView *imgView_AircraftDown;
+@property (strong, nonatomic) IBOutlet TapDetectingImageView *imgView_AircraftLeft;
+@property (strong, nonatomic) IBOutlet TapDetectingImageView *imgView_AircraftRight;
 @property (strong, nonatomic) IBOutlet UIImageView *imgView_MyBattleFieldBackground;
 @property (strong, nonatomic) IBOutlet UIImageView *imgView_EnemyBattleFieldBackground;
 

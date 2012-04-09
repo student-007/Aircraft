@@ -54,10 +54,11 @@
     [_imgView_AircraftDown setImage:[UIImage imageNamed:@"Aircraft.png"]];
     [_imgView_AircraftLeft setImage:[UIImage imageNamed:@"Aircraft.png"]];
     [_imgView_AircraftRight setImage:[UIImage imageNamed:@"Aircraft.png"]];
-    // rotation [Yufei Lang 4/5/2012]
-    _imgView_AircraftRight.transform = CGAffineTransformMakeRotation(M_PI_2);
-    _imgView_AircraftDown.transform = CGAffineTransformMakeRotation(M_PI);
-    _imgView_AircraftLeft.transform = CGAffineTransformMakeRotation(-M_PI_2);
+    // rotation & set 2d int array within the image view [Yufei Lang 4/5/2012]
+    [_imgView_AircraftUp setAircraftWithDirection:Up];
+    [_imgView_AircraftDown setAircraftWithDirection:Down];
+    [_imgView_AircraftRight setAircraftWithDirection:Right];
+    [_imgView_AircraftLeft setAircraftWithDirection:Left];
     
     // load image to battle field background [Yufei Lang 4/6/2012]
     [_imgView_MyBattleFieldBackground setImage:[UIImage imageNamed:@"blueSky"]];
@@ -140,7 +141,7 @@
         // adjust views (animation) [Yufei Lang 4/5/2012]
         _tempAircraftView.alpha = 0.7;
         CGPoint currentPoint = [touch locationInView:self.view];
-        currentPoint.y -= _tempAircraftView.frame.size.height / 2.0;;
+        //currentPoint.y -= _tempAircraftView.frame.size.height / 2.0;;
         _tempAircraftView.center = currentPoint;
         
         // end and commit animation [Yufei Lang 4/5/2012]
@@ -153,22 +154,24 @@
         int iIndexOfSubview = [touch locationInView:_view_AircraftHolder].x / 50;
         if (iIndexOfSubview >= 4) return; // in case of "done" button disabled tapping done button area will act[Yufei Lang 4/6/2012]
         switch (iIndexOfSubview) {
+            case 0:
+            {
+                [_tempAircraftView setAircraftWithDirection:Up];
+            }
+                break;
             case 1:
             {
-                CGAffineTransform rotate = CGAffineTransformMakeRotation(M_PI);
-                _tempAircraftView.transform = rotate;
+                [_tempAircraftView setAircraftWithDirection:Down];
             }
                 break;
             case 2:
             {
-                CGAffineTransform rotate = CGAffineTransformMakeRotation(-M_PI_2);
-                _tempAircraftView.transform = rotate;
+                [_tempAircraftView setAircraftWithDirection:Left];
             }
                 break;
             case 3:
             {
-                CGAffineTransform rotate = CGAffineTransformMakeRotation(M_PI_2);
-                _tempAircraftView.transform = rotate;
+                [_tempAircraftView setAircraftWithDirection:Right];
             }
                 break;
             default:
@@ -203,14 +206,14 @@
     UITouch *touch = [[event touchesForView:_view_AircraftHolder] anyObject];
     if (touch != NULL) {
         CGPoint currentPoint = [touch locationInView:self.view];
-        currentPoint.y -= _tempAircraftView.frame.size.height / 2.0;;
+        currentPoint.y -= _tempAircraftView.frame.size.height / 2.0;
         _tempAircraftView.center = currentPoint;
     }
     touch = [[event touchesForView:_tempAircraftView] anyObject];
     if (touch != NULL) 
     {
         CGPoint currentPoint = [touch locationInView:self.view];
-        currentPoint.y -= _tempAircraftView.frame.size.height / 2.0;;
+        //currentPoint.y -= _tempAircraftView.frame.size.height / 2.0; // in case moving down [Yufei Lang 4/9/2012]
         _tempAircraftView.center = currentPoint;
     }
 }
@@ -248,10 +251,10 @@
     {
         CGPoint targetPoint = [touch locationInView:self.view];
         int iX = (targetPoint.x - _tempAircraftView.frame.size.width / 2) / 29;
-        int iY = (targetPoint.y - _tempAircraftView.frame.size.height) / 29;
+        int iY = (targetPoint.y - _tempAircraftView.frame.size.height / 2) / 29;
         if ((int)(targetPoint.x - _tempAircraftView.frame.size.width / 2) % 29 >= 29 / 2)
             iX += 1;
-        if ((int)(targetPoint.y - _tempAircraftView.frame.size.height) % 29 >= 29 / 2)
+        if ((int)(targetPoint.y - _tempAircraftView.frame.size.height / 2) % 29 >= 29 / 2)
             iY += 1;
         [_tempAircraftView setFrame:CGRectMake(iX * 29, iY * 29, _tempAircraftView.frame.size.width, _tempAircraftView.frame.size.height)];
     }
