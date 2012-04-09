@@ -100,13 +100,28 @@
 
 #pragma touches actions
 
+- (void)delegateTouchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
+{
+    [self touchesBegan:touches withEvent:event];
+}
+
+- (void)delegateTouchesMoved:(NSSet *)touches withEvent:(UIEvent *)event
+{
+    [self touchesMoved:touches withEvent:event];
+}
+
+- (void)delegateTouchesEnded:(NSSet *)touches withEvent:(UIEvent *)event
+{
+    [self touchesEnded:touches withEvent:event];
+}
+
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
 {
     NSLog(@"touched");
     UITouch *touch = [[event touchesForView:_view_AircraftHolder] anyObject];
     if (touch != NULL && [touch locationInView:touch.view].x < (50 * 4)) // act only when touches aircrafts [Yufei Lang 4/6/2012]
     {
-        _tempAircraftView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"Aircraft.png"]];
+        _tempAircraftView = [[TapDetectingImageView alloc] initWithImage:[UIImage imageNamed:@"Aircraft.png"]];
         int iIndexOfSubview = [touch locationInView:_view_AircraftHolder].x / 50;
         if (iIndexOfSubview >= 4) return; // in case of "done" button disabled tapping done button area will act[Yufei Lang 4/6/2012]
         switch (iIndexOfSubview) {
@@ -158,6 +173,7 @@
 - (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event
 {
     UITouch *touch = [[event touchesForView:_view_AircraftHolder] anyObject];
+    //UITouch *touch = [touches anyObject];
     if (touch != NULL) {
         CGPoint currentPoint = [touch locationInView:self.view];
         currentPoint.y -= _tempAircraftView.frame.size.height / 2.0;;
@@ -183,6 +199,7 @@
 #warning useless gesture recognizer
             UITapGestureRecognizer *singleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleSingleTap:)];
             [_tempAircraftView addGestureRecognizer:singleTap];
+            _tempAircraftView.delegate = self;
 //            [_arryImgView_PlacedAircrafts addObject:_tempAircraftView];
             [_view_MyBattleField addSubview:_tempAircraftView];
             [_tempAircraftView setFrame:CGRectMake(iX * 29, iY * 29, _tempAircraftView.frame.size.width, _tempAircraftView.frame.size.height)];
@@ -205,6 +222,9 @@
     [super viewDidLoad];
     
     [self initAllViews];
+    CSocketConnection *socketConn = [[CSocketConnection alloc] init];
+    [socketConn makeConnection];
+    
 }
 
 - (void)viewDidUnload

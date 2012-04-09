@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0C70400C1532365B00B7F91F /* TapDetectingImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C70400B1532365B00B7F91F /* TapDetectingImageView.m */; };
 		0C7131B2152E2C8F0001BFEF /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0C7131B1152E2C8F0001BFEF /* UIKit.framework */; };
 		0C7131B4152E2C8F0001BFEF /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0C7131B3152E2C8F0001BFEF /* Foundation.framework */; };
 		0C7131B6152E2C8F0001BFEF /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0C7131B5152E2C8F0001BFEF /* CoreGraphics.framework */; };
@@ -40,6 +41,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		0C70400A1532365B00B7F91F /* TapDetectingImageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TapDetectingImageView.h; path = ../TapDetectingImageView.h; sourceTree = "<group>"; };
+		0C70400B1532365B00B7F91F /* TapDetectingImageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TapDetectingImageView.m; path = ../TapDetectingImageView.m; sourceTree = "<group>"; };
 		0C7131AD152E2C8F0001BFEF /* Aircraft.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Aircraft.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		0C7131B1152E2C8F0001BFEF /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		0C7131B3152E2C8F0001BFEF /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -144,6 +147,8 @@
 		0C7131B7152E2C8F0001BFEF /* Aircraft */ = {
 			isa = PBXGroup;
 			children = (
+				0C70400A1532365B00B7F91F /* TapDetectingImageView.h */,
+				0C70400B1532365B00B7F91F /* TapDetectingImageView.m */,
 				0CE884DC152E36CD003EAFEA /* SBJSON */,
 				0CE884D8152E356F003EAFEA /* NetTransmission */,
 				0C7131C0152E2C8F0001BFEF /* AppDelegate.h */,
@@ -328,6 +333,7 @@
 				0CDF5F81152F787700C1D2F8 /* AsyncSocket.m in Sources */,
 				0CDF5F82152F787700C1D2F8 /* AsyncUdpSocket.m in Sources */,
 				0CDF5F91152F819000C1D2F8 /* PlayViewController.m in Sources */,
+				0C70400C1532365B00B7F91F /* TapDetectingImageView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -7,13 +7,16 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "TapDetectingImageView.h"
+#import "CSocketConnection.h"
 
-@interface PlayViewController : UIViewController <UIScrollViewDelegate>
+@interface PlayViewController : UIViewController <UIScrollViewDelegate, TapDetectingImageViewDelegate>
 {
     BOOL _isAircraftHolderShowing;
     BOOL _isPlacingAircraftsReady;
     int _iNumberOfAircraftsPlaced;
-    UIView *_tempAircraftView; // use for showing user a temp aircraft when selecting from aircraft holder [Yufei Lang 4/5/2012]
+    //UIView *_tempAircraftView; // use for showing user a temp aircraft when selecting from aircraft holder [Yufei Lang 4/5/2012]
+    TapDetectingImageView *_tempAircraftView;
     //NSMutableArray *_arryImgView_PlacedAircrafts;
 }
 

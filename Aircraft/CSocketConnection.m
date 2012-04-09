@@ -18,13 +18,12 @@
 {
     self = [super init];
     if (self) {
-        [self makeConnection];
+        //[self makeConnection];
         //AsyncSocket *socket = [[AsyncSocket alloc] initWithDelegate:self];
         //NSError *error;
         //[socket connectToHost:STR_HOST_NAME onPort:I_PORT withTimeout:5 error:&error];
         //[socket connectToHost:STR_HOST_NAME onPort:I_PORT error:&error];
-        //NSLog(@"%@", error);
-        
+        //NSLog(@"%@", error);        
     }
     return self;
 }
