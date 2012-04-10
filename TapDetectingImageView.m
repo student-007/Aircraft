@@ -69,6 +69,7 @@ CGPoint midpointBetweenPoints(CGPoint a, CGPoint b);
         [self setMultipleTouchEnabled:YES];
         twoFingerTapIsPossible = YES;
         multipleTouches = NO;
+        _isTouchingAircraftBody = NO;
         
         // making a path just like aircraft, use for detecting whether user is tapping in the aircraft or not(the aircraft but in the view) [Yufei Lang 4/9/2012]
         _pathRef_AircraftUp=CGPathCreateMutable();
@@ -90,6 +91,7 @@ CGPoint midpointBetweenPoints(CGPoint a, CGPoint b);
         CGPathAddLineToPoint(_pathRef_AircraftUp, NULL, 0, 58);
         CGPathAddLineToPoint(_pathRef_AircraftUp, NULL, 0, 29);
         CGPathCloseSubpath(_pathRef_AircraftUp);
+    
     }
     return self;
 }
@@ -163,8 +165,8 @@ CGPoint midpointBetweenPoints(CGPoint a, CGPoint b);
         }
         case Down:
         {
-            CGAffineTransform transf = CGAffineTransformMakeRotation(M_PI);
-            if (CGPathContainsPoint(_pathRef_AircraftUp, &transf, touchedPoint, NO))
+//            CGAffineTransform transf = CGAffineTransformMakeRotation(M_PI);
+            if (CGPathContainsPoint(_pathRef_AircraftUp, NULL, touchedPoint, NO))
                 return YES;
             else
                 return NO;
@@ -172,8 +174,8 @@ CGPoint midpointBetweenPoints(CGPoint a, CGPoint b);
             break;
         case Left:
         {
-            CGAffineTransform transf = CGAffineTransformMakeRotation(-M_PI_2);
-            if (CGPathContainsPoint(_pathRef_AircraftUp, &transf, touchedPoint, NO))
+//            CGAffineTransform transf = CGAffineTransformMakeRotation(-M_PI_2);
+            if (CGPathContainsPoint(_pathRef_AircraftUp, NULL, touchedPoint, NO))
                 return YES;
             else
                 return NO;
@@ -181,9 +183,8 @@ CGPoint midpointBetweenPoints(CGPoint a, CGPoint b);
             break;
         case Right:
         {
-            CGAffineTransform transf = CGAffineTransformMakeRotation(M_PI_2);
-            if (
-                (_pathRef_AircraftUp, &transf, touchedPoint, NO))
+//            CGAffineTransform transf = CGAffineTransformMakeRotation(M_PI_2);
+            if (CGPathContainsPoint(_pathRef_AircraftUp, NULL, touchedPoint, NO))
                 return YES;
             else
                 return NO;
@@ -197,19 +198,25 @@ CGPoint midpointBetweenPoints(CGPoint a, CGPoint b);
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
 {
     if ([self isTouch:touches withEvent:event])
+    {
+        _isTouchingAircraftBody = YES;
         [_delegate delegateTouchesBegan:touches withEvent:event];
+    }
 }
 
 - (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event
 {
-    //if ([self isTouch:touches withEvent:event])
+    if (_isTouchingAircraftBody)
         [_delegate delegateTouchesMoved:touches withEvent:event];
 }
 
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event
 {
-    //if ([self isTouch:touches withEvent:event])
+    if (_isTouchingAircraftBody)
+    {
         [_delegate delegateTouchesEnded:touches withEvent:event];
+        _isTouchingAircraftBody = NO;
+    }
 }
 
 

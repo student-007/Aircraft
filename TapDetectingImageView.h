@@ -64,6 +64,7 @@ typedef enum {
     int _int2D_aircraft[5][5];
     AircraftDirection _direction;
     CGMutablePathRef _pathRef_AircraftUp;
+    BOOL _isTouchingAircraftBody;
     
     // Touch detection
     CGPoint tapLocation;         // Needed to record location of single tap, which will only be registered after delayed perform.
