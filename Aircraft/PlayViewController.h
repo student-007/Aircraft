@@ -19,6 +19,10 @@
     TapDetectingImageView *_tempAircraftView;
     CGRect _tempFrame;
     //NSMutableArray *_arryImgView_PlacedAircrafts;
+    
+    // my battle field grid & enemy battle field grid [Yufei Lang 4/10/2012]
+    int _myGrid[10][10];
+    int _enemyGrid[10][10];
 }
 
 
@@ -47,4 +51,8 @@
 - (void)initAllViews;
 - (void)loadPage: (UIView *)viewPage toScrollView: (UIScrollView *) scrollView;
 - (void)initGridInBattleFieldView:(UIView *)viewBattleField;
+- (void)removeAircraft:(TapDetectingImageView *)aircraftView withOldFrame:(CGRect)frame fromGrid:(int [10][10])grid ;
+- (BOOL)checkAircraft:(TapDetectingImageView *)aircraftView canFitGrid: (int [10][10])grid;
+- (BOOL)checkAircraft:(TapDetectingImageView *)aircraftView inNewFrame:(CGRect)frame canFitGrid: (int [10][10])grid;
+- (void)fillBattleFieldGrid: (int [10][10])grid withAircraft:(TapDetectingImageView *)aircraftView;
 @end

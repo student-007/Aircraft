@@ -151,6 +151,11 @@ CGPoint midpointBetweenPoints(CGPoint a, CGPoint b);
     }
 }
 
+- (int)int2D_aircraft:(int)row :(int)col
+{
+    return _int2D_aircraft[row][col];
+}
+
 - (void)aircraftPlaced // release retained memory [Yufei Lang 4/10/2012]
 {
     if (_pathRef_AircraftUp != nil)

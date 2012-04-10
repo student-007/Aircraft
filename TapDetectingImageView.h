@@ -73,12 +73,12 @@ typedef enum {
 
     
 }
-
 @property (nonatomic, weak) id <TapDetectingImageViewDelegate> delegate;
 
 // methods [Yufei Lang 4/9/2012]
 - (void)setAircraftWithDirection: (AircraftDirection) direction;
 - (void)aircraftPlaced; // release retained memory [Yufei Lang 4/10/2012]
+- (int)int2D_aircraft:(int)row :(int)col;
 @end
 
 
