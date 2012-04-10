@@ -17,6 +17,7 @@
     int _iNumberOfAircraftsPlaced;
     //UIView *_tempAircraftView; // use for showing user a temp aircraft when selecting from aircraft holder [Yufei Lang 4/5/2012]
     TapDetectingImageView *_tempAircraftView;
+    CGRect _tempFrame;
     //NSMutableArray *_arryImgView_PlacedAircrafts;
 }
 

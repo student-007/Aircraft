@@ -78,6 +78,7 @@ typedef enum {
 
 // methods [Yufei Lang 4/9/2012]
 - (void)setAircraftWithDirection: (AircraftDirection) direction;
+- (void)aircraftPlaced; // release retained memory [Yufei Lang 4/10/2012]
 @end
 
 

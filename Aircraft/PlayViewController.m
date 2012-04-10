@@ -59,6 +59,11 @@
     [_imgView_AircraftDown setAircraftWithDirection:Down];
     [_imgView_AircraftRight setAircraftWithDirection:Right];
     [_imgView_AircraftLeft setAircraftWithDirection:Left];
+    // release CGMutablePathRef in the images [Yufei Lang 4/10/2012]
+    [_imgView_AircraftUp aircraftPlaced];
+    [_imgView_AircraftDown aircraftPlaced];
+    [_imgView_AircraftLeft aircraftPlaced];
+    [_imgView_AircraftRight aircraftPlaced];
     
     // load image to battle field background [Yufei Lang 4/6/2012]
     [_imgView_MyBattleFieldBackground setImage:[UIImage imageNamed:@"blueSky"]];
@@ -134,6 +139,9 @@
     UITouch *touch = [touches anyObject];
     if (touch != NULL && touch.view == _tempAircraftView) 
     {
+        // record the original frame [Yufei Lang 4/10/2012]
+        _tempFrame = _tempAircraftView.frame;
+        
         // set up a new animation block [Yufei Lang 4/5/2012]
         [UIView beginAnimations:nil context:NULL];
         [UIView setAnimationDuration:0.5];
@@ -147,6 +155,7 @@
         // end and commit animation [Yufei Lang 4/5/2012]
         [UIView commitAnimations];
     }
+    
     touch = [[event touchesForView:_view_AircraftHolder] anyObject];
     if (touch != NULL && [touch locationInView:touch.view].x < (50 * 4)) // act only when touches aircrafts [Yufei Lang 4/6/2012]
     {
@@ -182,6 +191,8 @@
                                                [touch locationInView:self.view].y, 
                                                imgView.frame.size.width, 
                                                imgView.frame.size.height)];
+        // record the original frame [Yufei Lang 4/10/2012]
+        _tempFrame = _tempAircraftView.frame;
         _tempAircraftView.alpha = 0; // make it invisible first [Yufei Lang 4/5/2012]
         [self.view addSubview:_tempAircraftView];
         // set up a new animation block [Yufei Lang 4/5/2012]
@@ -203,12 +214,15 @@
 
 - (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event
 {
+    // when draging an aircraft from aircraft holder into battle field [Yufei Lang 4/5/2012]
     UITouch *touch = [[event touchesForView:_view_AircraftHolder] anyObject];
     if (touch != NULL) {
         CGPoint currentPoint = [touch locationInView:self.view];
         currentPoint.y -= _tempAircraftView.frame.size.height / 2.0;
         _tempAircraftView.center = currentPoint;
     }
+    
+    // when replacing an aircraft already in battle field [Yufei Lang 4/10/2012]
     touch = [[event touchesForView:_tempAircraftView] anyObject];
     if (touch != NULL) 
     {
@@ -220,44 +234,61 @@
 
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event
 {
+    
     // when placing a new aircraft [Yufei Lang 4/6/2012]
     UITouch *touch = [[event touchesForView:_view_AircraftHolder] anyObject];
+    
     if (touch != NULL) 
     {
-        CGPoint targetPoint = [touch locationInView:self.view];
-        int iX = (targetPoint.x - _tempAircraftView.frame.size.width / 2) / 29;
-        int iY = (targetPoint.y - _tempAircraftView.frame.size.height) / 29;
-        if ((int)(targetPoint.x - _tempAircraftView.frame.size.width / 2) % 29 >= 29 / 2)
-            iX += 1;
-        if ((int)(targetPoint.y - _tempAircraftView.frame.size.height) % 29 >= 29 / 2)
-            iY += 1;
-        [_tempAircraftView removeFromSuperview];
-        if (_iNumberOfAircraftsPlaced < 3) // if all the aircrafts have been placed then stopping putting it in my battle view [Yufei Lang 4/6/2012]
+        if (_tempAircraftView.frame.origin.x >= -5 && _tempAircraftView.frame.origin.y >= -5 && 
+            _tempAircraftView.frame.origin.x + _tempAircraftView.frame.size.width <= 295 &&
+            _tempAircraftView.frame.origin.y + _tempAircraftView.frame.size.height <= 295)
         {
-//#warning useless gesture recognizer
-//            UITapGestureRecognizer *singleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleSingleTap:)];
-//            [_tempAircraftView addGestureRecognizer:singleTap];
-            _tempAircraftView.delegate = self;
-//            [_arryImgView_PlacedAircrafts addObject:_tempAircraftView];
-            [_view_MyBattleField addSubview:_tempAircraftView];
-            [_tempAircraftView setFrame:CGRectMake(iX * 29, iY * 29, _tempAircraftView.frame.size.width, _tempAircraftView.frame.size.height)];
-            _iNumberOfAircraftsPlaced++;
+            CGPoint targetPoint = [touch locationInView:self.view];
+            int iX = (targetPoint.x - _tempAircraftView.frame.size.width / 2) / 29;
+            int iY = (targetPoint.y - _tempAircraftView.frame.size.height) / 29;
+            if ((int)(targetPoint.x - _tempAircraftView.frame.size.width / 2) % 29 >= 29 / 2)
+                iX += 1;
+            if ((int)(targetPoint.y - _tempAircraftView.frame.size.height) % 29 >= 29 / 2)
+                iY += 1;
+            [_tempAircraftView removeFromSuperview];
+            if (_iNumberOfAircraftsPlaced < 3) // if all the aircrafts have been placed then stopping putting it in my battle view [Yufei Lang 4/6/2012]
+            {
+                //#warning useless gesture recognizer
+                //            UITapGestureRecognizer *singleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleSingleTap:)];
+                //            [_tempAircraftView addGestureRecognizer:singleTap];
+                _tempAircraftView.delegate = self;
+                //            [_arryImgView_PlacedAircrafts addObject:_tempAircraftView];
+                [_view_MyBattleField addSubview:_tempAircraftView];
+                [_tempAircraftView setFrame:CGRectMake(iX * 29, iY * 29, _tempAircraftView.frame.size.width, _tempAircraftView.frame.size.height)];
+                _iNumberOfAircraftsPlaced++;
+            }
         }
+        else
+            [_tempAircraftView removeFromSuperview];
     }
     
     // when adjusting placed aircraft position [Yufei Lang 4/6/2012]
     touch = [[event touchesForView:_tempAircraftView] anyObject];
     if (touch != NULL) 
     {
-        CGPoint targetPoint = [touch locationInView:self.view];
-        int iX = (targetPoint.x - _tempAircraftView.frame.size.width / 2) / 29;
-        int iY = (targetPoint.y - _tempAircraftView.frame.size.height / 2) / 29;
-        if ((int)(targetPoint.x - _tempAircraftView.frame.size.width / 2) % 29 >= 29 / 2)
-            iX += 1;
-        if ((int)(targetPoint.y - _tempAircraftView.frame.size.height / 2) % 29 >= 29 / 2)
-            iY += 1;
-        [_tempAircraftView setFrame:CGRectMake(iX * 29, iY * 29, _tempAircraftView.frame.size.width, _tempAircraftView.frame.size.height)];
+        if (_tempAircraftView.frame.origin.x >= -5 && _tempAircraftView.frame.origin.y >= -5 && 
+            _tempAircraftView.frame.origin.x + _tempAircraftView.frame.size.width <= 295 &&
+            _tempAircraftView.frame.origin.y + _tempAircraftView.frame.size.height <= 295)
+        {
+            CGPoint targetPoint = [touch locationInView:self.view];
+            int iX = (targetPoint.x - _tempAircraftView.frame.size.width / 2) / 29;
+            int iY = (targetPoint.y - _tempAircraftView.frame.size.height / 2) / 29;
+            if ((int)(targetPoint.x - _tempAircraftView.frame.size.width / 2) % 29 >= 29 / 2)
+                iX += 1;
+            if ((int)(targetPoint.y - _tempAircraftView.frame.size.height / 2) % 29 >= 29 / 2)
+                iY += 1;
+            [_tempAircraftView setFrame:CGRectMake(iX * 29, iY * 29, _tempAircraftView.frame.size.width, _tempAircraftView.frame.size.height)];
+        }
+        else
+            [_tempAircraftView setFrame:_tempFrame];
     }
+    
 }
 
 - (void)didReceiveMemoryWarning

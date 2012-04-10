@@ -151,6 +151,12 @@ CGPoint midpointBetweenPoints(CGPoint a, CGPoint b);
     }
 }
 
+- (void)aircraftPlaced // release retained memory [Yufei Lang 4/10/2012]
+{
+    if (_pathRef_AircraftUp != nil)
+        CGPathRelease(_pathRef_AircraftUp); 
+}
+
 - (BOOL)isTouch:(NSSet *)touches withEvent:(UIEvent *)event
 {
     UITouch *touch = [[event touchesForView:self] anyObject];
