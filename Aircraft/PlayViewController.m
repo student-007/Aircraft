@@ -108,30 +108,41 @@
 
 - (void)delegateTouchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
 {
-    NSLog(@"touched_delegate");
-    
-    // pass what i selected view to _tempAircraftView in order to move and end touch actions [Yufei Lang 4/6/2012]
-    UITouch *touch = [touches anyObject];
-    _tempAircraftView = (TapDetectingImageView*)touch.view;
-    
-    // disable scroll view's scrolling availability [Yufei Lang 4/6/2012]
-    _scrollView_BattleField.scrollEnabled = NO;
-    
-    [self touchesBegan:touches withEvent:event];
+    // if all set which mean the "done" button has been clicked, then do not allow adjust aircraft's position [Yufei Lang 4/10/2012]
+    if (!_isPlacingAircraftsReady)
+    {
+        NSLog(@"touched_delegate");
+        // pass what i selected view to _tempAircraftView in order to move and end touch actions [Yufei Lang 4/6/2012]
+        UITouch *touch = [touches anyObject];
+        _tempAircraftView = (TapDetectingImageView*)touch.view;
+        
+        // disable scroll view's scrolling availability [Yufei Lang 4/6/2012]
+        _scrollView_BattleField.scrollEnabled = NO;
+        
+        [self touchesBegan:touches withEvent:event];
+    }
 }
 
 - (void)delegateTouchesMoved:(NSSet *)touches withEvent:(UIEvent *)event
 {
-    NSLog(@"touch moved_delegate");
-    [self touchesMoved:touches withEvent:event];
+    // if all set which mean the "done" button has been clicked, then do not allow adjust aircraft's position [Yufei Lang 4/10/2012]
+    if (!_isPlacingAircraftsReady)
+    {
+        [self touchesMoved:touches withEvent:event];
+        NSLog(@"touch moved_delegate");
+    }
 }
 
 - (void)delegateTouchesEnded:(NSSet *)touches withEvent:(UIEvent *)event
 {
-    // able scroll view's scrolling availability [Yufei Lang 4/6/2012]
-    _scrollView_BattleField.scrollEnabled = YES;
-    NSLog(@"touch ended_delegate");
-    [self touchesEnded:touches withEvent:event];
+    // if all set which mean the "done" button has been clicked, then do not allow adjust aircraft's position [Yufei Lang 4/10/2012]
+    if (!_isPlacingAircraftsReady)
+    {
+        // able scroll view's scrolling availability [Yufei Lang 4/6/2012]
+        _scrollView_BattleField.scrollEnabled = YES;
+        NSLog(@"touch ended_delegate");
+        [self touchesEnded:touches withEvent:event];
+    }
 }
 
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
@@ -297,7 +308,8 @@
             else
                 [_tempAircraftView setFrame:_tempFrame];
         }
-        
+        else
+            [_tempAircraftView setFrame:_tempFrame];
     }
     
 }
@@ -309,7 +321,7 @@
     for (int row = 0; row < 5; row ++) 
         for (int col = 0; col < 5; col ++) 
             if ([aircraftView int2D_aircraft:row :col] != 0) 
-                if (_myGrid[X+col][Y+row] != 0) 
+                if (_myGrid[Y+row][X+col] != 0) 
                     return NO;
     return YES;        
 }
@@ -321,7 +333,7 @@
     for (int row = 0; row < 5; row ++) 
         for (int col = 0; col < 5; col ++) 
             if ([aircraftView int2D_aircraft:row :col] != 0) 
-                if (_myGrid[X+col][Y+row] != 0) 
+                if (_myGrid[Y+row][X+col] != 0) 
                     return NO;
     return YES;        
 }
@@ -333,7 +345,7 @@
     for (int row = 0; row < 5; row ++) 
         for (int col = 0; col < 5; col ++)
             if ([aircraftView int2D_aircraft:row :col] != 0)
-                grid[X+col][Y+row] = 0;
+                grid[Y+row][X+col] = 0;
 }
 
 - (void)fillBattleFieldGrid: (int [10][10])grid withAircraft:(TapDetectingImageView *)aircraftView
@@ -343,7 +355,7 @@
     for (int row = 0; row < 5; row ++) 
         for (int col = 0; col < 5; col ++) 
             if ([aircraftView int2D_aircraft:row :col] != 0) 
-                grid[X+col][Y+row] = [aircraftView int2D_aircraft:row :col];
+                grid[Y+row][X+col] = [aircraftView int2D_aircraft:row :col];
 }
 
 - (void)didReceiveMemoryWarning
@@ -421,6 +433,12 @@
 //        }
     if (_isPlacingAircraftsReady == NO)
     {
+        if (_iNumberOfAircraftsPlaced != 3)
+        {
+            UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Place more Aircraft(s)" message:@"You have to place 3 aircrafts" delegate:nil cancelButtonTitle:@"Got you." otherButtonTitles: nil];
+            [alert show];
+            return;
+        }
         _isPlacingAircraftsReady = YES;
         
         // set up a new animation block [Yufei Lang 4/5/2012]
@@ -466,8 +484,22 @@
     else 
     {
         _isAircraftHolderShowing = YES;
-        _isPlacingAircraftsReady = NO; // in order to let method btnClicked_DonePlacingAircraft hide view, set NO [Yufei Lang 4/6/2012]
-        [self btnClicked_DonePlacingAircraft:nil];
+        // set up a new animation block [Yufei Lang 4/5/2012]
+        [UIView beginAnimations:nil context:NULL];
+        [UIView setAnimationDuration:0.5];
+        
+        // adjust views (animation) [Yufei Lang 4/5/2012]
+        //_view_AircraftHolder.alpha = 0;
+        [_view_AircraftHolder setFrame:CGRectMake(0, _view_AircraftHolder.frame.origin.y - 50.0, 320, 50)];
+        
+        //_view_ToolsHolder.alpha = 1.0;
+        [_view_ToolsHolder setFrame:CGRectMake(0, _view_ToolsHolder.frame.origin.y - 50.0, 320, 50)];
+        
+        if (_view_ChatFeild.frame.origin.y != 340)
+            [_view_ChatFeild setFrame:CGRectMake(0, _view_ChatFeild.frame.origin.y - 50.0, 320, 50)];
+        
+        // end and commit animation [Yufei Lang 4/5/2012]
+        [UIView commitAnimations];
     }
 }
 

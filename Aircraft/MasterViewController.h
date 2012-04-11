@@ -16,5 +16,5 @@
     
 }
 
-@property (strong, nonatomic) NSArray *arryTableContent;// whats in section one. play online or play with computer
+@property (strong, nonatomic) NSArray *arryTableContent;// whats in section one. play online or play with computer or  how to play
 @end
