@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0C6C1E5115363D2A00F9ECF9 /* UIView_BattleField.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C6C1E5015363D2A00F9ECF9 /* UIView_BattleField.m */; };
 		0C70400C1532365B00B7F91F /* TapDetectingImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C70400B1532365B00B7F91F /* TapDetectingImageView.m */; };
 		0C7131B2152E2C8F0001BFEF /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0C7131B1152E2C8F0001BFEF /* UIKit.framework */; };
 		0C7131B4152E2C8F0001BFEF /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0C7131B3152E2C8F0001BFEF /* Foundation.framework */; };
@@ -41,6 +42,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		0C6C1E4F15363D2A00F9ECF9 /* UIView_BattleField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UIView_BattleField.h; sourceTree = "<group>"; };
+		0C6C1E5015363D2A00F9ECF9 /* UIView_BattleField.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIView_BattleField.m; sourceTree = "<group>"; };
 		0C70400A1532365B00B7F91F /* TapDetectingImageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TapDetectingImageView.h; path = ../TapDetectingImageView.h; sourceTree = "<group>"; };
 		0C70400B1532365B00B7F91F /* TapDetectingImageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TapDetectingImageView.m; path = ../TapDetectingImageView.m; sourceTree = "<group>"; };
 		0C7131AD152E2C8F0001BFEF /* Aircraft.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Aircraft.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -162,6 +165,8 @@
 				0C7131C3152E2C8F0001BFEF /* MasterViewController.h */,
 				0C7131C4152E2C8F0001BFEF /* MasterViewController.m */,
 				0C7131C9152E2C8F0001BFEF /* MasterViewController.xib */,
+				0C6C1E4F15363D2A00F9ECF9 /* UIView_BattleField.h */,
+				0C6C1E5015363D2A00F9ECF9 /* UIView_BattleField.m */,
 				0CDF5F8E152F818F00C1D2F8 /* PlayViewController.h */,
 				0CDF5F8F152F819000C1D2F8 /* PlayViewController.m */,
 				0CDF5F90152F819000C1D2F8 /* PlayViewController.xib */,
@@ -342,6 +347,7 @@
 				0CDF5F82152F787700C1D2F8 /* AsyncUdpSocket.m in Sources */,
 				0CDF5F91152F819000C1D2F8 /* PlayViewController.m in Sources */,
 				0C70400C1532365B00B7F91F /* TapDetectingImageView.m in Sources */,
+				0C6C1E5115363D2A00F9ECF9 /* UIView_BattleField.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -414,6 +414,13 @@
     return YES;
 }
 
+#pragma mark - hide keyboard when tapping battle field view
+
+- (void) resignFirstResponsWhenTouching
+{
+    [_txtField_ChatTextBox resignFirstResponder];
+}
+
 #pragma mark - View lifecycle
 
 - (void)viewDidLoad
@@ -421,7 +428,9 @@
     [super viewDidLoad];
     
     [self initAllViews];
-    _txtField_ChatTextBox.delegate = self;    
+    _txtField_ChatTextBox.delegate = self;   
+    _view_MyBattleField.delegate = self;
+    _view_EnemyBattleField.delegate = self;
 }
 
 - (void)viewDidUnload
@@ -559,6 +568,8 @@
 - (IBAction)btnClicked_OnBattleGrid:(UIButton *)sender 
 {
     NSLog(@"btnClicked. btn frame: %@", NSStringFromCGRect(sender.frame));
+    // when clicked any button on enemy battle field, hide keyboard [Yufei Lang 4/10/2012]
+    [_txtField_ChatTextBox resignFirstResponder];
 }
 
 @end

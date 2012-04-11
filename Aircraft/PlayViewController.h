@@ -9,8 +9,9 @@
 #import <UIKit/UIKit.h>
 #import "TapDetectingImageView.h"
 #import "CSocketConnection.h"
+#import "UIView_BattleField.h"
 
-@interface PlayViewController : UIViewController <UIScrollViewDelegate, TapDetectingImageViewDelegate, UITextFieldDelegate>
+@interface PlayViewController : UIViewController <UIScrollViewDelegate, TapDetectingImageViewDelegate, UITextFieldDelegate, UIView_BattleField>
 {
     BOOL _isAircraftHolderShowing;
     BOOL _isPlacingAircraftsReady;
@@ -34,8 +35,8 @@
 @property (strong, nonatomic) IBOutlet UIView *view_AircraftHolder;
 @property (strong, nonatomic) IBOutlet UIView *view_ToolsHolder;
 @property (strong, nonatomic) IBOutlet UIView *view_ChatFeild;
-@property (strong, nonatomic) IBOutlet UIView *view_MyBattleField;
-@property (strong, nonatomic) IBOutlet UIView *view_EnemyBattleField;
+@property (strong, nonatomic) IBOutlet UIView_BattleField *view_MyBattleField;
+@property (strong, nonatomic) IBOutlet UIView_BattleField *view_EnemyBattleField;
 
 // properties - IBOutlet aircrafts images in holder [Yufei Lang 4/5/2012]
 @property (strong, nonatomic) IBOutlet TapDetectingImageView *imgView_AircraftUp;
