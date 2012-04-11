@@ -10,7 +10,7 @@
 #import "TapDetectingImageView.h"
 #import "CSocketConnection.h"
 
-@interface PlayViewController : UIViewController <UIScrollViewDelegate, TapDetectingImageViewDelegate>
+@interface PlayViewController : UIViewController <UIScrollViewDelegate, TapDetectingImageViewDelegate, UITextFieldDelegate>
 {
     BOOL _isAircraftHolderShowing;
     BOOL _isPlacingAircraftsReady;
@@ -39,10 +39,16 @@
 @property (strong, nonatomic) IBOutlet TapDetectingImageView *imgView_AircraftDown;
 @property (strong, nonatomic) IBOutlet TapDetectingImageView *imgView_AircraftLeft;
 @property (strong, nonatomic) IBOutlet TapDetectingImageView *imgView_AircraftRight;
+
+// properties - IBOutlet battle fields background [Yufei Lang 4/5/2012]
 @property (strong, nonatomic) IBOutlet UIImageView *imgView_MyBattleFieldBackground;
 @property (strong, nonatomic) IBOutlet UIImageView *imgView_EnemyBattleFieldBackground;
 
-// properties -  [Yufei Lang 4/5/2012]
+// properties - IBOutlet chatting field [Yufei Lang 4/10/2012]
+@property (strong, nonatomic) IBOutlet UITextView *textView_InfoView;
+@property (strong, nonatomic) IBOutlet UITextField *txtField_ChatTextBox;
+
+// properties -  useless[Yufei Lang 4/5/2012]
 @property (strong, nonatomic) NSMutableArray *arryImgView_PlacedAircrafts;
 
 // actions [Yufei Lang 4/5/2012]

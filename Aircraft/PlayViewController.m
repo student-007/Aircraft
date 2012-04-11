@@ -11,6 +11,8 @@
 #define NUMBER_OF_PAGE_IN_SCROLLVIEW 2
 
 @implementation PlayViewController
+@synthesize textView_InfoView = _textView_InfoView;
+@synthesize txtField_ChatTextBox = _txtField_ChatTextBox;
 @synthesize scrollView_BattleField = _scrollView_BattleField;
 @synthesize view_AircraftHolder = _view_AircraftHolder;
 @synthesize view_ToolsHolder = _view_ToolsHolder;
@@ -391,6 +393,8 @@
     [self setView_EnemyBattleField:nil];
     [self setImgView_MyBattleFieldBackground:nil];
     [self setImgView_EnemyBattleFieldBackground:nil];
+    [self setTxtField_ChatTextBox:nil];
+    [self setTextView_InfoView:nil];
     [super viewDidUnload];
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
@@ -503,7 +507,11 @@
     }
 }
 
-- (IBAction)btnClicked_OnBattleGrid:(UIButton*)sender 
+- (IBAction)btnClicked_SendChatMsg:(UIButton *)sender 
+{
+}
+
+- (IBAction)btnClicked_OnBattleGrid:(UIButton *)sender 
 {
     NSLog(@"btnClicked. btn frame: %@", NSStringFromCGRect(sender.frame));
 }
