@@ -64,7 +64,7 @@
 
 - (NSString *) makeConnection
 {
-    if ((_iSockfd = socket(AF_INET, SOCK_STREAM, 0) == -1)) {
+    if ((_iSockfd = socket(AF_INET, SOCK_STREAM, 0)) == -1) {
         herror("error making socket.");
         return NULL;
     }
