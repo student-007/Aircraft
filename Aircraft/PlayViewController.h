@@ -23,6 +23,9 @@
     // my battle field grid & enemy battle field grid [Yufei Lang 4/10/2012]
     int _myGrid[10][10];
     int _enemyGrid[10][10];
+    
+    // temp chatting string, to keep user what wanted to say [Yufei Lang 4/10/2012]
+    NSString *_tempChattingString;
 }
 
 

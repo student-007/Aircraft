@@ -149,6 +149,9 @@
 
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
 {
+    // hide keyboard [Yufei Lang 4/10/2012]
+    [_txtField_ChatTextBox resignFirstResponder];
+    
     // when replacing an aircraft [Yufei Lang 4/10/2012]
     UITouch *touch = [touches anyObject];
     if (touch != NULL && touch.view == _tempAircraftView) 
@@ -367,6 +370,50 @@
     // Release any cached data, images, etc that aren't in use.
 }
 
+#pragma mark - text field delegate
+
+
+- (void)textFieldDidBeginEditing:(UITextField *)textField
+{
+    // bring the chatting field to front [Yufei Lang 4/10/2012]
+    [self.view bringSubviewToFront:_view_ChatFeild];
+    // save the original msg [Yufei Lang 4/10/2012]
+    _tempChattingString = textField.text;
+    
+    textField.text = @"";    
+    [UIView beginAnimations:@"ResizeForKeyBoard" context:nil];
+    [UIView setAnimationDuration:0.3f];
+    
+    CGRect rect = _view_ChatFeild.frame;
+    rect.origin.y -= 216; // keyboard 216 tall [Yufei Lang 4/10/2012]
+    [_view_ChatFeild setFrame:rect];
+    
+    [UIView commitAnimations];
+}
+
+- (void)textFieldDidEndEditing:(UITextField *)textField
+{
+    if ([textField.text isEqualToString:@""]) {
+        textField.text = _tempChattingString;
+    }
+    
+    
+    [UIView beginAnimations:@"ResizeForKeyboard"context:nil];
+    [UIView setAnimationDuration:0.3f];
+    
+    CGRect rect = _view_ChatFeild.frame;
+    rect.origin.y += 216; // keyboard 216 tall [Yufei Lang 4/10/2012]
+    [_view_ChatFeild setFrame:rect];
+    
+    [UIView commitAnimations];
+}
+
+- (BOOL)textFieldShouldReturn:(UITextField *)textField
+{
+    [textField resignFirstResponder];
+    return YES;
+}
+
 #pragma mark - View lifecycle
 
 - (void)viewDidLoad
@@ -374,9 +421,7 @@
     [super viewDidLoad];
     
     [self initAllViews];
-//    CSocketConnection *socketConn = [[CSocketConnection alloc] init];
-//    [socketConn makeConnection];
-    
+    _txtField_ChatTextBox.delegate = self;    
 }
 
 - (void)viewDidUnload
@@ -480,7 +525,7 @@
         //_view_ToolsHolder.alpha = 0;
         [_view_ToolsHolder setFrame:CGRectMake(0, _view_ToolsHolder.frame.origin.y + 50.0, 320, 50)];
         
-        [_view_ChatFeild setFrame:CGRectMake(0, _view_ChatFeild.frame.origin.y + 50.0, 320, 50)];
+        [_view_ChatFeild setFrame:CGRectMake(0, _view_ChatFeild.frame.origin.y + 50.0, 320, 120)];
         
         // end and commit animation [Yufei Lang 4/5/2012]
         [UIView commitAnimations];
@@ -500,7 +545,7 @@
         [_view_ToolsHolder setFrame:CGRectMake(0, _view_ToolsHolder.frame.origin.y - 50.0, 320, 50)];
         
         if (_view_ChatFeild.frame.origin.y != 340)
-            [_view_ChatFeild setFrame:CGRectMake(0, _view_ChatFeild.frame.origin.y - 50.0, 320, 50)];
+            [_view_ChatFeild setFrame:CGRectMake(0, _view_ChatFeild.frame.origin.y - 50.0, 320, 120)];
         
         // end and commit animation [Yufei Lang 4/5/2012]
         [UIView commitAnimations];
