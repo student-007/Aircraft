@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		0C6C1E5115363D2A00F9ECF9 /* UIView_BattleField.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C6C1E5015363D2A00F9ECF9 /* UIView_BattleField.m */; };
+		0C6F06DC15372D3D00D9BF2D /* MBProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C6F06DB15372D3D00D9BF2D /* MBProgressHUD.m */; };
 		0C70400C1532365B00B7F91F /* TapDetectingImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C70400B1532365B00B7F91F /* TapDetectingImageView.m */; };
 		0C7131B2152E2C8F0001BFEF /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0C7131B1152E2C8F0001BFEF /* UIKit.framework */; };
 		0C7131B4152E2C8F0001BFEF /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0C7131B3152E2C8F0001BFEF /* Foundation.framework */; };
@@ -44,6 +45,8 @@
 /* Begin PBXFileReference section */
 		0C6C1E4F15363D2A00F9ECF9 /* UIView_BattleField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UIView_BattleField.h; sourceTree = "<group>"; };
 		0C6C1E5015363D2A00F9ECF9 /* UIView_BattleField.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIView_BattleField.m; sourceTree = "<group>"; };
+		0C6F06DA15372D3C00D9BF2D /* MBProgressHUD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MBProgressHUD.h; sourceTree = "<group>"; };
+		0C6F06DB15372D3D00D9BF2D /* MBProgressHUD.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MBProgressHUD.m; sourceTree = "<group>"; };
 		0C70400A1532365B00B7F91F /* TapDetectingImageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TapDetectingImageView.h; path = ../TapDetectingImageView.h; sourceTree = "<group>"; };
 		0C70400B1532365B00B7F91F /* TapDetectingImageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TapDetectingImageView.m; path = ../TapDetectingImageView.m; sourceTree = "<group>"; };
 		0C7131AD152E2C8F0001BFEF /* Aircraft.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Aircraft.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -116,6 +119,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		0C6F06DE15372D5700D9BF2D /* MBProgressHUD */ = {
+			isa = PBXGroup;
+			children = (
+				0C6F06DA15372D3C00D9BF2D /* MBProgressHUD.h */,
+				0C6F06DB15372D3D00D9BF2D /* MBProgressHUD.m */,
+			);
+			name = MBProgressHUD;
+			sourceTree = "<group>";
+		};
 		0C711A241533473F00D2020B /* Images */ = {
 			isa = PBXGroup;
 			children = (
@@ -157,6 +169,7 @@
 		0C7131B7152E2C8F0001BFEF /* Aircraft */ = {
 			isa = PBXGroup;
 			children = (
+				0C6F06DE15372D5700D9BF2D /* MBProgressHUD */,
 				0C711A241533473F00D2020B /* Images */,
 				0CE884DC152E36CD003EAFEA /* SBJSON */,
 				0CE884D8152E356F003EAFEA /* NetTransmission */,
@@ -348,6 +361,7 @@
 				0CDF5F91152F819000C1D2F8 /* PlayViewController.m in Sources */,
 				0C70400C1532365B00B7F91F /* TapDetectingImageView.m in Sources */,
 				0C6C1E5115363D2A00F9ECF9 /* UIView_BattleField.m in Sources */,
+				0C6F06DC15372D3D00D9BF2D /* MBProgressHUD.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

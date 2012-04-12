@@ -10,14 +10,24 @@
 #import "TapDetectingImageView.h"
 #import "CSocketConnection.h"
 #import "UIView_BattleField.h"
+#import "MBProgressHUD.h"
 
-@interface PlayViewController : UIViewController <UIScrollViewDelegate, TapDetectingImageViewDelegate, UITextFieldDelegate, UIView_BattleField>
+typedef enum
+{
+    CharacterAdjutant       =0,
+    CharacterMe             =1,
+    CharacterCompetitor     =2,
+}CharacterString;
+
+@interface PlayViewController : UIViewController <UIScrollViewDelegate, TapDetectingImageViewDelegate, UITextFieldDelegate, UIView_BattleField, CSocketConnection>
 {
     BOOL _isAircraftHolderShowing;
-    BOOL _isPlacingAircraftsReady;
-    int _iNumberOfAircraftsPlaced;
-    //UIView *_tempAircraftView; // use for showing user a temp aircraft when selecting from aircraft holder [Yufei Lang 4/5/2012]
+    BOOL _isPlacingAircraftsReady; // placed all 3 aircrafts, and clicked "done" button [Yufei Lang 4/12/2012]
+    int _iNumberOfAircraftsPlaced; // how many aircrafts have been placed [Yufei Lang 4/12/2012]
+    
+    // use for showing user a temp aircraft when selecting from aircraft holder [Yufei Lang 4/5/2012]
     TapDetectingImageView *_tempAircraftView;
+    // keep the old original frame in the temp rect [Yufei Lang 4/12/2012]
     CGRect _tempFrame;
     //NSMutableArray *_arryImgView_PlacedAircrafts;
     
@@ -27,6 +37,15 @@
     
     // temp chatting string, to keep user what wanted to say [Yufei Lang 4/10/2012]
     NSString *_tempChattingString;
+    // a string array, to keep the speaking character [Yufei Lang 4/12/2012]
+    // 0-Adjutant 1-Me 2-Competitor[Yufei Lang 4/12/2012]
+    NSArray *_arryCharacterString;
+    
+    // a socket connection [Yufei Lang 4/12/2012]
+    CSocketConnection *_socketConn;
+    
+    // give user some information when connecting to the host [Yufei Lang 4/12/2012]
+    MBProgressHUD *_progressHud;
 }
 
 
@@ -54,6 +73,15 @@
 
 // properties -  useless[Yufei Lang 4/5/2012]
 @property (strong, nonatomic) NSMutableArray *arryImgView_PlacedAircrafts;
+
+// properties - socket connection [Yufei Lang 4/12/2012]
+@property (strong, nonatomic) CSocketConnection *socketConn;
+
+// property - Array of Character Strings [Yufei Lang 4/12/2012]
+@property (strong, nonatomic) NSArray *arryCharacterString;
+
+// property - give user some information when connecting to the host [Yufei Lang 4/12/2012]
+@property (strong, nonatomic) MBProgressHUD *progressHud;
 
 // actions [Yufei Lang 4/5/2012]
 

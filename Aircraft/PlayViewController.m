@@ -10,10 +10,18 @@
 
 #define NUMBER_OF_PAGE_IN_SCROLLVIEW 2
 
+@interface PlayViewController()
+- (void)sendTextView: (UITextView *)textView Message: (NSString *)strMessage AsCharacter: (NSString *)character;
+//- (void)updateProgressHudWithWorkingStatus: (BOOL)status WithPercentageInFloat: (float)fPercentage WithAMessage: (NSString *)msg;
+@end
+
 @implementation PlayViewController
+@synthesize arryCharacterString = _arryCharacterString;
+@synthesize arryImgView_PlacedAircrafts = _arryImgView_PlacedAircrafts;
 @synthesize textView_InfoView = _textView_InfoView;
 @synthesize txtField_ChatTextBox = _txtField_ChatTextBox;
 @synthesize scrollView_BattleField = _scrollView_BattleField;
+@synthesize socketConn = _socketConn;
 @synthesize view_AircraftHolder = _view_AircraftHolder;
 @synthesize view_ToolsHolder = _view_ToolsHolder;
 @synthesize view_ChatFeild = _view_ChatFeild;
@@ -25,7 +33,7 @@
 @synthesize imgView_AircraftRight = _imgView_AircraftRight;
 @synthesize imgView_MyBattleFieldBackground = _imgView_MyBattleFieldBackground;
 @synthesize imgView_EnemyBattleFieldBackground = _imgView_EnemyBattleFieldBackground;
-@synthesize arryImgView_PlacedAircrafts = _arryImgView_PlacedAircrafts;
+@synthesize progressHud = _progressHud;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -35,6 +43,7 @@
         _isPlacingAircraftsReady = NO;
         _iNumberOfAircraftsPlaced = 0;
         _arryImgView_PlacedAircrafts = [[NSMutableArray alloc] init];
+        _arryCharacterString = [[NSArray alloc] initWithObjects:@"Adjutant", @"Me", @"Competitor", nil];
     }
     return self;
 }
@@ -372,7 +381,6 @@
 
 #pragma mark - text field delegate
 
-
 - (void)textFieldDidBeginEditing:(UITextField *)textField
 {
     // bring the chatting field to front [Yufei Lang 4/10/2012]
@@ -421,6 +429,34 @@
     [_txtField_ChatTextBox resignFirstResponder];
 }
 
+#pragma mark - own function - send text view msg
+
+- (void)sendTextView: (UITextView *)textView Message: (NSString *)strMessage AsCharacter: (NSString *)character
+{
+    NSString *strNewString = [textView.text stringByAppendingFormat:@"[%@]: %@\n", character, strMessage];
+    textView.text = strNewString;
+}
+
+#pragma mark - own function - update the progressHud
+
+- (void)updateProgressHudWithWorkingStatus: (BOOL)status WithPercentageInFloat: (float)fPercentage WithAMessage: (NSString *)msg
+{
+    if (status) {
+        _progressHud.labelText = msg;
+        _progressHud.progress = fPercentage;
+    } else {
+        _progressHud.labelText = msg;
+        _progressHud.progress = fPercentage;
+        [_progressHud hide:YES afterDelay:0.7];
+    }
+}
+
+#pragma mark - own function - make socket connection
+- (void)makeSocketConnection
+{
+    [_socketConn makeConnection];
+}
+
 #pragma mark - View lifecycle
 
 - (void)viewDidLoad
@@ -428,9 +464,22 @@
     [super viewDidLoad];
     
     [self initAllViews];
+    
+    // setting all  delegates [Yufei Lang 4/12/2012]
     _txtField_ChatTextBox.delegate = self;   
     _view_MyBattleField.delegate = self;
     _view_EnemyBattleField.delegate = self;
+    
+    // froze the screen for connecting to host [Yufei Lang 4/12/2012]
+    _progressHud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    _progressHud.mode = MBProgressHUDModeDeterminate;
+    
+    [self sendTextView:_textView_InfoView Message:@"Commander, please drag and release to place 3 aircrafts." 
+           AsCharacter:[_arryCharacterString objectAtIndex:CharacterAdjutant]];
+    _socketConn = [[CSocketConnection alloc] init];
+    _socketConn.delegate = self;
+    [self performSelector:@selector(makeSocketConnection) withObject:nil afterDelay:0.2];
+    
 }
 
 - (void)viewDidUnload
@@ -561,7 +610,9 @@
     }
 }
 
-- (IBAction)btnClicked_SendChatMsg:(UIButton *)sender 
+// button function changed, should be show/hide or keyboard. [Yufei Lang 4/12/2012]
+// member the action name is INCORRENT [Yufei Lang 4/12/2012]
+- (IBAction)btnClicked_SendChatMsg:(UIButton *)sender // INCORRENT name, should show/hide keyboard [Yufei Lang 4/12/2012]
 {
 }
 
