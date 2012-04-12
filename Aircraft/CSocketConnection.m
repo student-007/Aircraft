@@ -8,8 +8,8 @@
 
 #import "CSocketConnection.h"
 
-#define STR_HOST_NAME @"www.baidu.com"
-#define I_PORT 80
+#define STR_HOST_NAME @"192.168.53.9"
+#define I_PORT 5180
 #define I_BLOCK_SIZE 512
 
 @implementation CSocketConnection
