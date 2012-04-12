@@ -41,6 +41,7 @@
     if (self) {
         _isAircraftHolderShowing = YES;// AircraftHolder is Showing at the beginning [Yufei Lang 4/5/2012]
         _isPlacingAircraftsReady = NO;
+        _isRecvedNewMessage = NO;
         _iNumberOfAircraftsPlaced = 0;
         _arryImgView_PlacedAircrafts = [[NSMutableArray alloc] init];
         _arryCharacterString = [[NSArray alloc] initWithObjects:@"Adjutant", @"Me", @"Competitor", nil];
@@ -418,7 +419,15 @@
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField
 {
-    [textField resignFirstResponder];
+    CTransmissionStructure *tempStr = [[CTransmissionStructure alloc] initWithFlag:@"chat" andDetail:textField.text andNumberRow:0 andNumberCol:0];
+    if([_socketConn sendMsgAsTransStructure:tempStr])
+    {
+        [self sendTextView:_textView_InfoView Message:textField.text AsCharacter:[_arryCharacterString objectAtIndex:CharacterMe]];
+        textField.text = @"";
+    }
+    else {
+        [self sendTextView:_textView_InfoView Message:@"Sorry commander, there is a problem while sending you message." AsCharacter:[_arryCharacterString objectAtIndex:CharacterAdjutant]];
+    }
     return YES;
 }
 
@@ -433,8 +442,45 @@
 
 - (void)sendTextView: (UITextView *)textView Message: (NSString *)strMessage AsCharacter: (NSString *)character
 {
+    if (textView == nil) {
+        textView = _textView_InfoView;
+    }
     NSString *strNewString = [textView.text stringByAppendingFormat:@"[%@]: %@\n", character, strMessage];
     textView.text = strNewString;
+    [textView scrollRangeToVisible:NSMakeRange([strNewString length], 0)];
+}
+
+// this function will be called when post a notification named: ->
+// -> newMsgRecved(this has been defined as NewMSGComesFromHost)
+- (void) newMsgComes: (NSNotification *)note
+{
+    CTransmissionStructure *tempStructure = [note object];
+    NSParameterAssert([tempStructure isKindOfClass:[CTransmissionStructure class]]);
+    NSString *strCharacter;
+    if ([tempStructure.strFlag isEqualToString:@"chat"])
+    {
+        strCharacter = [_arryCharacterString objectAtIndex:CharacterCompetitor];
+        // get main thread in order to update UI elements
+        if ([NSThread isMainThread])
+            [self sendTextView:_textView_InfoView Message:tempStructure.strDetail AsCharacter:strCharacter];
+        else {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [self sendTextView:_textView_InfoView Message:tempStructure.strDetail AsCharacter:strCharacter];
+            });
+        }
+    }
+    else if ([tempStructure.strFlag isEqualToString:@"status"])
+    {
+        strCharacter = [_arryCharacterString objectAtIndex:CharacterAdjutant];
+        // get main thread in order to update UI elements
+        if ([NSThread isMainThread])
+            [self sendTextView:_textView_InfoView Message:tempStructure.strDetail AsCharacter:strCharacter];
+        else {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [self sendTextView:_textView_InfoView Message:tempStructure.strDetail AsCharacter:strCharacter];
+            });
+        }
+    }
 }
 
 #pragma mark - own function - update the progressHud
@@ -447,13 +493,15 @@
     } else {
         _progressHud.labelText = msg;
         _progressHud.progress = fPercentage;
-        [_progressHud hide:YES afterDelay:0.7];
+        [_progressHud hide:YES];
     }
 }
 
 #pragma mark - own function - make socket connection
 - (void)makeSocketConnection
 {
+    _socketConn = [[CSocketConnection alloc] init];
+    _socketConn.delegate = self;
     [_socketConn makeConnection];
 }
 
@@ -464,6 +512,8 @@
     [super viewDidLoad];
     
     [self initAllViews];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(newMsgComes:) name:NewMSGComesFromHost object:nil];
     
     // setting all  delegates [Yufei Lang 4/12/2012]
     _txtField_ChatTextBox.delegate = self;   
@@ -476,10 +526,12 @@
     
     [self sendTextView:_textView_InfoView Message:@"Commander, please drag and release to place 3 aircrafts." 
            AsCharacter:[_arryCharacterString objectAtIndex:CharacterAdjutant]];
-    _socketConn = [[CSocketConnection alloc] init];
-    _socketConn.delegate = self;
-    [self performSelector:@selector(makeSocketConnection) withObject:nil afterDelay:0.2];
+   
+    NSThread *th = [[NSThread alloc]initWithTarget:self selector:@selector(makeSocketConnection) object:nil];
+    th.name = @"thread for making connection";
+    [th start];
     
+            
 }
 
 - (void)viewDidUnload

@@ -14,6 +14,27 @@
 @synthesize iRow = _iRow;
 @synthesize iCol = _iCol;
 
+- (id)init
+{
+    self = [super init];
+    if (self) {
+        // init self
+    }
+    return self;
+}
+
+- (id)initWithFlag: (NSString *)strFlag andDetail: (NSString *)strDetail andNumberRow: (int)iRow andNumberCol: (int)iCol
+{
+    self = [super init];
+    if (self) {
+        self.strFlag = strFlag;
+        self.strDetail = strDetail;
+        _iRow = [[NSNumber alloc] initWithInt:iRow];
+        _iCol =  [[NSNumber alloc] initWithInt:iCol];
+    }
+    return self;
+}
+
 - (BOOL) fillWithJSONString: (NSString *)strJson
 {
     NSDictionary *dict = [strJson JSONValue]; // convert json string into a dictionary [Yufei Lang 4/5/2012]
@@ -21,14 +42,22 @@
     if (dict != NULL) {
         _strFlag = [dict objectForKey:@"strFlag"];
         _strDetail = [dict objectForKey:@"strDetail"];
-        _iRow = (NSInteger)[dict objectForKey:@"iRow"];
-        _iRow = (NSInteger)[dict objectForKey:@"iCol"];
+        _iRow = [dict objectForKey:@"iRow"];
+        _iCol = [dict objectForKey:@"iCol"];
         return YES; // successed [Yufei Lang 4/5/2012]
     } else {
         return NO; // error when resolving json string [Yufei Lang 4/5/2012]
     }
 }
 
-
+- (NSString *)convertMyselfToJsonString
+{
+    NSMutableDictionary *dict = [[NSMutableDictionary alloc] init];
+    [dict setValue:_strFlag forKey:@"strFlag"];
+    [dict setValue:_strDetail forKey:@"strDetail"];
+    [dict setValue:_iRow forKey:@"iRow"];
+    [dict setValue:_iCol forKey:@"iCol"];
+    return [dict JSONRepresentation];
+}
 
 @end

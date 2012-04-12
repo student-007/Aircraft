@@ -11,17 +11,20 @@
 
 @interface CTransmissionStructure : NSObject
 {
-    NSInteger _iRow;
-    NSInteger _iCol;
-    NSMutableString *_strFlag;
-    NSMutableString *_strDetail;
+    NSNumber *_iRow;
+    NSNumber *_iCol;
+    NSString *_strFlag;
+    NSString *_strDetail;
 }
 // properties [Yufei Lang 4/5/2012]
-@property (strong, nonatomic) NSMutableString *strFlag;
-@property (strong, nonatomic) NSMutableString *strDetail;
-@property (nonatomic) NSInteger iRow;
-@property (nonatomic) NSInteger iCol;
+@property (strong, nonatomic) NSString *strFlag;
+@property (strong, nonatomic) NSString *strDetail;
+@property (nonatomic) NSNumber *iRow;
+@property (nonatomic) NSNumber *iCol;
 
 // methods [Yufei Lang 4/5/2012]
+- (id)init;
+- (id)initWithFlag: (NSString *)strFlag andDetail: (NSString *)strDetail andNumberRow: (int)iRow andNumberCol: (int)iCol;
 - (BOOL) fillWithJSONString: (NSString *)strJson;
+- (NSString *) convertMyselfToJsonString;
 @end

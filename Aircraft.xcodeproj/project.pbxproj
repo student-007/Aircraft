@@ -19,8 +19,6 @@
 		0C7131C5152E2C8F0001BFEF /* MasterViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C7131C4152E2C8F0001BFEF /* MasterViewController.m */; };
 		0C7131CB152E2C8F0001BFEF /* MasterViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0C7131C9152E2C8F0001BFEF /* MasterViewController.xib */; };
 		0C8E761B153343D6000DFFF1 /* Aircraft.png in Resources */ = {isa = PBXBuildFile; fileRef = 0C8E761A153343D6000DFFF1 /* Aircraft.png */; };
-		0CDF5F81152F787700C1D2F8 /* AsyncSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = 0CDF5F7E152F787700C1D2F8 /* AsyncSocket.m */; };
-		0CDF5F82152F787700C1D2F8 /* AsyncUdpSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = 0CDF5F80152F787700C1D2F8 /* AsyncUdpSocket.m */; };
 		0CDF5F89152F78B000C1D2F8 /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0CDF5F88152F78B000C1D2F8 /* CFNetwork.framework */; };
 		0CDF5F91152F819000C1D2F8 /* PlayViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0CDF5F8F152F819000C1D2F8 /* PlayViewController.m */; };
 		0CDF5F92152F819000C1D2F8 /* PlayViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0CDF5F90152F819000C1D2F8 /* PlayViewController.xib */; };
@@ -63,10 +61,6 @@
 		0C7131C4152E2C8F0001BFEF /* MasterViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MasterViewController.m; sourceTree = "<group>"; };
 		0C7131CA152E2C8F0001BFEF /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/MasterViewController.xib; sourceTree = "<group>"; };
 		0C8E761A153343D6000DFFF1 /* Aircraft.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Aircraft.png; sourceTree = SOURCE_ROOT; };
-		0CDF5F7D152F787700C1D2F8 /* AsyncSocket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AsyncSocket.h; sourceTree = "<group>"; };
-		0CDF5F7E152F787700C1D2F8 /* AsyncSocket.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AsyncSocket.m; sourceTree = "<group>"; };
-		0CDF5F7F152F787700C1D2F8 /* AsyncUdpSocket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AsyncUdpSocket.h; sourceTree = "<group>"; };
-		0CDF5F80152F787700C1D2F8 /* AsyncUdpSocket.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AsyncUdpSocket.m; sourceTree = "<group>"; };
 		0CDF5F88152F78B000C1D2F8 /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
 		0CDF5F8E152F818F00C1D2F8 /* PlayViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PlayViewController.h; sourceTree = "<group>"; };
 		0CDF5F8F152F819000C1D2F8 /* PlayViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PlayViewController.m; sourceTree = "<group>"; };
@@ -253,10 +247,6 @@
 		0CE88513152E3EE6003EAFEA /* SocketConnection */ = {
 			isa = PBXGroup;
 			children = (
-				0CDF5F7D152F787700C1D2F8 /* AsyncSocket.h */,
-				0CDF5F7E152F787700C1D2F8 /* AsyncSocket.m */,
-				0CDF5F7F152F787700C1D2F8 /* AsyncUdpSocket.h */,
-				0CDF5F80152F787700C1D2F8 /* AsyncUdpSocket.m */,
 				0CE88515152E3F41003EAFEA /* CSocketConnection.h */,
 				0CE88516152E3F41003EAFEA /* CSocketConnection.m */,
 			);
@@ -356,8 +346,6 @@
 				0CE88501152E377E003EAFEA /* SBJsonUTF8Stream.m in Sources */,
 				0CE88502152E377E003EAFEA /* SBJsonWriter.m in Sources */,
 				0CE88517152E3F41003EAFEA /* CSocketConnection.m in Sources */,
-				0CDF5F81152F787700C1D2F8 /* AsyncSocket.m in Sources */,
-				0CDF5F82152F787700C1D2F8 /* AsyncUdpSocket.m in Sources */,
 				0CDF5F91152F819000C1D2F8 /* PlayViewController.m in Sources */,
 				0C70400C1532365B00B7F91F /* TapDetectingImageView.m in Sources */,
 				0C6C1E5115363D2A00F9ECF9 /* UIView_BattleField.m in Sources */,

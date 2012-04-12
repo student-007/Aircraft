@@ -21,6 +21,7 @@ typedef enum
 
 @interface PlayViewController : UIViewController <UIScrollViewDelegate, TapDetectingImageViewDelegate, UITextFieldDelegate, UIView_BattleField, CSocketConnection>
 {
+    BOOL _isRecvedNewMessage;
     BOOL _isAircraftHolderShowing;
     BOOL _isPlacingAircraftsReady; // placed all 3 aircrafts, and clicked "done" button [Yufei Lang 4/12/2012]
     int _iNumberOfAircraftsPlaced; // how many aircrafts have been placed [Yufei Lang 4/12/2012]
