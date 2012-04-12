@@ -19,8 +19,8 @@
 // properties [Yufei Lang 4/5/2012]
 @property (strong, nonatomic) NSString *strFlag;
 @property (strong, nonatomic) NSString *strDetail;
-@property (nonatomic) NSNumber *iRow;
-@property (nonatomic) NSNumber *iCol;
+@property (strong, nonatomic) NSNumber *iRow;
+@property (strong, nonatomic) NSNumber *iCol;
 
 // methods [Yufei Lang 4/5/2012]
 - (id)init;

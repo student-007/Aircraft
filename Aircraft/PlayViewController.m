@@ -41,7 +41,8 @@
     if (self) {
         _isAircraftHolderShowing = YES;// AircraftHolder is Showing at the beginning [Yufei Lang 4/5/2012]
         _isPlacingAircraftsReady = NO;
-        _isRecvedNewMessage = NO;
+        _isCompetitorReady = NO;
+        _isGettingPaired = NO;
         _iNumberOfAircraftsPlaced = 0;
         _arryImgView_PlacedAircrafts = [[NSMutableArray alloc] init];
         _arryCharacterString = [[NSArray alloc] initWithObjects:@"Adjutant", @"Me", @"Competitor", nil];
@@ -419,14 +420,24 @@
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField
 {
-    CTransmissionStructure *tempStr = [[CTransmissionStructure alloc] initWithFlag:@"chat" andDetail:textField.text andNumberRow:0 andNumberCol:0];
-    if([_socketConn sendMsgAsTransStructure:tempStr])
-    {
-        [self sendTextView:_textView_InfoView Message:textField.text AsCharacter:[_arryCharacterString objectAtIndex:CharacterMe]];
-        textField.text = @"";
+    if ([textField.text isEqualToString:@""]) {
+        return YES;
     }
-    else {
-        [self sendTextView:_textView_InfoView Message:@"Sorry commander, there is a problem while sending you message." AsCharacter:[_arryCharacterString objectAtIndex:CharacterAdjutant]];
+    if (_isGettingPaired) 
+    {
+        CTransmissionStructure *tempStr = [[CTransmissionStructure alloc] initWithFlag:@"chat" andDetail:textField.text andNumberRow:0 andNumberCol:0];
+        if([_socketConn sendMsgAsTransStructure:tempStr])
+        {
+            [self sendTextView:_textView_InfoView Message:textField.text AsCharacter:[_arryCharacterString objectAtIndex:CharacterMe]];
+            textField.text = @"";
+        }
+        else {
+            [self sendTextView:_textView_InfoView Message:@"Sorry commander, there is a problem while sending you message." AsCharacter:[_arryCharacterString objectAtIndex:CharacterAdjutant]];
+        }
+    } 
+    else 
+    {
+        [self sendTextView:_textView_InfoView Message:@"Sorry commander, you can't send msg to nobody, I am still looking for your competitor." AsCharacter:[_arryCharacterString objectAtIndex:CharacterAdjutant]];
     }
     return YES;
 }
@@ -469,16 +480,33 @@
             });
         }
     }
-    else if ([tempStructure.strFlag isEqualToString:@"status"])
+    if ([tempStructure.strFlag isEqualToString:@"status"])
     {
+#warning action for these statuses
+        if ([tempStructure.strDetail isEqualToString:@"found your competitor"])
+        {
+            _isGettingPaired = YES;
+            if ([NSThread isMainThread])
+            [self sendTextView:_textView_InfoView Message:@"Commander, please drag and release to place 3 aircrafts." 
+                   AsCharacter:[_arryCharacterString objectAtIndex:CharacterAdjutant]];  
+            else
+            {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [self sendTextView:_textView_InfoView Message:@"Commander, please drag and release to place 3 aircrafts." 
+                           AsCharacter:[_arryCharacterString objectAtIndex:CharacterAdjutant]];});
+            }
+        }
+        if ([tempStructure.strDetail isEqualToString:@"your competitor is ready"])
+            _isCompetitorReady = YES;
+        // normal status like :waiting for competitor[Yufei Lang 4/12/2012]
         strCharacter = [_arryCharacterString objectAtIndex:CharacterAdjutant];
         // get main thread in order to update UI elements
         if ([NSThread isMainThread])
             [self sendTextView:_textView_InfoView Message:tempStructure.strDetail AsCharacter:strCharacter];
-        else {
+        else 
+        {
             dispatch_async(dispatch_get_main_queue(), ^{
-                [self sendTextView:_textView_InfoView Message:tempStructure.strDetail AsCharacter:strCharacter];
-            });
+                [self sendTextView:_textView_InfoView Message:tempStructure.strDetail AsCharacter:strCharacter];});
         }
     }
 }
@@ -523,10 +551,7 @@
     // froze the screen for connecting to host [Yufei Lang 4/12/2012]
     _progressHud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     _progressHud.mode = MBProgressHUDModeDeterminate;
-    
-    [self sendTextView:_textView_InfoView Message:@"Commander, please drag and release to place 3 aircrafts." 
-           AsCharacter:[_arryCharacterString objectAtIndex:CharacterAdjutant]];
-   
+       
     NSThread *th = [[NSThread alloc]initWithTarget:self selector:@selector(makeSocketConnection) object:nil];
     th.name = @"thread for making connection";
     [th start];
@@ -666,6 +691,7 @@
 // member the action name is INCORRENT [Yufei Lang 4/12/2012]
 - (IBAction)btnClicked_SendChatMsg:(UIButton *)sender // INCORRENT name, should show/hide keyboard [Yufei Lang 4/12/2012]
 {
+    [_txtField_ChatTextBox resignFirstResponder];
 }
 
 - (IBAction)btnClicked_OnBattleGrid:(UIButton *)sender 

@@ -21,10 +21,11 @@ typedef enum
 
 @interface PlayViewController : UIViewController <UIScrollViewDelegate, TapDetectingImageViewDelegate, UITextFieldDelegate, UIView_BattleField, CSocketConnection>
 {
-    BOOL _isRecvedNewMessage;
-    BOOL _isAircraftHolderShowing;
-    BOOL _isPlacingAircraftsReady; // placed all 3 aircrafts, and clicked "done" button [Yufei Lang 4/12/2012]
-    int _iNumberOfAircraftsPlaced; // how many aircrafts have been placed [Yufei Lang 4/12/2012]
+    BOOL _isGettingPaired;          // if user is getting another player [Yufei Lang 4/12/2012]
+    BOOL _isAircraftHolderShowing;  // is Aircraft Holder Showing [Yufei Lang 4/12/2012]
+    BOOL _isPlacingAircraftsReady;  // placed all 3 aircrafts, and clicked "done" button [Yufei Lang 4/12/2012]
+    BOOL _isCompetitorReady;        // is competitor placed all aircrafts [Yufei Lang 4/12/2012]
+    int _iNumberOfAircraftsPlaced;  // how many aircrafts have been placed [Yufei Lang 4/12/2012]
     
     // use for showing user a temp aircraft when selecting from aircraft holder [Yufei Lang 4/5/2012]
     TapDetectingImageView *_tempAircraftView;
