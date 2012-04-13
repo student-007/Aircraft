@@ -72,6 +72,8 @@
         _isGettingPaired = NO;
         _isGamingContinuing = NO;
         _iNumberOfAircraftsPlaced = 0;
+        _iNumberOfMineAircraftDestried = 0;
+        _iNumberOfEnemyAircraftDestoried = 0;
         _arryMyBattleFieldLabels = [[NSMutableArray alloc] init];
         _arryEmenyBattleFieldButtons = [[NSMutableArray alloc] init];
         _arryCharacterString = [[NSArray alloc] initWithObjects:@"Adjutant", @"Me", @"Competitor", nil];
@@ -513,8 +515,20 @@
         textView = _textView_InfoView;
     }
     NSString *strNewString = [textView.text stringByAppendingFormat:@"[%@]: %@\n", character, strMessage];
-    textView.text = strNewString;
-    [textView scrollRangeToVisible:NSMakeRange([strNewString length], 0)];
+    
+    if ([NSThread isMainThread])
+    {
+        textView.text = strNewString;
+        [textView scrollRangeToVisible:NSMakeRange([strNewString length], 0)];
+    }
+    else 
+    {
+        // if not main thread, get main thread in order to update UI elements
+        dispatch_async(dispatch_get_main_queue(), ^{
+            textView.text = strNewString;
+            [textView scrollRangeToVisible:NSMakeRange([strNewString length], 0)];
+        });
+    }
 }
 
 // execute when received a END GAME message from socket connection [Yufei Lang 3/12/2012]
@@ -524,35 +538,15 @@
     
     if ([transStr.strDetail isEqualToString:MSG_END_GAME_YOU_WON])
     {
-        if ([NSThread isMainThread])
-        {
-            [self sendTextView:_textView_InfoView Message:@"Congratulations! You won!" 
-                   AsCharacter:strCharacter];
-        }
-        else
-        {// if not main thread, get main thread in order to update UI elements
-            dispatch_async(dispatch_get_main_queue(), ^{
-                [self sendTextView:_textView_InfoView Message:@"Congratulations! You won!" 
-                       AsCharacter:strCharacter];
-            });
-        }
+        [self sendTextView:_textView_InfoView Message:@"Congratulations! You won!" 
+               AsCharacter:strCharacter];
         [_socketConn closeConnection];
     }
     
     if ([transStr.strDetail isEqualToString:MSG_END_GAME_YOU_LOST])
     {
-        if ([NSThread isMainThread])
-        {
-            [self sendTextView:_textView_InfoView Message:@"I'am so sorry, You lost." 
-                   AsCharacter:strCharacter];
-        }
-        else
-        {// if not main thread, get main thread in order to update UI elements
-            dispatch_async(dispatch_get_main_queue(), ^{
-                [self sendTextView:_textView_InfoView Message:@"I'am so sorry, You lost." 
-                       AsCharacter:strCharacter];
-            });
-        }
+        [self sendTextView:_textView_InfoView Message:@"I'am so sorry, You lost." 
+               AsCharacter:strCharacter];
         [_socketConn closeConnection];
     }
 }
@@ -567,12 +561,11 @@
     if ([transStr.strDetail isEqualToString:MSG_FLAG_STATUS_WAITING])
     {
         _isMyturn = YES;
-        _isCompetitorReady = YES;
         
+        [self sendTextView:_textView_InfoView Message:@"Welcome, please wait a little while for your competitor." 
+               AsCharacter:strCharacter];
         if ([NSThread isMainThread])
         {
-            [self sendTextView:_textView_InfoView Message:@"Welcome, please wait a little while for your competitor." 
-                   AsCharacter:strCharacter];
             if (_isMyturn) 
                 _lbl_WhoseTurn.text = TURN_OF_MINE;
             else
@@ -581,8 +574,6 @@
         else 
         {
             dispatch_async(dispatch_get_main_queue(), ^{
-                [self sendTextView:_textView_InfoView Message:@"Welcome, please wait a little while for your competitor." 
-                       AsCharacter:strCharacter];
                 if (_isMyturn) 
                     _lbl_WhoseTurn.text = TURN_OF_MINE;
                 else
@@ -597,38 +588,18 @@
         _isGettingPaired = YES;
         _isGamingContinuing = YES;
         
-        // if already is main thread, execute normally
-        if ([NSThread isMainThread])
-        {
-            [self sendTextView:_textView_InfoView Message:@"Found your competitor, ready to go!" 
-                   AsCharacter:[_arryCharacterString objectAtIndex:CharacterAdjutant]];  
-            [self sendTextView:_textView_InfoView Message:@"Commander, please drag and release to place 3 aircrafts." 
-                   AsCharacter:[_arryCharacterString objectAtIndex:CharacterAdjutant]];   
-        }
-        else
-        {// if not main thread, get main thread in order to update UI elements
-            dispatch_async(dispatch_get_main_queue(), ^{
-                [self sendTextView:_textView_InfoView Message:@"Found your competitor, ready to go!" 
-                       AsCharacter:[_arryCharacterString objectAtIndex:CharacterAdjutant]];  
-                [self sendTextView:_textView_InfoView Message:@"Commander, please drag and release to place 3 aircrafts." 
-                       AsCharacter:[_arryCharacterString objectAtIndex:CharacterAdjutant]]; 
-            });
-        }
+        [self sendTextView:_textView_InfoView Message:@"Found your competitor, ready to go!" 
+               AsCharacter:[_arryCharacterString objectAtIndex:CharacterAdjutant]];  
+        [self sendTextView:_textView_InfoView Message:@"Commander, please drag and release to place 3 aircrafts." 
+               AsCharacter:[_arryCharacterString objectAtIndex:CharacterAdjutant]];
     }
     
     // when competitor placed all 3 aircraft [Yufei Lang 4/12/2012]
     if ([transStr.strDetail isEqualToString:MSG_FLAG_STATUS_COMPTOR_READY])
     {
         _isCompetitorReady = YES;
-        if ([NSThread isMainThread])
-            [self sendTextView:_textView_InfoView Message:@"Your competitor is getting ready!" AsCharacter:strCharacter];
-        else 
-        {
-            dispatch_async(dispatch_get_main_queue(), ^{
-                [self sendTextView:_textView_InfoView Message:@"Your competitor is getting ready!" 
-                       AsCharacter:strCharacter];
-            });
-        }
+        
+        [self sendTextView:_textView_InfoView Message:@"Your competitor is ready!" AsCharacter:strCharacter];
     }
 }
 
@@ -638,22 +609,16 @@
     // since it is a status message, we use "Competitor" as the speaking character
     NSString *strCharacter = [_arryCharacterString objectAtIndex:CharacterCompetitor];
     
-    // if already is main thread, execute normally
-    if ([NSThread isMainThread])
-        [self sendTextView:_textView_InfoView Message:transStr.strDetail AsCharacter:strCharacter];
-    else 
-    {
-        // if not main thread, get main thread in order to update UI elements
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [self sendTextView:_textView_InfoView Message:transStr.strDetail AsCharacter:strCharacter];
-        });
-    }
+    // update the text view for chatting information [Yufei Lang 4/12/2012]
+    [self sendTextView:_textView_InfoView Message:transStr.strDetail AsCharacter:strCharacter];
 }
 
 // execute when received a ATTACT message from socket connection [Yufei Lang 3/12/2012]
 - (void)recvAttackMessage: (CTransmissionStructure *)transStr
 {
+    // after the attack, it will be my turn now [Yufei Lang 4/12/2012]
     _isMyturn = YES;
+    // update the turning information [Yufei Lang 4/12/2012]
     // if already is main thread, execute normally
     if ([NSThread isMainThread])
     {
@@ -673,6 +638,8 @@
         });
     }
     
+    // check if the attack is miss, hit or destory one of my aircarfts [Yufei Lang 4/12/2012]
+    // after checking, modify the attack detail and ready to send back [Yufei Lang 4/12/2012]
     switch (_myGrid[[transStr.iRow intValue]][[transStr.iCol intValue]]) {
         case 0:
             transStr.strDetail = MSG_ATTACK_DETAIL_MISS;
@@ -686,6 +653,11 @@
         default:
             break;
     }
+    
+    // modify the flag to "attackResult" from "attack". Send it back to attacker [Yufei Lang 4/12/2012]
+    transStr.strFlag = MSG_FLAG_ATTACK_RESULT;
+    [_socketConn sendMsgAsTransStructure:transStr];
+    
     // if enemy's attack is missed [Yufei Lang 3/12/2012]
     if ([transStr.strDetail isEqualToString:MSG_ATTACK_DETAIL_MISS]) 
     {
@@ -731,6 +703,24 @@
     // if enemy's attack is hit the my aircraft's head [Yufei Lang 3/12/2012]
     if ([transStr.strDetail isEqualToString:MSG_ATTACK_DETAIL_DIE]) 
     {
+        // if all 3 aircrafts have been destoried, send user "I'am sorry but you lost"
+        // send competitor a msg "you won" [Yufei Lang 4/12/2012]
+        // then close the connection [Yufei Lang 4/12/2012]
+        ++_iNumberOfMineAircraftDestried;
+        if (_iNumberOfMineAircraftDestried == 3) 
+        {
+            // send user a message, says you lost [Yufei Lang 4/12/2012]
+            [self sendTextView:_textView_InfoView Message:@"I'am so sorry, You lost." AsCharacter:[_arryCharacterString objectAtIndex:CharacterAdjutant]];
+            
+            // send competitor a message [Yufei Lang 4/12/2012]
+            CTransmissionStructure *tempStr = [[CTransmissionStructure alloc] initWithFlag:MSG_FLAG_END_GAME andDetail:MSG_END_GAME_YOU_WON andNumberRow:0 andNumberCol:0];
+            
+            // close the socket connection [Yufei Lang 4/12/2012]
+            if([_socketConn sendMsgAsTransStructure:tempStr])
+                [_socketConn closeConnection];
+        }
+        
+        // update the UI [Yufei Lang 4/12/2012]
         // if already is main thread, execute normally
         if ([NSThread isMainThread])
         {
@@ -748,10 +738,6 @@
             });
         }
     }
-    
-    // send attack result back to attacker [Yufei Lang 4/12/2012]
-    transStr.strFlag = MSG_FLAG_ATTACK_RESULT;
-    [_socketConn sendMsgAsTransStructure:transStr];
 }
 
 // execute when received a ATTACT RESULT message from socket connection [Yufei Lang 3/12/2012]
@@ -802,6 +788,16 @@
     // if my attack is hit the head of enemy's aircraft [Yufei Lang 3/12/2012]
     if ([transStr.strDetail isEqualToString:MSG_ATTACK_DETAIL_DIE]) 
     {
+        // if all 3 aircrafts have been destoried, send competitor a msg "you lost" [Yufei Lang 4/12/2012]
+        // then close the connection [Yufei Lang 4/12/2012]
+        ++_iNumberOfEnemyAircraftDestoried;
+        if (_iNumberOfEnemyAircraftDestoried == 3) {
+            [self sendTextView:_textView_InfoView Message:@"Congratulations! You won!" AsCharacter:[_arryCharacterString objectAtIndex:CharacterAdjutant]];
+            CTransmissionStructure *tempStr = [[CTransmissionStructure alloc] initWithFlag:MSG_FLAG_END_GAME andDetail:MSG_END_GAME_YOU_LOST andNumberRow:0 andNumberCol:0];
+            if([_socketConn sendMsgAsTransStructure:tempStr])
+                [_socketConn closeConnection];
+        }
+        
         // if already is main thread, execute normally
         if ([NSThread isMainThread])
         {
@@ -891,12 +887,6 @@
     _view_MyBattleField.delegate = self;
     _view_EnemyBattleField.delegate = self;
     
-//    CTransmissionStructure *temp = [[CTransmissionStructure alloc] initWithFlag:@"attackResult" andDetail:@"miss" andNumberRow:0 andNumberCol:4];
-//    [self recvAttackResultMessage:temp];
-//    temp.strDetail = @"hit";
-//    temp.iRow = [NSNumber numberWithInt:3];
-//    [self recvAttackResultMessage:temp];
-    
     // froze the screen for connecting to host [Yufei Lang 4/12/2012]
     _progressHud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     _progressHud.mode = MBProgressHUDModeDeterminate;
@@ -904,8 +894,6 @@
     NSThread *th = [[NSThread alloc]initWithTarget:self selector:@selector(makeSocketConnection) object:nil];
     th.name = @"thread for making connection";
     [th start];
-    
-            
 }
 
 - (void)viewDidUnload
@@ -969,8 +957,17 @@
 
 // pop my self, back to master view controller [Yufei Lang 4/5/2012]
 - (IBAction)btnClicked_OnExit:(id)sender {
-    UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Are you sure?" message:@"Existing now will lose the game." delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Exit", nil];
-    [alert show];
+    if (_isGettingPaired)
+    {
+        UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Are you sure?" message:@"Existing now will lose the game." delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Exit", nil];
+        [alert show];
+    }
+    else
+    {
+        [_socketConn closeConnection];
+        [self.navigationController setNavigationBarHidden:NO animated:YES];
+        [self.navigationController popViewControllerAnimated:YES];
+    }
 }
 
 // hide _view_AircraftHolder and show _view_ToosHolder after placing aircrafts [Yufei Lang 4/5/2012]
@@ -987,6 +984,7 @@
         _isPlacingAircraftsReady = YES;
         
 #warning make the button like diabled
+        [sender setTitle:@"Ready!" forState:UIControlStateNormal];
         
         if (_isMyturn) 
             _lbl_WhoseTurn.text = TURN_OF_MINE;
@@ -1062,8 +1060,26 @@
 // member the action name is INCORRENT [Yufei Lang 4/12/2012]
 - (IBAction)btnClicked_SendChatMsg:(UIButton *)sender // INCORRENT name, should show/hide keyboard [Yufei Lang 4/12/2012]
 {
-#warning 判断显示或者隐藏键盘
-    [_txtField_ChatTextBox resignFirstResponder];
+    // if there is nothing in the chatting box need to be sent, hide the keyboard [Yufei Lang 4/12/2012]
+    // then reset it to a picture like " ^ " [Yufei Lang 4/12/2012]
+    if ([_txtField_ChatTextBox.text isEqualToString:@""] && [_txtField_ChatTextBox isFirstResponder])
+    {
+        [_txtField_ChatTextBox resignFirstResponder];
+#warning set button to a pic like "^"
+    }
+    
+    // if txtField is not first responder (keyboard is not showing) but nothing to say [Yufei Lang 4/12/2012]
+    // set first responder (show key board) [Yufei Lang 4/12/2012]
+    // then reset it to a picture like " V " [Yufei Lang 4/12/2012]
+    else if ([_txtField_ChatTextBox.text isEqualToString:@""] && ![_txtField_ChatTextBox isFirstResponder])
+    {
+#warning set button to a pic like "V"
+        [_txtField_ChatTextBox becomeFirstResponder];
+    }
+    else
+    {
+        [self textFieldShouldReturn:_txtField_ChatTextBox];
+    }
 }
 
 - (IBAction)btnClicked_OnBattleGrid:(UIButton *)sender 

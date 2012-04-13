@@ -22,15 +22,18 @@ typedef enum
 @interface PlayViewController : UIViewController <UIScrollViewDelegate, TapDetectingImageViewDelegate, UITextFieldDelegate, UIView_BattleField, CSocketConnection, UIAlertViewDelegate>
 {
     BOOL _isMyturn;
-    BOOL _isGamingContinuing;       // if the game is on [Yufei Lang 4/12/2012]
-    BOOL _isGettingPaired;          // if user is getting another player [Yufei Lang 4/12/2012]
-    BOOL _isAircraftHolderShowing;  // is Aircraft Holder Showing [Yufei Lang 4/12/2012]
-    BOOL _isPlacingAircraftsReady;  // placed all 3 aircrafts, and clicked "done" button [Yufei Lang 4/12/2012]
-    BOOL _isCompetitorReady;        // is competitor placed all aircrafts [Yufei Lang 4/12/2012]
-    int _iNumberOfAircraftsPlaced;  // how many aircrafts have been placed [Yufei Lang 4/12/2012]
+    BOOL _isGamingContinuing;               // if the game is on [Yufei Lang 4/12/2012]
+    BOOL _isGettingPaired;                  // if user is getting another player [Yufei Lang 4/12/2012]
+    BOOL _isAircraftHolderShowing;          // is Aircraft Holder Showing [Yufei Lang 4/12/2012]
+    BOOL _isPlacingAircraftsReady;          // placed all 3 aircrafts, and clicked "done" button [Yufei Lang 4/12/2012]
+    BOOL _isCompetitorReady;                // is competitor placed all aircrafts [Yufei Lang 4/12/2012]
+    int _iNumberOfAircraftsPlaced;          // how many aircrafts have been placed [Yufei Lang 4/12/2012]
+    int _iNumberOfMineAircraftDestried;     // how many aircrafts of mine have been destried [Yufei Lang 4/12/2012]
+    int _iNumberOfEnemyAircraftDestoried;   // how many aircrafts of mine have been destried [Yufei Lang 4/12/2012]
     
     // use for showing user a temp aircraft when selecting from aircraft holder [Yufei Lang 4/5/2012]
     TapDetectingImageView *_tempAircraftView;
+    
     // keep the old original frame in the temp rect [Yufei Lang 4/12/2012]
     CGRect _tempFrame;
     //NSMutableArray *_arryImgView_PlacedAircrafts;
