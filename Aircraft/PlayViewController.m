@@ -1009,6 +1009,9 @@
         
         // end and commit animation [Yufei Lang 4/5/2012]
         [UIView commitAnimations];
+        
+        CTransmissionStructure *attackStr = [[CTransmissionStructure alloc] initWithFlag:MSG_FLAG_STATUS andDetail:MSG_FLAG_STATUS_COMPTOR_READY andNumberRow:0 andNumberCol:0];
+        [_socketConn sendMsgAsTransStructure:attackStr];
     }
 }
 
