@@ -576,17 +576,17 @@
         // if already is main thread, execute normally
         if ([NSThread isMainThread])
         {
-            UILable *lbl = [[_arryMyBattleFieldLabels objectAtIndex:transStr.iCol.intValue] 
+            UILabel *lbl = [[_arryMyBattleFieldLabels objectAtIndex:transStr.iCol.intValue] 
                              objectAtIndex:transStr.iRow.intValue];
-            [lbl setTitle:ATTACK_MISS forState:UIControlStateNormal];
+            lbl.text = ATTACK_MISS;
         }
         else 
         {
             // if not main thread, get main thread in order to update UI elements
             dispatch_async(dispatch_get_main_queue(), ^{
-                UILable *lbl = [[_arryMyBattleFieldLabels objectAtIndex:transStr.iCol.intValue] 
+                UILabel *lbl = [[_arryMyBattleFieldLabels objectAtIndex:transStr.iCol.intValue] 
                                  objectAtIndex:transStr.iRow.intValue];
-                [lbl setTitle:ATTACK_MISS forState:UIControlStateNormal];
+                lbl.text = ATTACK_MISS;
             });
         }
     }
@@ -597,17 +597,17 @@
         // if already is main thread, execute normally
         if ([NSThread isMainThread])
         {
-            UILable *lbl = [[_arryMyBattleFieldLabels objectAtIndex:transStr.iCol.intValue] 
+            UILabel *lbl = [[_arryMyBattleFieldLabels objectAtIndex:transStr.iCol.intValue] 
                              objectAtIndex:transStr.iRow.intValue];
-            [lbl setTitle:ATTACK_HIT forState:UIControlStateNormal];
+            lbl.text = ATTACK_HIT;
         }
         else 
         {
             // if not main thread, get main thread in order to update UI elements
             dispatch_async(dispatch_get_main_queue(), ^{
-                UILable *lbl = [[_arryMyBattleFieldLabels objectAtIndex:transStr.iCol.intValue] 
+                UILabel *lbl = [[_arryMyBattleFieldLabels objectAtIndex:transStr.iCol.intValue] 
                                  objectAtIndex:transStr.iRow.intValue];
-                [lbl setTitle:ATTACK_HIT forState:UIControlStateNormal];
+                lbl.text = ATTACK_HIT;
             });
         }
     }
@@ -618,17 +618,17 @@
         // if already is main thread, execute normally
         if ([NSThread isMainThread])
         {
-            UILable *lbl = [[_arryMyBattleFieldLabels objectAtIndex:transStr.iCol.intValue] 
+            UILabel *lbl = [[_arryMyBattleFieldLabels objectAtIndex:transStr.iCol.intValue] 
                              objectAtIndex:transStr.iRow.intValue];
-            [lbl setTitle:ATTACK_DIE forState:UIControlStateNormal];
+            lbl.text = ATTACK_DIE;
         }
         else 
         {
             // if not main thread, get main thread in order to update UI elements
             dispatch_async(dispatch_get_main_queue(), ^{
-                UILable *lbl = [[_arryMyBattleFieldLabels objectAtIndex:transStr.iCol.intValue] 
+                UILabel *lbl = [[_arryMyBattleFieldLabels objectAtIndex:transStr.iCol.intValue] 
                                  objectAtIndex:transStr.iRow.intValue];
-                [lbl setTitle:ATTACK_DIE forState:UIControlStateNormal];
+                lbl.text = ATTACK_DIE;
             });
         }
     }
@@ -766,19 +766,19 @@
     _view_MyBattleField.delegate = self;
     _view_EnemyBattleField.delegate = self;
     
-    CTransmissionStructure *temp = [[CTransmissionStructure alloc] initWithFlag:@"attackResult" andDetail:@"miss" andNumberRow:0 andNumberCol:4];
-    [self recvAttackResultMessage:temp];
-    temp.strDetail = @"hit";
-    temp.iRow = [NSNumber numberWithInt:3];
-    [self recvAttackResultMessage:temp];
+//    CTransmissionStructure *temp = [[CTransmissionStructure alloc] initWithFlag:@"attackResult" andDetail:@"miss" andNumberRow:0 andNumberCol:4];
+//    [self recvAttackResultMessage:temp];
+//    temp.strDetail = @"hit";
+//    temp.iRow = [NSNumber numberWithInt:3];
+//    [self recvAttackResultMessage:temp];
     
-//    // froze the screen for connecting to host [Yufei Lang 4/12/2012]
-//    _progressHud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-//    _progressHud.mode = MBProgressHUDModeDeterminate;
-//       
-//    NSThread *th = [[NSThread alloc]initWithTarget:self selector:@selector(makeSocketConnection) object:nil];
-//    th.name = @"thread for making connection";
-//    [th start];
+    // froze the screen for connecting to host [Yufei Lang 4/12/2012]
+    _progressHud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    _progressHud.mode = MBProgressHUDModeDeterminate;
+       
+    NSThread *th = [[NSThread alloc]initWithTarget:self selector:@selector(makeSocketConnection) object:nil];
+    th.name = @"thread for making connection";
+    [th start];
     
             
 }
