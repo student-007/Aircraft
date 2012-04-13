@@ -19,6 +19,10 @@
 #define MSG_FLAG_STATUS_PAIRED          @"found your competitor"
 #define MSG_FLAG_STATUS_COMPTOR_READY   @"your competitor is ready"
 
+#define MSG_ATTACK_DETAIL_MISS          @"miss"
+#define MSG_ATTACK_DETAIL_HIT           @"hit"
+#define MSG_ATTACK_DETAIL_DIE           @"die"
+
 #define ATTACK_MISS                     @"\ue049" // cloud, means nothing there [Yufei Lang 4/12/2012]
 #define ATTACK_HIT                      @"\ue332" // empty circle, means hit but not hit the head which is still alive [Yufei Lang 4/12/2012]
 #define ATTACK_DIE                      @"\ue219" // solid circle, means dead [Yufei Lang 4/12/2012]
@@ -570,8 +574,21 @@
 // execute when received a ATTACT message from socket connection [Yufei Lang 3/12/2012]
 - (void)recvAttackMessage: (CTransmissionStructure *)transStr
 {
+    switch (_myGrid[[transStr.iRow intValue]][[transStr.iCol intValue]]) {
+        case 0:
+            transStr.strDetail = ATTACK_MISS;
+            break;
+        case 1:
+            transStr.strDetail = ATTACK_HIT;
+            break;
+        case 9:
+            transStr.strDetail = ATTACK_DIE;
+            break;
+        default:
+            break;
+    }
     // if my attack is missed [Yufei Lang 3/12/2012]
-    if ([transStr.strDetail isEqualToString:@"miss"]) 
+    if ([transStr.strDetail isEqualToString:MSG_ATTACK_DETAIL_MISS]) 
     {
         // if already is main thread, execute normally
         if ([NSThread isMainThread])
@@ -592,7 +609,7 @@
     }
     
     // if my attack is hited [Yufei Lang 3/12/2012]
-    if ([transStr.strDetail isEqualToString:@"hit"]) 
+    if ([transStr.strDetail isEqualToString:MSG_ATTACK_DETAIL_HIT]) 
     {
         // if already is main thread, execute normally
         if ([NSThread isMainThread])
@@ -613,7 +630,7 @@
     }
     
     // if my attack is hit the head of enemy's aircraft [Yufei Lang 3/12/2012]
-    if ([transStr.strDetail isEqualToString:@"die"]) 
+    if ([transStr.strDetail isEqualToString:MSG_ATTACK_DETAIL_DIE]) 
     {
         // if already is main thread, execute normally
         if ([NSThread isMainThread])
@@ -638,7 +655,7 @@
 - (void)recvAttackResultMessage: (CTransmissionStructure *)transStr
 {
     // if my attack is missed [Yufei Lang 3/12/2012]
-    if ([transStr.strDetail isEqualToString:@"miss"]) 
+    if ([transStr.strDetail isEqualToString:MSG_ATTACK_DETAIL_MISS]) 
     {
         // if already is main thread, execute normally
         if ([NSThread isMainThread])
@@ -659,7 +676,7 @@
     }
     
     // if my attack is hited [Yufei Lang 3/12/2012]
-    if ([transStr.strDetail isEqualToString:@"hit"]) 
+    if ([transStr.strDetail isEqualToString:MSG_ATTACK_DETAIL_HIT]) 
     {
         // if already is main thread, execute normally
         if ([NSThread isMainThread])
@@ -680,7 +697,7 @@
     }
     
     // if my attack is hit the head of enemy's aircraft [Yufei Lang 3/12/2012]
-    if ([transStr.strDetail isEqualToString:@"die"]) 
+    if ([transStr.strDetail isEqualToString:MSG_ATTACK_DETAIL_DIE]) 
     {
         // if already is main thread, execute normally
         if ([NSThread isMainThread])
@@ -920,9 +937,18 @@
 
 - (IBAction)btnClicked_OnBattleGrid:(UIButton *)sender 
 {
+    // used for debugging [Yufei Lang 4/12/2012]
     NSLog(@"btnClicked. btn frame: %@", NSStringFromCGRect(sender.frame));
+    
     // when clicked any button on enemy battle field, hide keyboard [Yufei Lang 4/10/2012]
     [_txtField_ChatTextBox resignFirstResponder];
+    
+    int X = sender.frame.origin.x / 29;
+    int Y = sender.frame.origin.y / 29;
+    CTransmissionStructure *attackStr = [[CTransmissionStructure alloc] initWithFlag:MSG_FLAG_ATTACK andDetail:@"" andNumberRow:X andNumberCol:Y];
+    if (![_socketConn sendMsgAsTransStructure:attackStr])
+        [self sendTextView:_textView_InfoView Message:@"Can't send attack msg, please try again." 
+               AsCharacter:[_arryCharacterString objectAtIndex:CharacterAdjutant]];
 }
 
 @end
