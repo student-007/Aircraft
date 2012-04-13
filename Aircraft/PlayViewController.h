@@ -19,7 +19,7 @@ typedef enum
     CharacterCompetitor     =2,
 }CharacterString;
 
-@interface PlayViewController : UIViewController <UIScrollViewDelegate, TapDetectingImageViewDelegate, UITextFieldDelegate, UIView_BattleField, CSocketConnection>
+@interface PlayViewController : UIViewController <UIScrollViewDelegate, TapDetectingImageViewDelegate, UITextFieldDelegate, UIView_BattleField, CSocketConnection, UIAlertViewDelegate>
 {
     BOOL _isGettingPaired;          // if user is getting another player [Yufei Lang 4/12/2012]
     BOOL _isAircraftHolderShowing;  // is Aircraft Holder Showing [Yufei Lang 4/12/2012]

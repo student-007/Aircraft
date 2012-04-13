@@ -133,6 +133,12 @@
     }
 }
 
+- (void)closeConnection
+{
+    _isGameContinuing = NO;
+    close(_iSockfd);
+}
+
 - (void)recvMsg_waitUntilDone
 {
     while (_isGameContinuing)

@@ -12,6 +12,7 @@
 
 #define MSG_FLAG_STATUS                 @"status"
 #define MSG_FLAG_CHAT                   @"chat"
+#define MSG_FLAG_END_GAME               @"endGame"
 #define MSG_FLAG_ATTACK                 @"attack"
 #define MSG_FLAG_ATTACK_RESULT          @"attackResult"
 
@@ -26,6 +27,9 @@
 #define ATTACK_MISS                     @"\ue049" // cloud, means nothing there [Yufei Lang 4/12/2012]
 #define ATTACK_HIT                      @"\ue332" // empty circle, means hit but not hit the head which is still alive [Yufei Lang 4/12/2012]
 #define ATTACK_DIE                      @"\ue219" // solid circle, means dead [Yufei Lang 4/12/2012]
+
+#define MSG_END_GAME_YOU_WON            @"you won"
+#define MSG_END_GAME_YOU_LOST           @"you lost"
 
 @interface PlayViewController()
 - (void)sendTextView: (UITextView *)textView Message: (NSString *)strMessage AsCharacter: (NSString *)character;
@@ -508,6 +512,45 @@
     [textView scrollRangeToVisible:NSMakeRange([strNewString length], 0)];
 }
 
+// execute when received a END GAME message from socket connection [Yufei Lang 3/12/2012]
+- (void)recvEndGameMessage: (CTransmissionStructure *)transStr
+{
+    NSString *strCharacter = [_arryCharacterString objectAtIndex:CharacterAdjutant];
+    
+    if ([transStr.strDetail isEqualToString:MSG_END_GAME_YOU_WON])
+    {
+        if ([NSThread isMainThread])
+        {
+            [self sendTextView:_textView_InfoView Message:@"Congratulations! You won!" 
+                   AsCharacter:strCharacter];
+        }
+        else
+        {// if not main thread, get main thread in order to update UI elements
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [self sendTextView:_textView_InfoView Message:@"Congratulations! You won!" 
+                       AsCharacter:strCharacter];
+            });
+        }
+        [_socketConn closeConnection];
+    }
+    
+    if ([transStr.strDetail isEqualToString:MSG_END_GAME_YOU_LOST])
+    {
+        if ([NSThread isMainThread])
+        {
+            [self sendTextView:_textView_InfoView Message:@"I'am so sorry, You lost." 
+                   AsCharacter:strCharacter];
+        }
+        else
+        {// if not main thread, get main thread in order to update UI elements
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [self sendTextView:_textView_InfoView Message:@"I'am so sorry, You lost." 
+                       AsCharacter:strCharacter];
+            });
+        }
+        [_socketConn closeConnection];
+    }
+}
 
 // execute when received a STATUS message from socket connection [Yufei Lang 3/12/2012]
 - (void)recvStatusMessage: (CTransmissionStructure *)transStr
@@ -728,6 +771,11 @@
     CTransmissionStructure *tempStructure = [note object];
     NSParameterAssert([tempStructure isKindOfClass:[CTransmissionStructure class]]);
     
+    if ([tempStructure.strFlag isEqualToString:MSG_FLAG_END_GAME]) 
+    {
+        [self recvEndGameMessage: tempStructure];
+    }
+    
     if ([tempStructure.strFlag isEqualToString:MSG_FLAG_STATUS]) 
     {
         [self recvStatusMessage: tempStructure];
@@ -738,14 +786,14 @@
         [self recvChatMessage: tempStructure];
     }
     
-    if ([tempStructure.strFlag isEqualToString:MSG_FLAG_ATTACK]) 
-    {
-        [self recvAttackMessage: tempStructure];
-    }
-    
     if ([tempStructure.strFlag isEqualToString:MSG_FLAG_ATTACK_RESULT]) 
     {
         [self recvAttackResultMessage: tempStructure];
+    }
+    
+    if ([tempStructure.strFlag isEqualToString:MSG_FLAG_ATTACK]) 
+    {
+        [self recvAttackMessage: tempStructure];
     }
 }
 
@@ -830,6 +878,21 @@
     return (interfaceOrientation == UIInterfaceOrientationPortrait);
 }
 
+#pragma mark - UIAlertView Delegate
+
+// Called when a button is clicked. The view will be automatically dismissed after this call returns
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    if (buttonIndex != 0) // if exit anyway [Yufei Lang 4/12/2012]
+    {
+        CTransmissionStructure *attackStr = [[CTransmissionStructure alloc] initWithFlag:MSG_FLAG_END_GAME andDetail:MSG_END_GAME_YOU_WON andNumberRow:0 andNumberCol:0];
+        [_socketConn sendMsgAsTransStructure:attackStr];
+        [_socketConn closeConnection];
+        [self.navigationController setNavigationBarHidden:NO animated:YES];
+        [self.navigationController popViewControllerAnimated:YES];
+    }
+}
+
 #pragma mark - Actions
 
 // slide in to enemy field [Yufei Lang 4/5/2012]
@@ -848,8 +911,8 @@
 
 // pop my self, back to master view controller [Yufei Lang 4/5/2012]
 - (IBAction)btnClicked_OnExit:(id)sender {
-    [self.navigationController setNavigationBarHidden:NO animated:YES];
-    [self.navigationController popViewControllerAnimated:YES];
+    UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Are you sure?" message:@"Existing now will lose the game." delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Exit", nil];
+    [alert show];
 }
 
 // hide _view_AircraftHolder and show _view_ToosHolder after placing aircrafts [Yufei Lang 4/5/2012]

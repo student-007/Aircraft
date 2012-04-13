@@ -33,6 +33,7 @@
 // methods [Yufei Lang 4/5/2012]
 - (id) init;
 - (NSString *) makeConnection;
+- (void)closeConnection;
 - (BOOL)sendMsgAsTransStructure: (CTransmissionStructure *)struture;
 - (void)recvMsg_waitUntilDone;
 @end
