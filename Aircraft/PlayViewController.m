@@ -136,16 +136,16 @@
     // so when recv the attack msg, we can update the text lable within the labels [Yufei Lang 3/12/2012]
     for (int row = 0; row < 10; row++) 
     {
-        NSMutableArray *arryButtonsInRow = [[NSMutableArray alloc] init];
+        NSMutableArray *arryLabelsInRow = [[NSMutableArray alloc] init];
         for (int col = 0; col < 10; col++) 
         {
             UILabel *lbl = [[UILabel alloc]initWithFrame:CGRectMake(col * 29, row * 29, 29, 29)];
-            //lbl.contentEdgeInsets = UIEdgeInsetsMake(3.5, 1.5, 0.0, 0.0);
+            lbl.textAlignment = UITextAlignmentCenter;
             lbl.backgroundColor = [UIColor clearColor];
-            [arryButtonsInRow addObject:lbl];
+            [arryLabelsInRow addObject:lbl];
             [viewBattleField addSubview:lbl];
         }
-        [arry2D_Lables addObject:arryButtonsInRow];
+        [arry2D_Lables addObject:arryLabelsInRow];
     }
 }
 
@@ -947,8 +947,8 @@
     // when clicked any button on enemy battle field, hide keyboard [Yufei Lang 4/10/2012]
     [_txtField_ChatTextBox resignFirstResponder];
     
-    int X = sender.frame.origin.x / 29;
-    int Y = sender.frame.origin.y / 29;
+    int X = sender.frame.origin.y / 29;
+    int Y = sender.frame.origin.x / 29;
     CTransmissionStructure *attackStr = [[CTransmissionStructure alloc] initWithFlag:MSG_FLAG_ATTACK andDetail:@"" andNumberRow:X andNumberCol:Y];
     if (![_socketConn sendMsgAsTransStructure:attackStr])
         [self sendTextView:_textView_InfoView Message:@"Can't send attack msg, please try again." 
