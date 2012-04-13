@@ -21,6 +21,8 @@ typedef enum
 
 @interface PlayViewController : UIViewController <UIScrollViewDelegate, TapDetectingImageViewDelegate, UITextFieldDelegate, UIView_BattleField, CSocketConnection, UIAlertViewDelegate>
 {
+    BOOL _isMyturn;
+    BOOL _isGamingContinuing;       // if the game is on [Yufei Lang 4/12/2012]
     BOOL _isGettingPaired;          // if user is getting another player [Yufei Lang 4/12/2012]
     BOOL _isAircraftHolderShowing;  // is Aircraft Holder Showing [Yufei Lang 4/12/2012]
     BOOL _isPlacingAircraftsReady;  // placed all 3 aircrafts, and clicked "done" button [Yufei Lang 4/12/2012]
@@ -76,6 +78,9 @@ typedef enum
 // properties -  battle fields buttons[Yufei Lang 4/5/2012]
 @property (strong, nonatomic) NSMutableArray *arryMyBattleFieldLabels;
 @property (strong, nonatomic) NSMutableArray *arryEmenyBattleFieldButtons;
+
+// makr whose turn it is [Yufei Lang 4/12/2012]
+@property (strong, nonatomic) IBOutlet UILabel *lbl_WhoseTurn;
 
 // properties - socket connection [Yufei Lang 4/12/2012]
 @property (strong, nonatomic) CSocketConnection *socketConn;

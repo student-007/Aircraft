@@ -27,6 +27,8 @@
 #define ATTACK_MISS                     @"\ue049" // cloud, means nothing there [Yufei Lang 4/12/2012]
 #define ATTACK_HIT                      @"\ue332" // empty circle, means hit but not hit the head which is still alive [Yufei Lang 4/12/2012]
 #define ATTACK_DIE                      @"\ue219" // solid circle, means dead [Yufei Lang 4/12/2012]
+#define TURN_OF_MINE                    @"\ue130 My Turn" // 飞镖 [Yufei Lang 4/12/2012]
+#define TURN_OF_COMPETITOR              @"\ue045 Competitor's Turn" // coffee [Yufei Lang 4/12/2012]
 
 #define MSG_END_GAME_YOU_WON            @"you won"
 #define MSG_END_GAME_YOU_LOST           @"you lost"
@@ -41,6 +43,7 @@
 @synthesize arryCharacterString = _arryCharacterString;
 @synthesize arryMyBattleFieldLabels = _arryMyBattleFieldLabels;
 @synthesize arryEmenyBattleFieldButtons = _arryEmenyBattleFieldButtons;
+@synthesize lbl_WhoseTurn = _lbl_WhoseTurn;
 @synthesize textView_InfoView = _textView_InfoView;
 @synthesize txtField_ChatTextBox = _txtField_ChatTextBox;
 @synthesize scrollView_BattleField = _scrollView_BattleField;
@@ -65,7 +68,9 @@
         _isAircraftHolderShowing = YES;// AircraftHolder is Showing at the beginning [Yufei Lang 4/5/2012]
         _isPlacingAircraftsReady = NO;
         _isCompetitorReady = NO;
+        _isMyturn = NO;
         _isGettingPaired = NO;
+        _isGamingContinuing = NO;
         _iNumberOfAircraftsPlaced = 0;
         _arryMyBattleFieldLabels = [[NSMutableArray alloc] init];
         _arryEmenyBattleFieldButtons = [[NSMutableArray alloc] init];
@@ -558,9 +563,39 @@
     // since it is a status message, we use "adjutant" as the speaking character
     NSString *strCharacter = [_arryCharacterString objectAtIndex:CharacterAdjutant];
     
+    // when waiting for a competitor [Yufei Lang 4/12/2012]
+    if ([transStr.strDetail isEqualToString:MSG_FLAG_STATUS_WAITING])
+    {
+        _isMyturn = YES;
+        _isCompetitorReady = YES;
+        
+        if ([NSThread isMainThread])
+        {
+            [self sendTextView:_textView_InfoView Message:@"Welcome, please wait a little while for your competitor." 
+                   AsCharacter:strCharacter];
+            if (_isMyturn) 
+                _lbl_WhoseTurn.text = TURN_OF_MINE;
+            else
+                _lbl_WhoseTurn.text = TURN_OF_COMPETITOR;
+        }
+        else 
+        {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [self sendTextView:_textView_InfoView Message:@"Welcome, please wait a little while for your competitor." 
+                       AsCharacter:strCharacter];
+                if (_isMyturn) 
+                    _lbl_WhoseTurn.text = TURN_OF_MINE;
+                else
+                    _lbl_WhoseTurn.text = TURN_OF_COMPETITOR;
+            });
+        }
+    }
+    
+    // when found a competitor [Yufei Lang 4/12/2012]
     if ([transStr.strDetail isEqualToString:MSG_FLAG_STATUS_PAIRED])
     {
         _isGettingPaired = YES;
+        _isGamingContinuing = YES;
         
         // if already is main thread, execute normally
         if ([NSThread isMainThread])
@@ -580,6 +615,8 @@
             });
         }
     }
+    
+    // when competitor placed all 3 aircraft [Yufei Lang 4/12/2012]
     if ([transStr.strDetail isEqualToString:MSG_FLAG_STATUS_COMPTOR_READY])
     {
         _isCompetitorReady = YES;
@@ -616,6 +653,26 @@
 // execute when received a ATTACT message from socket connection [Yufei Lang 3/12/2012]
 - (void)recvAttackMessage: (CTransmissionStructure *)transStr
 {
+    _isMyturn = YES;
+    // if already is main thread, execute normally
+    if ([NSThread isMainThread])
+    {
+        if (_isMyturn) 
+            _lbl_WhoseTurn.text = TURN_OF_MINE;
+        else
+            _lbl_WhoseTurn.text = TURN_OF_COMPETITOR;
+    }
+    else 
+    {
+        // if not main thread, get main thread in order to update UI elements
+        dispatch_async(dispatch_get_main_queue(), ^{
+            if (_isMyturn) 
+                _lbl_WhoseTurn.text = TURN_OF_MINE;
+            else
+                _lbl_WhoseTurn.text = TURN_OF_COMPETITOR;
+        });
+    }
+    
     switch (_myGrid[[transStr.iRow intValue]][[transStr.iCol intValue]]) {
         case 0:
             transStr.strDetail = MSG_ATTACK_DETAIL_MISS;
@@ -867,6 +924,7 @@
     [self setImgView_EnemyBattleFieldBackground:nil];
     [self setTxtField_ChatTextBox:nil];
     [self setTextView_InfoView:nil];
+    [self setLbl_WhoseTurn:nil];
     [super viewDidUnload];
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
@@ -918,10 +976,6 @@
 // hide _view_AircraftHolder and show _view_ToosHolder after placing aircrafts [Yufei Lang 4/5/2012]
 - (IBAction)btnClicked_DonePlacingAircraft:(UIButton *)sender 
 {   
-//    if (sender != nil) {
-//            sender.enabled = NO;
-#warning make the button looks like disabled here
-//        }
     if (_isPlacingAircraftsReady == NO)
     {
         if (_iNumberOfAircraftsPlaced != 3)
@@ -931,6 +985,13 @@
             return;
         }
         _isPlacingAircraftsReady = YES;
+        
+#warning make the button like diabled
+        
+        if (_isMyturn) 
+            _lbl_WhoseTurn.text = TURN_OF_MINE;
+        else
+            _lbl_WhoseTurn.text = TURN_OF_COMPETITOR;
         
         // set up a new animation block [Yufei Lang 4/5/2012]
         [UIView beginAnimations:nil context:NULL];
@@ -998,23 +1059,27 @@
 // member the action name is INCORRENT [Yufei Lang 4/12/2012]
 - (IBAction)btnClicked_SendChatMsg:(UIButton *)sender // INCORRENT name, should show/hide keyboard [Yufei Lang 4/12/2012]
 {
+#warning 判断显示或者隐藏键盘
     [_txtField_ChatTextBox resignFirstResponder];
 }
 
 - (IBAction)btnClicked_OnBattleGrid:(UIButton *)sender 
 {
-    // used for debugging [Yufei Lang 4/12/2012]
-    NSLog(@"btnClicked. btn frame: %@", NSStringFromCGRect(sender.frame));
-    
-    // when clicked any button on enemy battle field, hide keyboard [Yufei Lang 4/10/2012]
-    [_txtField_ChatTextBox resignFirstResponder];
-    
-    int X = sender.frame.origin.x / 29;
-    int Y = sender.frame.origin.y / 29;
-    CTransmissionStructure *attackStr = [[CTransmissionStructure alloc] initWithFlag:MSG_FLAG_ATTACK andDetail:@"" andNumberRow:Y andNumberCol:X];
-    if (![_socketConn sendMsgAsTransStructure:attackStr])
-        [self sendTextView:_textView_InfoView Message:@"Can't send attack msg, please try again." 
-               AsCharacter:[_arryCharacterString objectAtIndex:CharacterAdjutant]];
+    if (_isGamingContinuing && _isCompetitorReady && _isPlacingAircraftsReady && _isMyturn)
+    {
+        int X = sender.frame.origin.x / 29;
+        int Y = sender.frame.origin.y / 29;
+        CTransmissionStructure *attackStr = [[CTransmissionStructure alloc] initWithFlag:MSG_FLAG_ATTACK andDetail:@"" andNumberRow:Y andNumberCol:X];
+        if (![_socketConn sendMsgAsTransStructure:attackStr])
+            [self sendTextView:_textView_InfoView Message:@"Can't send attack msg, please try again." 
+                   AsCharacter:[_arryCharacterString objectAtIndex:CharacterAdjutant]];
+
+        _isMyturn = NO;
+        if (_isMyturn) 
+            _lbl_WhoseTurn.text = TURN_OF_MINE;
+        else
+            _lbl_WhoseTurn.text = TURN_OF_COMPETITOR;
+    }
 }
 
 @end
