@@ -8,16 +8,30 @@
 
 #import "PlayViewController.h"
 
-#define NUMBER_OF_PAGE_IN_SCROLLVIEW 2
+#define NUMBER_OF_PAGE_IN_SCROLLVIEW    2
+
+#define MSG_FLAG_STATUS                 @"status"
+#define MSG_FLAG_CHAT                   @"chat"
+#define MSG_FLAG_ATTACK                 @"attack"
+#define MSG_FLAG_ATTACK_RESULT          @"attackResult"
+
+#define MSG_FLAG_STATUS_WAITING         @"waiting for competitor"
+#define MSG_FLAG_STATUS_PAIRED          @"found your competitor"
+#define MSG_FLAG_STATUS_COMPTOR_READY   @"your competitor is ready"
+
+#define ATTACK_MISS                     @"\ue049" // cloud, means nothing there [Yufei Lang 4/12/2012]
+#define ATTACK_HIT                      @"\ue332" // empty circle, means hit but not hit the head which is still alive [Yufei Lang 4/12/2012]
+#define ATTACK_DIE                      @"\ue219" // solid circle, means dead [Yufei Lang 4/12/2012]
 
 @interface PlayViewController()
 - (void)sendTextView: (UITextView *)textView Message: (NSString *)strMessage AsCharacter: (NSString *)character;
-- (void)initGridInBattleFieldView:(UIView *)viewBattleField WithButtonsInArray: (NSMutableArray *) arry2D_Buttons;
+- (void)initGridInBattleFieldView:(UIView *)viewBattleField WithButtonsWillBeStoredInArray: (NSMutableArray *) arry2D_Buttons;
+- (void)initGridInBattleFieldView:(UIView *)viewBattleField WithLabelsWillBeStoredInArray: (NSMutableArray *) arry2D_Buttons;
 @end
 
 @implementation PlayViewController
 @synthesize arryCharacterString = _arryCharacterString;
-@synthesize arryMyBattleFieldButtons = _arryMyBattleFieldButtons;
+@synthesize arryMyBattleFieldLabels = _arryMyBattleFieldLabels;
 @synthesize arryEmenyBattleFieldButtons = _arryEmenyBattleFieldButtons;
 @synthesize textView_InfoView = _textView_InfoView;
 @synthesize txtField_ChatTextBox = _txtField_ChatTextBox;
@@ -45,7 +59,7 @@
         _isCompetitorReady = NO;
         _isGettingPaired = NO;
         _iNumberOfAircraftsPlaced = 0;
-        _arryMyBattleFieldButtons = [[NSMutableArray alloc] init];
+        _arryMyBattleFieldLabels = [[NSMutableArray alloc] init];
         _arryEmenyBattleFieldButtons = [[NSMutableArray alloc] init];
         _arryCharacterString = [[NSArray alloc] initWithObjects:@"Adjutant", @"Me", @"Competitor", nil];
     }
@@ -85,14 +99,14 @@
     [_imgView_EnemyBattleFieldBackground setImage:[UIImage imageNamed:@"blueSky"]];
     
     // init two battle fields with buttons [Yufei Lang 4/6/2012]
-    //[self initGridInBattleFieldView:_view_MyBattleField WithButtonsInArray:_arryMyBattleFieldButtons];
-    [self initGridInBattleFieldView:_view_EnemyBattleField WithButtonsInArray:_arryEmenyBattleFieldButtons];
+    [self initGridInBattleFieldView:_view_MyBattleField WithLabelsWillBeStoredInArray:_arryMyBattleFieldLabels];
+    [self initGridInBattleFieldView:_view_EnemyBattleField WithButtonsWillBeStoredInArray:_arryEmenyBattleFieldButtons];
 
 }
 
-- (void)initGridInBattleFieldView:(UIView *)viewBattleField WithButtonsInArray: (NSMutableArray *) arry2D_Buttons
+- (void)initGridInBattleFieldView:(UIView *)viewBattleField WithButtonsWillBeStoredInArray: (NSMutableArray *) arry2D_Buttons
 {
-    // those loops will create 100 buttons fill the battle field [Yufei Lang 3/12/2012]
+    // these loops will create 100 buttons fill the battle field [Yufei Lang 3/12/2012]
     // it will also create a 2D array which is a member of self called _arry??BattleFieldButtons[Yufei Lang 3/12/2012]
     // so when recv the attack msg, we can update the text lable within the buttons [Yufei Lang 3/12/2012]
     for (int row = 0; row < 10; row++) 
@@ -101,14 +115,33 @@
         for (int col = 0; col < 10; col++) 
         {
             UIButton *btn = [[UIButton alloc]initWithFrame:CGRectMake(col * 29, row * 29, 29, 29)];
+            // this will make sure emoji icon apears in the centre of the buttons [Yufei Lang 4/12/2012]
             btn.contentEdgeInsets = UIEdgeInsetsMake(3.5, 1.5, 0.0, 0.0);
-            //[btn setTitle:@"\ue21a" forState:UIControlStateNormal];
-            //[btn setTitle:[NSString stringWithFormat:@"%i%i", row, col] forState:UIControlStateNormal];
             [btn addTarget:nil action:@selector(btnClicked_OnBattleGrid:) forControlEvents:UIControlEventTouchUpInside];
             [arryButtonsInRow addObject:btn];
             [viewBattleField addSubview:btn];
         }
         [arry2D_Buttons addObject:arryButtonsInRow];
+    }
+}
+
+- (void)initGridInBattleFieldView:(UIView *)viewBattleField WithLabelsWillBeStoredInArray: (NSMutableArray *) arry2D_Lables
+{
+    // these loops will create 100 labels fill the battle field [Yufei Lang 3/12/2012]
+    // it will also create a 2D array which is a member of self called _arry??BattleFieldButtons[Yufei Lang 3/12/2012]
+    // so when recv the attack msg, we can update the text lable within the labels [Yufei Lang 3/12/2012]
+    for (int row = 0; row < 10; row++) 
+    {
+        NSMutableArray *arryButtonsInRow = [[NSMutableArray alloc] init];
+        for (int col = 0; col < 10; col++) 
+        {
+            UILabel *lbl = [[UILabel alloc]initWithFrame:CGRectMake(col * 29, row * 29, 29, 29)];
+            //lbl.contentEdgeInsets = UIEdgeInsetsMake(3.5, 1.5, 0.0, 0.0);
+            lbl.backgroundColor = [UIColor clearColor];
+            [arryButtonsInRow addObject:lbl];
+            [viewBattleField addSubview:lbl];
+        }
+        [arry2D_Lables addObject:arryButtonsInRow];
     }
 }
 
@@ -441,12 +474,14 @@
             textField.text = @"";
         }
         else {
-            [self sendTextView:_textView_InfoView Message:@"Sorry commander, there is a problem while sending you message." AsCharacter:[_arryCharacterString objectAtIndex:CharacterAdjutant]];
+            [self sendTextView:_textView_InfoView Message:@"Sorry commander, there is a problem while sending your message." 
+                   AsCharacter:[_arryCharacterString objectAtIndex:CharacterAdjutant]];
         }
     } 
     else 
     {
-        [self sendTextView:_textView_InfoView Message:@"Sorry commander, you can't send msg to nobody, I am still looking for your competitor." AsCharacter:[_arryCharacterString objectAtIndex:CharacterAdjutant]];
+        [self sendTextView:_textView_InfoView Message:@"Sorry commander, you can't send msg to nobody, I am still looking for your competitor." 
+               AsCharacter:[_arryCharacterString objectAtIndex:CharacterAdjutant]];
     }
     return YES;
 }
@@ -477,7 +512,7 @@
     // since it is a status message, we use "adjutant" as the speaking character
     NSString *strCharacter = [_arryCharacterString objectAtIndex:CharacterAdjutant];
     
-    if ([transStr.strDetail isEqualToString:@"found your competitor"])
+    if ([transStr.strDetail isEqualToString:MSG_FLAG_STATUS_PAIRED])
     {
         _isGettingPaired = YES;
         
@@ -499,7 +534,7 @@
             });
         }
     }
-    if ([transStr.strDetail isEqualToString:@"your competitor is ready"])
+    if ([transStr.strDetail isEqualToString:MSG_FLAG_STATUS_COMPTOR_READY])
     {
         _isCompetitorReady = YES;
         if ([NSThread isMainThread])
@@ -535,7 +570,68 @@
 // execute when received a ATTACT message from socket connection [Yufei Lang 3/12/2012]
 - (void)recvAttackMessage: (CTransmissionStructure *)transStr
 {
+    // if my attack is missed [Yufei Lang 3/12/2012]
+    if ([transStr.strDetail isEqualToString:@"miss"]) 
+    {
+        // if already is main thread, execute normally
+        if ([NSThread isMainThread])
+        {
+            UILable *lbl = [[_arryMyBattleFieldLabels objectAtIndex:transStr.iCol.intValue] 
+                             objectAtIndex:transStr.iRow.intValue];
+            [lbl setTitle:ATTACK_MISS forState:UIControlStateNormal];
+        }
+        else 
+        {
+            // if not main thread, get main thread in order to update UI elements
+            dispatch_async(dispatch_get_main_queue(), ^{
+                UILable *lbl = [[_arryMyBattleFieldLabels objectAtIndex:transStr.iCol.intValue] 
+                                 objectAtIndex:transStr.iRow.intValue];
+                [lbl setTitle:ATTACK_MISS forState:UIControlStateNormal];
+            });
+        }
+    }
     
+    // if my attack is hited [Yufei Lang 3/12/2012]
+    if ([transStr.strDetail isEqualToString:@"hit"]) 
+    {
+        // if already is main thread, execute normally
+        if ([NSThread isMainThread])
+        {
+            UILable *lbl = [[_arryMyBattleFieldLabels objectAtIndex:transStr.iCol.intValue] 
+                             objectAtIndex:transStr.iRow.intValue];
+            [lbl setTitle:ATTACK_HIT forState:UIControlStateNormal];
+        }
+        else 
+        {
+            // if not main thread, get main thread in order to update UI elements
+            dispatch_async(dispatch_get_main_queue(), ^{
+                UILable *lbl = [[_arryMyBattleFieldLabels objectAtIndex:transStr.iCol.intValue] 
+                                 objectAtIndex:transStr.iRow.intValue];
+                [lbl setTitle:ATTACK_HIT forState:UIControlStateNormal];
+            });
+        }
+    }
+    
+    // if my attack is hit the head of enemy's aircraft [Yufei Lang 3/12/2012]
+    if ([transStr.strDetail isEqualToString:@"die"]) 
+    {
+        // if already is main thread, execute normally
+        if ([NSThread isMainThread])
+        {
+            UILable *lbl = [[_arryMyBattleFieldLabels objectAtIndex:transStr.iCol.intValue] 
+                             objectAtIndex:transStr.iRow.intValue];
+            [lbl setTitle:ATTACK_DIE forState:UIControlStateNormal];
+        }
+        else 
+        {
+            // if not main thread, get main thread in order to update UI elements
+            dispatch_async(dispatch_get_main_queue(), ^{
+                UILable *lbl = [[_arryMyBattleFieldLabels objectAtIndex:transStr.iCol.intValue] 
+                                 objectAtIndex:transStr.iRow.intValue];
+                [lbl setTitle:ATTACK_DIE forState:UIControlStateNormal];
+            });
+        }
+    }
 }
 
 // execute when received a ATTACT RESULT message from socket connection [Yufei Lang 3/12/2012]
@@ -549,8 +645,7 @@
         {
             UIButton *btn = [[_arryEmenyBattleFieldButtons objectAtIndex:transStr.iCol.intValue] 
                              objectAtIndex:transStr.iRow.intValue];
-#warning change the button label basic on emoji
-            [btn setTitle:@"\ue21a" forState:UIControlStateNormal];
+            [btn setTitle:ATTACK_MISS forState:UIControlStateNormal];
         }
         else 
         {
@@ -558,8 +653,7 @@
             dispatch_async(dispatch_get_main_queue(), ^{
                 UIButton *btn = [[_arryEmenyBattleFieldButtons objectAtIndex:transStr.iCol.intValue] 
                                  objectAtIndex:transStr.iRow.intValue];
-#warning change the button label basic on emoji
-                [btn setTitle:@"\ue21a" forState:UIControlStateNormal];
+                [btn setTitle:ATTACK_MISS forState:UIControlStateNormal];
             });
         }
     }
@@ -567,13 +661,43 @@
     // if my attack is hited [Yufei Lang 3/12/2012]
     if ([transStr.strDetail isEqualToString:@"hit"]) 
     {
-        <#statements#>
+        // if already is main thread, execute normally
+        if ([NSThread isMainThread])
+        {
+            UIButton *btn = [[_arryEmenyBattleFieldButtons objectAtIndex:transStr.iCol.intValue] 
+                             objectAtIndex:transStr.iRow.intValue];
+            [btn setTitle:ATTACK_HIT forState:UIControlStateNormal];
+        }
+        else 
+        {
+            // if not main thread, get main thread in order to update UI elements
+            dispatch_async(dispatch_get_main_queue(), ^{
+                UIButton *btn = [[_arryEmenyBattleFieldButtons objectAtIndex:transStr.iCol.intValue] 
+                                 objectAtIndex:transStr.iRow.intValue];
+                [btn setTitle:ATTACK_HIT forState:UIControlStateNormal];
+            });
+        }
     }
     
     // if my attack is hit the head of enemy's aircraft [Yufei Lang 3/12/2012]
     if ([transStr.strDetail isEqualToString:@"die"]) 
     {
-        <#statements#>
+        // if already is main thread, execute normally
+        if ([NSThread isMainThread])
+        {
+            UIButton *btn = [[_arryEmenyBattleFieldButtons objectAtIndex:transStr.iCol.intValue] 
+                             objectAtIndex:transStr.iRow.intValue];
+            [btn setTitle:ATTACK_DIE forState:UIControlStateNormal];
+        }
+        else 
+        {
+            // if not main thread, get main thread in order to update UI elements
+            dispatch_async(dispatch_get_main_queue(), ^{
+                UIButton *btn = [[_arryEmenyBattleFieldButtons objectAtIndex:transStr.iCol.intValue] 
+                                 objectAtIndex:transStr.iRow.intValue];
+                [btn setTitle:ATTACK_DIE forState:UIControlStateNormal];
+            });
+        }
     }
 }
 
@@ -584,22 +708,22 @@
     CTransmissionStructure *tempStructure = [note object];
     NSParameterAssert([tempStructure isKindOfClass:[CTransmissionStructure class]]);
     
-    if ([tempStructure.strFlag isEqualToString:@"status"]) 
+    if ([tempStructure.strFlag isEqualToString:MSG_FLAG_STATUS]) 
     {
         [self recvStatusMessage: tempStructure];
     }
     
-    if ([tempStructure.strFlag isEqualToString:@"chat"]) 
+    if ([tempStructure.strFlag isEqualToString:MSG_FLAG_CHAT]) 
     {
         [self recvChatMessage: tempStructure];
     }
     
-    if ([tempStructure.strFlag isEqualToString:@"attack"]) 
+    if ([tempStructure.strFlag isEqualToString:MSG_FLAG_ATTACK]) 
     {
         [self recvAttackMessage: tempStructure];
     }
     
-    if ([tempStructure.strFlag isEqualToString:@"attackResult"]) 
+    if ([tempStructure.strFlag isEqualToString:MSG_FLAG_ATTACK_RESULT]) 
     {
         [self recvAttackResultMessage: tempStructure];
     }
@@ -642,16 +766,19 @@
     _view_MyBattleField.delegate = self;
     _view_EnemyBattleField.delegate = self;
     
-//    CTransmissionStructure *temp = [[CTransmissionStructure alloc] initWithFlag:@"attackResult" andDetail:@"miss" andNumberRow:0 andNumberCol:4];
-//    [self recvAttackResultMessage:temp];
+    CTransmissionStructure *temp = [[CTransmissionStructure alloc] initWithFlag:@"attackResult" andDetail:@"miss" andNumberRow:0 andNumberCol:4];
+    [self recvAttackResultMessage:temp];
+    temp.strDetail = @"hit";
+    temp.iRow = [NSNumber numberWithInt:3];
+    [self recvAttackResultMessage:temp];
     
-    // froze the screen for connecting to host [Yufei Lang 4/12/2012]
-    _progressHud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-    _progressHud.mode = MBProgressHUDModeDeterminate;
-       
-    NSThread *th = [[NSThread alloc]initWithTarget:self selector:@selector(makeSocketConnection) object:nil];
-    th.name = @"thread for making connection";
-    [th start];
+//    // froze the screen for connecting to host [Yufei Lang 4/12/2012]
+//    _progressHud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+//    _progressHud.mode = MBProgressHUDModeDeterminate;
+//       
+//    NSThread *th = [[NSThread alloc]initWithTarget:self selector:@selector(makeSocketConnection) object:nil];
+//    th.name = @"thread for making connection";
+//    [th start];
     
             
 }

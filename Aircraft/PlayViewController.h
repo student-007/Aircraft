@@ -74,7 +74,7 @@ typedef enum
 @property (strong, nonatomic) IBOutlet UITextField *txtField_ChatTextBox;
 
 // properties -  battle fields buttons[Yufei Lang 4/5/2012]
-@property (strong, nonatomic) NSMutableArray *arryMyBattleFieldButtons;
+@property (strong, nonatomic) NSMutableArray *arryMyBattleFieldLabels;
 @property (strong, nonatomic) NSMutableArray *arryEmenyBattleFieldButtons;
 
 // properties - socket connection [Yufei Lang 4/12/2012]
