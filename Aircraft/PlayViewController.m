@@ -576,13 +576,13 @@
 {
     switch (_myGrid[[transStr.iRow intValue]][[transStr.iCol intValue]]) {
         case 0:
-            transStr.strDetail = ATTACK_MISS;
+            transStr.strDetail = MSG_ATTACK_DETAIL_MISS;
             break;
         case 1:
-            transStr.strDetail = ATTACK_HIT;
+            transStr.strDetail = MSG_ATTACK_DETAIL_HIT;
             break;
         case 9:
-            transStr.strDetail = ATTACK_DIE;
+            transStr.strDetail = MSG_ATTACK_DETAIL_DIE;
             break;
         default:
             break;
@@ -649,6 +649,10 @@
             });
         }
     }
+    
+    // send attack result back to attacker [Yufei Lang 4/12/2012]
+    transStr.strFlag = MSG_FLAG_ATTACK_RESULT;
+    [_socketConn sendMsgAsTransStructure:transStr];
 }
 
 // execute when received a ATTACT RESULT message from socket connection [Yufei Lang 3/12/2012]
