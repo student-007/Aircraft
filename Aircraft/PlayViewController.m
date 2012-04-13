@@ -461,53 +461,121 @@
     [textView scrollRangeToVisible:NSMakeRange([strNewString length], 0)];
 }
 
+
+// execute when received a STATUS message from socket connection [Yufei Lang 3/12/2012]
+- (void)recvStatusMessage: (CTransmissionStructure *)transStr
+{
+    // since it is a status message, we use "adjutant" as the speaking character
+    NSString *strCharacter = [_arryCharacterString objectAtIndex:CharacterAdjutant];
+    
+    if ([transStr.strDetail isEqualToString:@"found your competitor"])
+    {
+        _isGettingPaired = YES;
+        
+        // if already is main thread, execute normally
+        if ([NSThread isMainThread])
+        {
+            [self sendTextView:_textView_InfoView Message:@"Found your competitor, ready to go!" 
+                   AsCharacter:[_arryCharacterString objectAtIndex:CharacterAdjutant]];  
+            [self sendTextView:_textView_InfoView Message:@"Commander, please drag and release to place 3 aircrafts." 
+                   AsCharacter:[_arryCharacterString objectAtIndex:CharacterAdjutant]];   
+        }
+        else
+        {// if not main thread, get main thread in order to update UI elements
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [self sendTextView:_textView_InfoView Message:@"Found your competitor, ready to go!" 
+                       AsCharacter:[_arryCharacterString objectAtIndex:CharacterAdjutant]];  
+                [self sendTextView:_textView_InfoView Message:@"Commander, please drag and release to place 3 aircrafts." 
+                       AsCharacter:[_arryCharacterString objectAtIndex:CharacterAdjutant]]; 
+            });
+        }
+    }
+    if ([transStr.strDetail isEqualToString:@"your competitor is ready"])
+    {
+        _isCompetitorReady = YES;
+        if ([NSThread isMainThread])
+            [self sendTextView:_textView_InfoView Message:@"Your competitor is getting ready!" AsCharacter:strCharacter];
+        else 
+        {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [self sendTextView:_textView_InfoView Message:@"Your competitor is getting ready!" 
+                       AsCharacter:strCharacter];
+            });
+        }
+    }
+}
+
+// execute when received a CHATTING message from socket connection [Yufei Lang 3/12/2012]
+- (void)recvChatMessage: (CTransmissionStructure *)transStr
+{
+    // since it is a status message, we use "Competitor" as the speaking character
+    NSString *strCharacter = [_arryCharacterString objectAtIndex:CharacterCompetitor];
+    
+    // if already is main thread, execute normally
+    if ([NSThread isMainThread])
+        [self sendTextView:_textView_InfoView Message:transStr.strDetail AsCharacter:strCharacter];
+    else 
+    {
+        // if not main thread, get main thread in order to update UI elements
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self sendTextView:_textView_InfoView Message:transStr.strDetail AsCharacter:strCharacter];
+        });
+    }
+}
+
+// execute when received a ATTACT message from socket connection [Yufei Lang 3/12/2012]
+- (void)recvAttackMessage: (CTransmissionStructure *)transStr
+{
+    
+}
+
+// execute when received a ATTACT RESULT message from socket connection [Yufei Lang 3/12/2012]
+- (void)recvAttackResultMessage: (CTransmissionStructure *)transStr
+{
+    // if my attack is missed [Yufei Lang 3/12/2012]
+    if ([transStr.strDetail isEqualToString:@"miss"]) 
+    {
+        <#statements#>
+    }
+    
+    // if my attack is hited [Yufei Lang 3/12/2012]
+    if ([transStr.strDetail isEqualToString:@"hit"]) 
+    {
+        <#statements#>
+    }
+    
+    // if my attack is missed [Yufei Lang 3/12/2012]
+    if ([transStr.strDetail isEqualToString:@"die"]) 
+    {
+        <#statements#>
+    }
+}
+
 // this function will be called when post a notification named: ->
 // -> newMsgRecved(this has been defined as NewMSGComesFromHost)
 - (void) newMsgComes: (NSNotification *)note
 {
     CTransmissionStructure *tempStructure = [note object];
     NSParameterAssert([tempStructure isKindOfClass:[CTransmissionStructure class]]);
-    NSString *strCharacter;
-    if ([tempStructure.strFlag isEqualToString:@"chat"])
+    
+    if ([tempStructure.strFlag isEqualToString:@"status"]) 
     {
-        strCharacter = [_arryCharacterString objectAtIndex:CharacterCompetitor];
-        // get main thread in order to update UI elements
-        if ([NSThread isMainThread])
-            [self sendTextView:_textView_InfoView Message:tempStructure.strDetail AsCharacter:strCharacter];
-        else {
-            dispatch_async(dispatch_get_main_queue(), ^{
-                [self sendTextView:_textView_InfoView Message:tempStructure.strDetail AsCharacter:strCharacter];
-            });
-        }
+        [self recvStatusMessage: tempStructure];
     }
-    if ([tempStructure.strFlag isEqualToString:@"status"])
+    
+    if ([tempStructure.strFlag isEqualToString:@"chat"]) 
     {
-#warning action for these statuses
-        if ([tempStructure.strDetail isEqualToString:@"found your competitor"])
-        {
-            _isGettingPaired = YES;
-            if ([NSThread isMainThread])
-            [self sendTextView:_textView_InfoView Message:@"Commander, please drag and release to place 3 aircrafts." 
-                   AsCharacter:[_arryCharacterString objectAtIndex:CharacterAdjutant]];  
-            else
-            {
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    [self sendTextView:_textView_InfoView Message:@"Commander, please drag and release to place 3 aircrafts." 
-                           AsCharacter:[_arryCharacterString objectAtIndex:CharacterAdjutant]];});
-            }
-        }
-        if ([tempStructure.strDetail isEqualToString:@"your competitor is ready"])
-            _isCompetitorReady = YES;
-        // normal status like :waiting for competitor[Yufei Lang 4/12/2012]
-        strCharacter = [_arryCharacterString objectAtIndex:CharacterAdjutant];
-        // get main thread in order to update UI elements
-        if ([NSThread isMainThread])
-            [self sendTextView:_textView_InfoView Message:tempStructure.strDetail AsCharacter:strCharacter];
-        else 
-        {
-            dispatch_async(dispatch_get_main_queue(), ^{
-                [self sendTextView:_textView_InfoView Message:tempStructure.strDetail AsCharacter:strCharacter];});
-        }
+        [self recvChatMessage: tempStructure];
+    }
+    
+    if ([tempStructure.strFlag isEqualToString:@"attack"]) 
+    {
+        [self recvAttackMessage: tempStructure];
+    }
+    
+    if ([tempStructure.strFlag isEqualToString:@"attackResult"]) 
+    {
+        [self recvAttackResultMessage: tempStructure];
     }
 }
 
