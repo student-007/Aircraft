@@ -453,7 +453,6 @@
         textField.text = _tempChattingString;
     }
     
-    
     [UIView beginAnimations:@"ResizeForKeyboard"context:nil];
     [UIView setAnimationDuration:0.3f];
     
@@ -587,64 +586,64 @@
         default:
             break;
     }
-    // if my attack is missed [Yufei Lang 3/12/2012]
+    // if enemy's attack is missed [Yufei Lang 3/12/2012]
     if ([transStr.strDetail isEqualToString:MSG_ATTACK_DETAIL_MISS]) 
     {
         // if already is main thread, execute normally
         if ([NSThread isMainThread])
         {
-            UILabel *lbl = [[_arryMyBattleFieldLabels objectAtIndex:transStr.iCol.intValue] 
-                             objectAtIndex:transStr.iRow.intValue];
+            UILabel *lbl = [[_arryMyBattleFieldLabels objectAtIndex:transStr.iRow.intValue] 
+                             objectAtIndex:transStr.iCol.intValue];
             lbl.text = ATTACK_MISS;
         }
         else 
         {
             // if not main thread, get main thread in order to update UI elements
             dispatch_async(dispatch_get_main_queue(), ^{
-                UILabel *lbl = [[_arryMyBattleFieldLabels objectAtIndex:transStr.iCol.intValue] 
-                                 objectAtIndex:transStr.iRow.intValue];
+                UILabel *lbl = [[_arryMyBattleFieldLabels objectAtIndex:transStr.iRow.intValue] 
+                                 objectAtIndex:transStr.iCol.intValue];
                 lbl.text = ATTACK_MISS;
             });
         }
     }
     
-    // if my attack is hited [Yufei Lang 3/12/2012]
+    // if enemy's attack is hit [Yufei Lang 3/12/2012]
     if ([transStr.strDetail isEqualToString:MSG_ATTACK_DETAIL_HIT]) 
     {
         // if already is main thread, execute normally
         if ([NSThread isMainThread])
         {
-            UILabel *lbl = [[_arryMyBattleFieldLabels objectAtIndex:transStr.iCol.intValue] 
-                             objectAtIndex:transStr.iRow.intValue];
+            UILabel *lbl = [[_arryMyBattleFieldLabels objectAtIndex:transStr.iRow.intValue] 
+                             objectAtIndex:transStr.iCol.intValue];
             lbl.text = ATTACK_HIT;
         }
         else 
         {
             // if not main thread, get main thread in order to update UI elements
             dispatch_async(dispatch_get_main_queue(), ^{
-                UILabel *lbl = [[_arryMyBattleFieldLabels objectAtIndex:transStr.iCol.intValue] 
-                                 objectAtIndex:transStr.iRow.intValue];
+                UILabel *lbl = [[_arryMyBattleFieldLabels objectAtIndex:transStr.iRow.intValue] 
+                                 objectAtIndex:transStr.iCol.intValue];
                 lbl.text = ATTACK_HIT;
             });
         }
     }
     
-    // if my attack is hit the head of enemy's aircraft [Yufei Lang 3/12/2012]
+    // if enemy's attack is hit the my aircraft's head [Yufei Lang 3/12/2012]
     if ([transStr.strDetail isEqualToString:MSG_ATTACK_DETAIL_DIE]) 
     {
         // if already is main thread, execute normally
         if ([NSThread isMainThread])
         {
-            UILabel *lbl = [[_arryMyBattleFieldLabels objectAtIndex:transStr.iCol.intValue] 
-                             objectAtIndex:transStr.iRow.intValue];
+            UILabel *lbl = [[_arryMyBattleFieldLabels objectAtIndex:transStr.iRow.intValue] 
+                             objectAtIndex:transStr.iCol.intValue];
             lbl.text = ATTACK_DIE;
         }
         else 
         {
             // if not main thread, get main thread in order to update UI elements
             dispatch_async(dispatch_get_main_queue(), ^{
-                UILabel *lbl = [[_arryMyBattleFieldLabels objectAtIndex:transStr.iCol.intValue] 
-                                 objectAtIndex:transStr.iRow.intValue];
+                UILabel *lbl = [[_arryMyBattleFieldLabels objectAtIndex:transStr.iRow.intValue] 
+                                 objectAtIndex:transStr.iCol.intValue];
                 lbl.text = ATTACK_DIE;
             });
         }
@@ -664,16 +663,16 @@
         // if already is main thread, execute normally
         if ([NSThread isMainThread])
         {
-            UIButton *btn = [[_arryEmenyBattleFieldButtons objectAtIndex:transStr.iCol.intValue] 
-                             objectAtIndex:transStr.iRow.intValue];
+            UIButton *btn = [[_arryEmenyBattleFieldButtons objectAtIndex:transStr.iRow.intValue] 
+                             objectAtIndex:transStr.iCol.intValue];
             [btn setTitle:ATTACK_MISS forState:UIControlStateNormal];
         }
         else 
         {
             // if not main thread, get main thread in order to update UI elements
             dispatch_async(dispatch_get_main_queue(), ^{
-                UIButton *btn = [[_arryEmenyBattleFieldButtons objectAtIndex:transStr.iCol.intValue] 
-                                 objectAtIndex:transStr.iRow.intValue];
+                UIButton *btn = [[_arryEmenyBattleFieldButtons objectAtIndex:transStr.iRow.intValue] 
+                                 objectAtIndex:transStr.iCol.intValue];
                 [btn setTitle:ATTACK_MISS forState:UIControlStateNormal];
             });
         }
@@ -685,16 +684,16 @@
         // if already is main thread, execute normally
         if ([NSThread isMainThread])
         {
-            UIButton *btn = [[_arryEmenyBattleFieldButtons objectAtIndex:transStr.iCol.intValue] 
-                             objectAtIndex:transStr.iRow.intValue];
+            UIButton *btn = [[_arryEmenyBattleFieldButtons objectAtIndex:transStr.iRow.intValue] 
+                             objectAtIndex:transStr.iCol.intValue];
             [btn setTitle:ATTACK_HIT forState:UIControlStateNormal];
         }
         else 
         {
             // if not main thread, get main thread in order to update UI elements
             dispatch_async(dispatch_get_main_queue(), ^{
-                UIButton *btn = [[_arryEmenyBattleFieldButtons objectAtIndex:transStr.iCol.intValue] 
-                                 objectAtIndex:transStr.iRow.intValue];
+                UIButton *btn = [[_arryEmenyBattleFieldButtons objectAtIndex:transStr.iRow.intValue] 
+                                 objectAtIndex:transStr.iCol.intValue];
                 [btn setTitle:ATTACK_HIT forState:UIControlStateNormal];
             });
         }
@@ -706,16 +705,16 @@
         // if already is main thread, execute normally
         if ([NSThread isMainThread])
         {
-            UIButton *btn = [[_arryEmenyBattleFieldButtons objectAtIndex:transStr.iCol.intValue] 
-                             objectAtIndex:transStr.iRow.intValue];
+            UIButton *btn = [[_arryEmenyBattleFieldButtons objectAtIndex:transStr.iRow.intValue] 
+                             objectAtIndex:transStr.iCol.intValue];
             [btn setTitle:ATTACK_DIE forState:UIControlStateNormal];
         }
         else 
         {
             // if not main thread, get main thread in order to update UI elements
             dispatch_async(dispatch_get_main_queue(), ^{
-                UIButton *btn = [[_arryEmenyBattleFieldButtons objectAtIndex:transStr.iCol.intValue] 
-                                 objectAtIndex:transStr.iRow.intValue];
+                UIButton *btn = [[_arryEmenyBattleFieldButtons objectAtIndex:transStr.iRow.intValue] 
+                                 objectAtIndex:transStr.iCol.intValue];
                 [btn setTitle:ATTACK_DIE forState:UIControlStateNormal];
             });
         }
@@ -947,9 +946,9 @@
     // when clicked any button on enemy battle field, hide keyboard [Yufei Lang 4/10/2012]
     [_txtField_ChatTextBox resignFirstResponder];
     
-    int X = sender.frame.origin.y / 29;
-    int Y = sender.frame.origin.x / 29;
-    CTransmissionStructure *attackStr = [[CTransmissionStructure alloc] initWithFlag:MSG_FLAG_ATTACK andDetail:@"" andNumberRow:X andNumberCol:Y];
+    int X = sender.frame.origin.x / 29;
+    int Y = sender.frame.origin.y / 29;
+    CTransmissionStructure *attackStr = [[CTransmissionStructure alloc] initWithFlag:MSG_FLAG_ATTACK andDetail:@"" andNumberRow:Y andNumberCol:X];
     if (![_socketConn sendMsgAsTransStructure:attackStr])
         [self sendTextView:_textView_InfoView Message:@"Can't send attack msg, please try again." 
                AsCharacter:[_arryCharacterString objectAtIndex:CharacterAdjutant]];
