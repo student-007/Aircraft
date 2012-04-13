@@ -73,8 +73,9 @@ typedef enum
 @property (strong, nonatomic) IBOutlet UITextView *textView_InfoView;
 @property (strong, nonatomic) IBOutlet UITextField *txtField_ChatTextBox;
 
-// properties -  useless[Yufei Lang 4/5/2012]
-@property (strong, nonatomic) NSMutableArray *arryImgView_PlacedAircrafts;
+// properties -  battle fields buttons[Yufei Lang 4/5/2012]
+@property (strong, nonatomic) NSMutableArray *arryMyBattleFieldButtons;
+@property (strong, nonatomic) NSMutableArray *arryEmenyBattleFieldButtons;
 
 // properties - socket connection [Yufei Lang 4/12/2012]
 @property (strong, nonatomic) CSocketConnection *socketConn;
@@ -90,7 +91,6 @@ typedef enum
 // methods [Yufei Lang 4/5/2012]
 - (void)initAllViews;
 - (void)loadPage: (UIView *)viewPage toScrollView: (UIScrollView *) scrollView;
-- (void)initGridInBattleFieldView:(UIView *)viewBattleField;
 - (void)removeAircraft:(TapDetectingImageView *)aircraftView withOldFrame:(CGRect)frame fromGrid:(int [10][10])grid ;
 - (BOOL)checkAircraft:(TapDetectingImageView *)aircraftView canFitGrid: (int [10][10])grid;
 - (BOOL)checkAircraft:(TapDetectingImageView *)aircraftView inNewFrame:(CGRect)frame canFitGrid: (int [10][10])grid;

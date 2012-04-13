@@ -12,12 +12,13 @@
 
 @interface PlayViewController()
 - (void)sendTextView: (UITextView *)textView Message: (NSString *)strMessage AsCharacter: (NSString *)character;
-//- (void)updateProgressHudWithWorkingStatus: (BOOL)status WithPercentageInFloat: (float)fPercentage WithAMessage: (NSString *)msg;
+- (void)initGridInBattleFieldView:(UIView *)viewBattleField WithButtonsInArray: (NSMutableArray *) arry2D_Buttons;
 @end
 
 @implementation PlayViewController
 @synthesize arryCharacterString = _arryCharacterString;
-@synthesize arryImgView_PlacedAircrafts = _arryImgView_PlacedAircrafts;
+@synthesize arryMyBattleFieldButtons = _arryMyBattleFieldButtons;
+@synthesize arryEmenyBattleFieldButtons = _arryEmenyBattleFieldButtons;
 @synthesize textView_InfoView = _textView_InfoView;
 @synthesize txtField_ChatTextBox = _txtField_ChatTextBox;
 @synthesize scrollView_BattleField = _scrollView_BattleField;
@@ -44,7 +45,8 @@
         _isCompetitorReady = NO;
         _isGettingPaired = NO;
         _iNumberOfAircraftsPlaced = 0;
-        _arryImgView_PlacedAircrafts = [[NSMutableArray alloc] init];
+        _arryMyBattleFieldButtons = [[NSMutableArray alloc] init];
+        _arryEmenyBattleFieldButtons = [[NSMutableArray alloc] init];
         _arryCharacterString = [[NSArray alloc] initWithObjects:@"Adjutant", @"Me", @"Competitor", nil];
     }
     return self;
@@ -83,14 +85,19 @@
     [_imgView_EnemyBattleFieldBackground setImage:[UIImage imageNamed:@"blueSky"]];
     
     // init two battle fields with buttons [Yufei Lang 4/6/2012]
-    //[self initGridInBattleFieldView:_view_MyBattleField];
-    [self initGridInBattleFieldView:_view_EnemyBattleField];
+    //[self initGridInBattleFieldView:_view_MyBattleField WithButtonsInArray:_arryMyBattleFieldButtons];
+    [self initGridInBattleFieldView:_view_EnemyBattleField WithButtonsInArray:_arryEmenyBattleFieldButtons];
 
 }
 
-- (void)initGridInBattleFieldView:(UIView *)viewBattleField
+- (void)initGridInBattleFieldView:(UIView *)viewBattleField WithButtonsInArray: (NSMutableArray *) arry2D_Buttons
 {
+    // those loops will create 100 buttons fill the battle field [Yufei Lang 3/12/2012]
+    // it will also create a 2D array which is a member of self called _arry??BattleFieldButtons[Yufei Lang 3/12/2012]
+    // so when recv the attack msg, we can update the text lable within the buttons [Yufei Lang 3/12/2012]
     for (int row = 0; row < 10; row++) 
+    {
+        NSMutableArray *arryButtonsInRow = [[NSMutableArray alloc] init];
         for (int col = 0; col < 10; col++) 
         {
             UIButton *btn = [[UIButton alloc]initWithFrame:CGRectMake(col * 29, row * 29, 29, 29)];
@@ -98,9 +105,11 @@
             //[btn setTitle:@"\ue21a" forState:UIControlStateNormal];
             //[btn setTitle:[NSString stringWithFormat:@"%i%i", row, col] forState:UIControlStateNormal];
             [btn addTarget:nil action:@selector(btnClicked_OnBattleGrid:) forControlEvents:UIControlEventTouchUpInside];
+            [arryButtonsInRow addObject:btn];
             [viewBattleField addSubview:btn];
         }
-    
+        [arry2D_Buttons addObject:arryButtonsInRow];
+    }
 }
 
 - (void)loadPage: (UIView *)viewPage toScrollView: (UIScrollView *) scrollView
@@ -535,7 +544,24 @@
     // if my attack is missed [Yufei Lang 3/12/2012]
     if ([transStr.strDetail isEqualToString:@"miss"]) 
     {
-        <#statements#>
+        // if already is main thread, execute normally
+        if ([NSThread isMainThread])
+        {
+            UIButton *btn = [[_arryEmenyBattleFieldButtons objectAtIndex:transStr.iCol.intValue] 
+                             objectAtIndex:transStr.iRow.intValue];
+#warning change the button label basic on emoji
+            [btn setTitle:@"\ue21a" forState:UIControlStateNormal];
+        }
+        else 
+        {
+            // if not main thread, get main thread in order to update UI elements
+            dispatch_async(dispatch_get_main_queue(), ^{
+                UIButton *btn = [[_arryEmenyBattleFieldButtons objectAtIndex:transStr.iCol.intValue] 
+                                 objectAtIndex:transStr.iRow.intValue];
+#warning change the button label basic on emoji
+                [btn setTitle:@"\ue21a" forState:UIControlStateNormal];
+            });
+        }
     }
     
     // if my attack is hited [Yufei Lang 3/12/2012]
@@ -544,7 +570,7 @@
         <#statements#>
     }
     
-    // if my attack is missed [Yufei Lang 3/12/2012]
+    // if my attack is hit the head of enemy's aircraft [Yufei Lang 3/12/2012]
     if ([transStr.strDetail isEqualToString:@"die"]) 
     {
         <#statements#>
@@ -615,6 +641,9 @@
     _txtField_ChatTextBox.delegate = self;   
     _view_MyBattleField.delegate = self;
     _view_EnemyBattleField.delegate = self;
+    
+//    CTransmissionStructure *temp = [[CTransmissionStructure alloc] initWithFlag:@"attackResult" andDetail:@"miss" andNumberRow:0 andNumberCol:4];
+//    [self recvAttackResultMessage:temp];
     
     // froze the screen for connecting to host [Yufei Lang 4/12/2012]
     _progressHud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
