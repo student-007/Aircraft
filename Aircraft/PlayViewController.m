@@ -1049,7 +1049,7 @@
         [UIView setAnimationDuration:0.5];
         
         // set button img, make the arrow icon upsidedown [Yufei Lang 4/14/2012]
-        sender.imageView.transform = CGAffineTransformMakeRotation(M_PI);
+        sender.imageView.transform = CGAffineTransformMakeRotation(0);
         
         // adjust views (animation) [Yufei Lang 4/5/2012]
         //_view_AircraftHolder.alpha = 0;
