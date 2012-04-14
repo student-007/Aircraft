@@ -37,6 +37,7 @@
 - (void)sendTextView: (UITextView *)textView Message: (NSString *)strMessage AsCharacter: (NSString *)character;
 - (void)initGridInBattleFieldView:(UIView *)viewBattleField WithButtonsWillBeStoredInArray: (NSMutableArray *) arry2D_Buttons;
 - (void)initGridInBattleFieldView:(UIView *)viewBattleField WithLabelsWillBeStoredInArray: (NSMutableArray *) arry2D_Buttons;
+- (void)print: (int[10][10]) intArry2D;
 @end
 
 @implementation PlayViewController
@@ -344,12 +345,13 @@
                 iY += 1;
             [_tempAircraftView removeFromSuperview];
             // if all the aircrafts have been placed then stopping putting it in my battle view [Yufei Lang 4/6/2012]
-            // and if an aircraft can be put here [Yufei Lang 4/10/2012]
-            if (_iNumberOfAircraftsPlaced < 3 && [self checkAircraft:_tempAircraftView canFitGrid:_myGrid]) 
+            // and check if an aircraft can be put here before putting it [Yufei Lang 4/10/2012]
+            CGRect newFrame = CGRectMake(iX * 29, iY * 29, _tempAircraftView.frame.size.width, _tempAircraftView.frame.size.height);
+            if (_iNumberOfAircraftsPlaced < 3 && [self checkAircraft:_tempAircraftView inNewFrame:newFrame canFitGrid:_myGrid]) 
             {
                 _tempAircraftView.delegate = self;
                 [_view_MyBattleField addSubview:_tempAircraftView];
-                [_tempAircraftView setFrame:CGRectMake(iX * 29, iY * 29, _tempAircraftView.frame.size.width, _tempAircraftView.frame.size.height)];
+                [_tempAircraftView setFrame:newFrame];
                 _iNumberOfAircraftsPlaced++;
                 [self fillBattleFieldGrid:_myGrid withAircraft:_tempAircraftView];
             }
@@ -362,11 +364,13 @@
     touch = [[event touchesForView:_tempAircraftView] anyObject];
     if (touch != NULL) 
     {
+        // if the aircraft is in the battle field [Yufei Lang 4/14/2012]
         if (_tempAircraftView.frame.origin.x >= -5 && _tempAircraftView.frame.origin.y >= -5 && 
             _tempAircraftView.frame.origin.x + _tempAircraftView.frame.size.width <= 295 &&
             _tempAircraftView.frame.origin.y + _tempAircraftView.frame.size.height <= 295)
         {
             CGPoint targetPoint = [touch locationInView:self.view];
+            // dividing 2 because aircraft's centre is in the place where user touching [Yufei Lang 4/14/2012]
             int iX = (targetPoint.x - _tempAircraftView.frame.size.width / 2) / 29;
             int iY = (targetPoint.y - _tempAircraftView.frame.size.height / 2) / 29;
             if ((int)(targetPoint.x - _tempAircraftView.frame.size.width / 2) % 29 >= 29 / 2)
@@ -389,20 +393,11 @@
     
 }
 
-- (BOOL)checkAircraft:(TapDetectingImageView *)aircraftView canFitGrid: (int [10][10])grid 
-{
-    int X = aircraftView.frame.origin.x / 29;
-    int Y = aircraftView.frame.origin.y / 29;
-    for (int row = 0; row < 5; row ++) 
-        for (int col = 0; col < 5; col ++) 
-            if ([aircraftView int2D_aircraft:row :col] != 0) 
-                if (_myGrid[Y+row][X+col] != 0) 
-                    return NO;
-    return YES;        
-}
-
 - (BOOL)checkAircraft:(TapDetectingImageView *)aircraftView inNewFrame:(CGRect)frame canFitGrid: (int [10][10])grid 
 {
+    [self print:grid];
+    // allow non-accurate placing [Yufei Lang 4/14/2012]
+    
     int X = frame.origin.x / 29;
     int Y = frame.origin.y / 29;
     for (int row = 0; row < 5; row ++) 
@@ -1135,6 +1130,20 @@
             _lbl_WhoseTurn.text = TURN_OF_MINE;
         else
             _lbl_WhoseTurn.text = TURN_OF_COMPETITOR;
+    }
+}
+
+- (void)print: (int[10][10]) intArry2D
+{
+    for (int row = 0; row < 10; row ++) 
+    {
+        NSMutableString *str = [[NSMutableString alloc] init];
+        for (int col = 0; col < 10; col ++) 
+        {
+             //[arryNumberInRow addObject:[NSNumber numberWithInt:intArry2D[row][col]]];
+            [str appendFormat:@"%d, ", intArry2D[row][col]];
+        }
+        NSLog(@"%@\n", str);
     }
 }
 
