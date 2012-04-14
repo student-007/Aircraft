@@ -24,10 +24,10 @@
 #define MSG_ATTACK_DETAIL_HIT           @"hit"
 #define MSG_ATTACK_DETAIL_DIE           @"die"
 
-#define ATTACK_MISS                     @"\ue049" // cloud, means nothing there [Yufei Lang 4/12/2012]
-#define ATTACK_HIT                      @"\ue332" // empty circle, means hit but not hit the head which is still alive [Yufei Lang 4/12/2012]
-#define ATTACK_DIE                      @"\ue219" // solid circle, means dead [Yufei Lang 4/12/2012]
-#define TURN_OF_MINE                    @"\ue130 My Turn" // 飞镖 [Yufei Lang 4/12/2012]
+#define ATTACK_MISS                     @"\ue049"                   // cloud, means nothing there [Yufei Lang 4/12/2012]
+#define ATTACK_HIT                      @"\ue332"                   // empty circle, hit but not hit the head, still alive [Yufei Lang 4/12/2012]
+#define ATTACK_DIE                      @"\ue219"                   // solid circle, means dead [Yufei Lang 4/12/2012]
+#define TURN_OF_MINE                    @"\ue130 My Turn"           // 飞镖 [Yufei Lang 4/12/2012]
 #define TURN_OF_COMPETITOR              @"\ue045 Competitor's Turn" // coffee [Yufei Lang 4/12/2012]
 
 #define MSG_END_GAME_YOU_WON            @"you won"
@@ -98,11 +98,13 @@
     [_imgView_AircraftDown setImage:[UIImage imageNamed:@"Aircraft.png"]];
     [_imgView_AircraftLeft setImage:[UIImage imageNamed:@"Aircraft.png"]];
     [_imgView_AircraftRight setImage:[UIImage imageNamed:@"Aircraft.png"]];
+    
     // rotation & set 2d int array within the image view [Yufei Lang 4/5/2012]
     [_imgView_AircraftUp setAircraftWithDirection:Up];
     [_imgView_AircraftDown setAircraftWithDirection:Down];
     [_imgView_AircraftRight setAircraftWithDirection:Right];
     [_imgView_AircraftLeft setAircraftWithDirection:Left];
+    
     // release CGMutablePathRef in the images [Yufei Lang 4/10/2012]
     [_imgView_AircraftUp aircraftPlaced];
     [_imgView_AircraftDown aircraftPlaced];
@@ -887,6 +889,7 @@
     _view_MyBattleField.delegate = self;
     _view_EnemyBattleField.delegate = self;
     
+       
     // froze the screen for connecting to host [Yufei Lang 4/12/2012]
     _progressHud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     _progressHud.mode = MBProgressHUDModeDeterminate;
@@ -983,8 +986,9 @@
         }
         _isPlacingAircraftsReady = YES;
         
-#warning make the button like diabled
+        // set title to ready, and make it gray color like disabled [Yufei Lang 4/14/2012]
         [sender setTitle:@"Ready!" forState:UIControlStateNormal];
+        [sender setTitleColor:[UIColor grayColor] forState:UIControlStateNormal];
         
         if (_isMyturn) 
             _lbl_WhoseTurn.text = TURN_OF_MINE;
@@ -1013,7 +1017,7 @@
     }
 }
 
-- (IBAction)btnClicked_ShowHideAircraftHolder:(id)sender 
+- (IBAction)btnClicked_ShowHideAircraftHolder:(UIButton *)sender 
 {
     if (_isAircraftHolderShowing) 
     {        
@@ -1021,6 +1025,9 @@
         // set up a new animation block [Yufei Lang 4/5/2012]
         [UIView beginAnimations:nil context:NULL];
         [UIView setAnimationDuration:0.5];
+        
+        // set button img, make the arrow icon upsidedown [Yufei Lang 4/14/2012]
+        sender.imageView.transform = CGAffineTransformMakeRotation(M_PI);
         
         // adjust views (animation) [Yufei Lang 4/5/2012]
         //_view_AircraftHolder.alpha = 1.0;
@@ -1040,6 +1047,9 @@
         // set up a new animation block [Yufei Lang 4/5/2012]
         [UIView beginAnimations:nil context:NULL];
         [UIView setAnimationDuration:0.5];
+        
+        // set button img, make the arrow icon upsidedown [Yufei Lang 4/14/2012]
+        sender.imageView.transform = CGAffineTransformMakeRotation(M_PI);
         
         // adjust views (animation) [Yufei Lang 4/5/2012]
         //_view_AircraftHolder.alpha = 0;
@@ -1065,7 +1075,7 @@
     if ([_txtField_ChatTextBox.text isEqualToString:@""] && [_txtField_ChatTextBox isFirstResponder])
     {
         [_txtField_ChatTextBox resignFirstResponder];
-#warning set button to a pic like "^"
+        [sender setImage:[UIImage imageNamed:@"goUp"] forState:UIControlStateNormal];
     }
     
     // if txtField is not first responder (keyboard is not showing) but nothing to say [Yufei Lang 4/12/2012]
@@ -1075,6 +1085,7 @@
     {
 #warning set button to a pic like "V"
         [_txtField_ChatTextBox becomeFirstResponder];
+        [sender setImage:[UIImage imageNamed:@"goDown"] forState:UIControlStateNormal];
     }
     else
     {
