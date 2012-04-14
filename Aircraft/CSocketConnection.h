@@ -19,7 +19,8 @@
 @interface CSocketConnection : NSObject
 {
     NSInteger _iSockfd;
-    struct sockaddr_in _their_addr; // Socket address, internet style [Yufei Lang 4/5/2012]
+    NSInteger _iConn;                       // connection status [Yufei Lang 4/14/2012]
+    struct sockaddr_in _their_addr;         // Socket address, internet style [Yufei Lang 4/5/2012]
     BOOL _isFirstConnecting;
     BOOL _isGameContinuing;
     CTransmissionStructure *_transmissionStructure;
@@ -29,11 +30,13 @@
 @property (nonatomic, weak) id<CSocketConnection> delegate;
 @property (nonatomic, strong) CTransmissionStructure *transmissionStructure;
 @property (nonatomic) BOOL isGameContinuing;
+@property (nonatomic) NSInteger iConn;
 
 // methods [Yufei Lang 4/5/2012]
 - (id) init;
 - (NSString *) makeConnection;
 - (void)closeConnection;
+- (BOOL)isConnect;
 - (BOOL)sendMsgAsTransStructure: (CTransmissionStructure *)struture;
 - (void)recvMsg_waitUntilDone;
 @end

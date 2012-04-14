@@ -995,44 +995,51 @@
 // hide _view_AircraftHolder and show _view_ToosHolder after placing aircrafts [Yufei Lang 4/5/2012]
 - (IBAction)btnClicked_DonePlacingAircraft:(UIButton *)sender 
 {   
-    if (_isPlacingAircraftsReady == NO)
+    if (_socketConn.iConn == -1 || ![_socketConn isConnect]) {
+        [self sendTextView:_textView_InfoView Message:@"why bother, there's no connection. Will you start a new online game?" 
+               AsCharacter:[_arryCharacterString objectAtIndex:CharacterAdjutant]];
+    }
+    else
     {
-        if (_iNumberOfAircraftsPlaced != 3)
+        if (_isPlacingAircraftsReady == NO)
         {
-            UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Place more Aircraft(s)" message:@"You have to place 3 aircrafts" delegate:nil cancelButtonTitle:@"Got you." otherButtonTitles: nil];
-            [alert show];
-            return;
+            if (_iNumberOfAircraftsPlaced != 3)
+            {
+                UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Place more Aircraft(s)" message:@"You have to place 3 aircrafts" delegate:nil cancelButtonTitle:@"Got you." otherButtonTitles: nil];
+                [alert show];
+                return;
+            }
+            _isPlacingAircraftsReady = YES;
+            
+            // set title to ready, and make it gray color like disabled [Yufei Lang 4/14/2012]
+            [sender setTitle:@"Ready!" forState:UIControlStateNormal];
+            [sender setTitleColor:[UIColor grayColor] forState:UIControlStateNormal];
+            
+            if (_isMyturn) 
+                _lbl_WhoseTurn.text = TURN_OF_MINE;
+            else
+                _lbl_WhoseTurn.text = TURN_OF_COMPETITOR;
+            
+            // set up a new animation block [Yufei Lang 4/5/2012]
+            [UIView beginAnimations:nil context:NULL];
+            [UIView setAnimationDuration:0.5];
+            
+            // adjust views (animation) [Yufei Lang 4/5/2012]
+            //_view_AircraftHolder.alpha = 0;
+            [_view_AircraftHolder setFrame:CGRectMake(0, _view_AircraftHolder.frame.origin.y - 50.0, 320, 50)];
+            
+            //_view_ToolsHolder.alpha = 1.0;
+            [_view_ToolsHolder setFrame:CGRectMake(0, _view_ToolsHolder.frame.origin.y - 50.0, 320, 50)];
+            
+            if (_view_ChatFeild.frame.origin.y != 340)
+                [_view_ChatFeild setFrame:CGRectMake(0, _view_ChatFeild.frame.origin.y - 50.0, 320, 50)];
+            
+            // end and commit animation [Yufei Lang 4/5/2012]
+            [UIView commitAnimations];
+            
+            CTransmissionStructure *attackStr = [[CTransmissionStructure alloc] initWithFlag:MSG_FLAG_STATUS andDetail:MSG_FLAG_STATUS_COMPTOR_READY andNumberRow:0 andNumberCol:0];
+            [_socketConn sendMsgAsTransStructure:attackStr];
         }
-        _isPlacingAircraftsReady = YES;
-        
-        // set title to ready, and make it gray color like disabled [Yufei Lang 4/14/2012]
-        [sender setTitle:@"Ready!" forState:UIControlStateNormal];
-        [sender setTitleColor:[UIColor grayColor] forState:UIControlStateNormal];
-        
-        if (_isMyturn) 
-            _lbl_WhoseTurn.text = TURN_OF_MINE;
-        else
-            _lbl_WhoseTurn.text = TURN_OF_COMPETITOR;
-        
-        // set up a new animation block [Yufei Lang 4/5/2012]
-        [UIView beginAnimations:nil context:NULL];
-        [UIView setAnimationDuration:0.5];
-        
-        // adjust views (animation) [Yufei Lang 4/5/2012]
-        //_view_AircraftHolder.alpha = 0;
-        [_view_AircraftHolder setFrame:CGRectMake(0, _view_AircraftHolder.frame.origin.y - 50.0, 320, 50)];
-        
-        //_view_ToolsHolder.alpha = 1.0;
-        [_view_ToolsHolder setFrame:CGRectMake(0, _view_ToolsHolder.frame.origin.y - 50.0, 320, 50)];
-        
-        if (_view_ChatFeild.frame.origin.y != 340)
-            [_view_ChatFeild setFrame:CGRectMake(0, _view_ChatFeild.frame.origin.y - 50.0, 320, 50)];
-        
-        // end and commit animation [Yufei Lang 4/5/2012]
-        [UIView commitAnimations];
-        
-        CTransmissionStructure *attackStr = [[CTransmissionStructure alloc] initWithFlag:MSG_FLAG_STATUS andDetail:MSG_FLAG_STATUS_COMPTOR_READY andNumberRow:0 andNumberCol:0];
-        [_socketConn sendMsgAsTransStructure:attackStr];
     }
 }
 

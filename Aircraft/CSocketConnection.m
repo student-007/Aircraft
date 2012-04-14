@@ -8,15 +8,18 @@
 
 #import "CSocketConnection.h"
 
-#define STR_HOST_NAME @"192.168.53.9"
-#define I_PORT 5180
-#define I_BLOCK_SIZE 512
+#define MSG_FLAG_CONNECTION     @"connectionTest"
+
+#define STR_HOST_NAME           @"192.168.53.9"
+#define I_PORT                  5180
+#define I_BLOCK_SIZE            512
 
 @implementation CSocketConnection
 
 @synthesize delegate = _delegate;
 @synthesize transmissionStructure = _transmissionStructure;
 @synthesize isGameContinuing = _isGameContinuing;
+@synthesize iConn = _iConn;
 
 - (id) init
 {
@@ -24,6 +27,7 @@
     if (self) {
         _isFirstConnecting = YES;
         _isGameContinuing = YES;
+        _iConn = -1;
     }
     return self;
 }
@@ -69,8 +73,8 @@
     
     if (_isFirstConnecting)
         [_delegate updateProgressHudWithWorkingStatus:YES WithPercentageInFloat:0.5f WithAMessage:@"Connecting to destination..."];
-    int iConn = connect(_iSockfd, (struct sockaddr *)&_their_addr, sizeof(struct sockaddr)); // making the connection to the socket [Yufei Lang 4/5/2012]
-    if (iConn != -1) // sucessed making connection [Yufei Lang 4/5/2012]
+    _iConn = connect(_iSockfd, (struct sockaddr *)&_their_addr, sizeof(struct sockaddr)); // making the connection to the socket [Yufei Lang 4/5/2012]
+    if (_iConn != -1) // sucessed making connection [Yufei Lang 4/5/2012]
     {
         NSMutableString *strReadString = [[NSMutableString alloc] init]; // need a string to recv [Yufei Lang 4/5/2012]
         char chReadBuffer[I_BLOCK_SIZE] = {0}; // a char* recv transmission block [Yufei Lang 4/5/2012]
@@ -96,6 +100,7 @@
         {
             [_delegate updateProgressHudWithWorkingStatus:NO WithPercentageInFloat:1.0f WithAMessage:@"Connected!"];
         }
+        
         NSLog(@"recved data from socket: %@", strReadString);
         _isFirstConnecting = NO;
         
@@ -116,6 +121,23 @@
     }
 }
 
+- (BOOL)isConnect
+{
+    CTransmissionStructure *tempStr = [[CTransmissionStructure alloc] initWithFlag:MSG_FLAG_CONNECTION andDetail:@"" andNumberRow:0 andNumberCol:0];
+    NSString *strJsonString = [tempStr convertMyselfToJsonString];
+    NSData *data = [strJsonString dataUsingEncoding:NSASCIIStringEncoding];
+    ssize_t dataSended = send(_iSockfd, [data bytes], [data length], 0);
+    if (dataSended != [data length]) 
+    {
+        NSLog(@"error while sending socket data, connection may have closed.");
+        return NO;
+    }
+    else {
+        return YES;
+    }
+
+}
+
 - (BOOL)sendMsgAsTransStructure:(CTransmissionStructure *)struture
 {
     NSString *strJsonString = [struture convertMyselfToJsonString];
@@ -123,7 +145,7 @@
     ssize_t dataSended = send(_iSockfd, [data bytes], [data length], 0);
     if (dataSended != [data length]) 
     {
-        NSLog(@"error while sending data.");
+        NSLog(@"error while sending socket data, connection may have closed.");
         return NO;
     }
     else {
