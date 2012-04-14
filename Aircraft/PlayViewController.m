@@ -856,14 +856,33 @@
 
 - (void)updateProgressHudWithWorkingStatus: (BOOL)status WithPercentageInFloat: (float)fPercentage WithAMessage: (NSString *)msg
 {
-    if (status) {
-        _progressHud.labelText = msg;
-        _progressHud.progress = fPercentage;
-    } else {
-        _progressHud.labelText = msg;
-        _progressHud.progress = fPercentage;
-        [_progressHud hide:YES];
+    if ([NSThread isMainThread])
+    {
+        if (status) {
+            _progressHud.labelText = msg;
+            _progressHud.progress = fPercentage;
+        } else {
+            _progressHud.labelText = msg;
+            _progressHud.progress = fPercentage;
+            [_progressHud hide:YES afterDelay:1.5];
+        }
     }
+    else 
+    {
+        // if not main thread, get main thread in order to update UI elements
+        dispatch_async(dispatch_get_main_queue(), ^{
+            if (status) {
+                _progressHud.labelText = msg;
+                _progressHud.progress = fPercentage;
+            } else {
+                _progressHud.labelText = msg;
+                _progressHud.progress = fPercentage;
+                [_progressHud hide:YES afterDelay:1.5];
+            }
+        });
+    }
+    // make it like app is in progress [Yufei Lang 4/14/2012]
+    [NSThread sleepForTimeInterval:0.1];
 }
 
 #pragma mark - own function - make socket connection
@@ -892,7 +911,7 @@
        
     // froze the screen for connecting to host [Yufei Lang 4/12/2012]
     _progressHud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-    _progressHud.mode = MBProgressHUDModeDeterminate;
+    _progressHud.mode = MBProgressHUDModeAnnularDeterminate;
        
     NSThread *th = [[NSThread alloc]initWithTarget:self selector:@selector(makeSocketConnection) object:nil];
     th.name = @"thread for making connection";

@@ -52,8 +52,6 @@
     if ((_iSockfd = socket(AF_INET, SOCK_STREAM, 0)) == -1) {
         if (_isFirstConnecting)
         {
-            [_delegate updateProgressHudWithWorkingStatus:YES WithPercentageInFloat:0.0f WithAMessage:@"failed making connecting."];
-            [NSThread sleepForTimeInterval:2];
             [_delegate updateProgressHudWithWorkingStatus:NO WithPercentageInFloat:0.0f WithAMessage:@"failed making connecting."];
         }
         herror("error making socket.");
@@ -70,7 +68,7 @@
     bzero(&(_their_addr.sin_zero), 8);
     
     if (_isFirstConnecting)
-        [_delegate updateProgressHudWithWorkingStatus:YES WithPercentageInFloat:0.6f WithAMessage:@"Connecting to destination..."];
+        [_delegate updateProgressHudWithWorkingStatus:YES WithPercentageInFloat:0.5f WithAMessage:@"Connecting to destination..."];
     int iConn = connect(_iSockfd, (struct sockaddr *)&_their_addr, sizeof(struct sockaddr)); // making the connection to the socket [Yufei Lang 4/5/2012]
     if (iConn != -1) // sucessed making connection [Yufei Lang 4/5/2012]
     {
@@ -78,13 +76,17 @@
         char chReadBuffer[I_BLOCK_SIZE] = {0}; // a char* recv transmission block [Yufei Lang 4/5/2012]
         int iByteRecved = 0; // how many bytes recved [Yufei Lang 4/5/2012]
         if (_isFirstConnecting)
-            [_delegate updateProgressHudWithWorkingStatus:YES WithPercentageInFloat:0.8f WithAMessage:@"Receiving data..."];
+            [_delegate updateProgressHudWithWorkingStatus:YES WithPercentageInFloat:0.6f WithAMessage:@"Receiving data..."];
         do 
         {
             iByteRecved = recv(_iSockfd, chReadBuffer, sizeof(chReadBuffer), 0); // recv data from socket then write to chReadBuffer. [Yufei Lang 4/5/2012]
             [strReadString appendFormat:[NSString stringWithCString:chReadBuffer encoding:NSASCIIStringEncoding]];
         } 
         while (iByteRecved == I_BLOCK_SIZE); // if recved all data, end the loop [Yufei Lang 4/5/2012]
+        if (_isFirstConnecting)
+        {
+            [_delegate updateProgressHudWithWorkingStatus:YES WithPercentageInFloat:0.8f WithAMessage:@"Data received..."];
+        }
         _transmissionStructure = [[CTransmissionStructure alloc] init];
         [_transmissionStructure fillWithJSONString:strReadString];
         
@@ -92,8 +94,6 @@
         
         if (_isFirstConnecting)
         {
-            [_delegate updateProgressHudWithWorkingStatus:YES WithPercentageInFloat:0.9f WithAMessage:@"Data received..."];
-            [NSThread sleepForTimeInterval:0.5];
             [_delegate updateProgressHudWithWorkingStatus:NO WithPercentageInFloat:1.0f WithAMessage:@"Connected!"];
         }
         NSLog(@"recved data from socket: %@", strReadString);
@@ -110,8 +110,6 @@
     {
         if (_isFirstConnecting)
         {
-            [_delegate updateProgressHudWithWorkingStatus:YES WithPercentageInFloat:0.0f WithAMessage:@"failed connecting destination."];
-            [NSThread sleepForTimeInterval:2];
             [_delegate updateProgressHudWithWorkingStatus:NO WithPercentageInFloat:0.0f WithAMessage:@"failed connecting destination."];
         }
         return @"Connect to host failed.";
