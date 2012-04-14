@@ -47,6 +47,7 @@
 @synthesize lbl_WhoseTurn = _lbl_WhoseTurn;
 @synthesize textView_InfoView = _textView_InfoView;
 @synthesize txtField_ChatTextBox = _txtField_ChatTextBox;
+@synthesize btnSendButton = _btnSendButton;
 @synthesize scrollView_BattleField = _scrollView_BattleField;
 @synthesize socketConn = _socketConn;
 @synthesize view_AircraftHolder = _view_AircraftHolder;
@@ -221,7 +222,7 @@
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
 {
     // hide keyboard [Yufei Lang 4/10/2012]
-    [_txtField_ChatTextBox resignFirstResponder];
+    [self resignFirstResponsWhenTouching];
     
     // when replacing an aircraft [Yufei Lang 4/10/2012]
     UITouch *touch = [touches anyObject];
@@ -381,11 +382,17 @@
             if ([self checkAircraft:_tempAircraftView inNewFrame:newFrame canFitGrid:_myGrid])
             {
                 [_tempAircraftView setFrame:newFrame];
-                [self removeAircraft:_tempAircraftView withOldFrame:_tempFrame fromGrid:_myGrid];
+                //[self removeAircraft:_tempAircraftView withOldFrame:_tempFrame fromGrid:_myGrid];
                 [self fillBattleFieldGrid:_myGrid withAircraft:_tempAircraftView];
             }
             else
                 [_tempAircraftView setFrame:_tempFrame];
+        }
+        // if user wants to remove this aircraft [Yufei Lang 4/14/2012]
+        else if (_tempAircraftView.frame.origin.y > 280)
+        {
+            [_tempAircraftView removeFromSuperview];
+            _iNumberOfAircraftsPlaced--;
         }
         else
             [_tempAircraftView setFrame:_tempFrame];
@@ -439,6 +446,12 @@
 
 - (void)textFieldDidBeginEditing:(UITextField *)textField
 {
+    // since the text field becomes first responder, make the send button like V [Yufei Lang 4/14/2012]
+    [UIView beginAnimations:nil context:NULL];
+    _btnSendButton.imageView.transform = CGAffineTransformMakeRotation(M_PI);
+    [UIView setAnimationDuration:0.4];
+    [UIView commitAnimations];
+    
     // bring the chatting field to front [Yufei Lang 4/10/2012]
     [self.view bringSubviewToFront:_view_ChatFeild];
     // save the original msg [Yufei Lang 4/10/2012]
@@ -489,6 +502,11 @@
                    AsCharacter:[_arryCharacterString objectAtIndex:CharacterAdjutant]];
         }
     } 
+    else if (![_socketConn isConnect])
+    {
+        [self sendTextView:_textView_InfoView Message:@"Sorry commander, there is no connection." 
+               AsCharacter:[_arryCharacterString objectAtIndex:CharacterAdjutant]];
+    }
     else 
     {
         [self sendTextView:_textView_InfoView Message:@"Sorry commander, you can't send msg to nobody, I am still looking for your competitor." 
@@ -497,10 +515,34 @@
     return YES;
 }
 
+//- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string;
+//{
+//    if (![textField.text isEqualToString:@""]) {
+//        [_btnSendButton.imageView setImage:[UIImage imageNamed:@"sendButtonSend.png"]];
+//    }
+//    else if ([textField isFirstResponder]) // empty msg, keyboard is showing [Yufei Lang 4/14/2012]
+//    {
+//        // make it like V [Yufei Lang 4/14/2012]
+//        [_btnSendButton.imageView setImage:[UIImage imageNamed:@"sendButtonUp.png"]];
+//        _btnSendButton.imageView.transform = CGAffineTransformMakeRotation(M_PI);
+//    }
+//    else // empty msg, keyboard is not showing [Yufei Lang 4/14/2012]
+//    {
+//        // make it like ^ [Yufei Lang 4/14/2012]
+//        [_btnSendButton.imageView setImage:[UIImage imageNamed:@"sendButtonUp.png"]];
+//        _btnSendButton.imageView.transform = CGAffineTransformMakeRotation(0);
+//    }
+//    return YES;
+//}
+
 #pragma mark - hide keyboard when tapping battle field view
 
 - (void) resignFirstResponsWhenTouching
 {
+    [UIView beginAnimations:nil context:NULL];
+    _btnSendButton.imageView.transform = CGAffineTransformMakeRotation(0);
+    [UIView setAnimationDuration:0.4];
+    [UIView commitAnimations];
     [_txtField_ChatTextBox resignFirstResponder];
 }
 
@@ -930,6 +972,7 @@
     [self setTxtField_ChatTextBox:nil];
     [self setTextView_InfoView:nil];
     [self setLbl_WhoseTurn:nil];
+    [self setBtnSendButton:nil];
     [super viewDidUnload];
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
@@ -1091,27 +1134,50 @@
 // member the action name is INCORRENT [Yufei Lang 4/12/2012]
 - (IBAction)btnClicked_SendChatMsg:(UIButton *)sender // INCORRENT name, should show/hide keyboard [Yufei Lang 4/12/2012]
 {
-    // if there is nothing in the chatting box need to be sent, hide the keyboard [Yufei Lang 4/12/2012]
-    // then reset it to a picture like " ^ " [Yufei Lang 4/12/2012]
-    if ([_txtField_ChatTextBox.text isEqualToString:@""] && [_txtField_ChatTextBox isFirstResponder])
+    if ([_txtField_ChatTextBox isFirstResponder]) 
     {
-        [_txtField_ChatTextBox resignFirstResponder];
-        [sender setImage:[UIImage imageNamed:@"goUp"] forState:UIControlStateNormal];
-    }
-    
-    // if txtField is not first responder (keyboard is not showing) but nothing to say [Yufei Lang 4/12/2012]
-    // set first responder (show key board) [Yufei Lang 4/12/2012]
-    // then reset it to a picture like " V " [Yufei Lang 4/12/2012]
-    else if ([_txtField_ChatTextBox.text isEqualToString:@""] && ![_txtField_ChatTextBox isFirstResponder])
+        [self resignFirstResponsWhenTouching];
+    } 
+    else 
     {
-#warning set button to a pic like "V"
         [_txtField_ChatTextBox becomeFirstResponder];
-        [sender setImage:[UIImage imageNamed:@"goDown"] forState:UIControlStateNormal];
+        
+        [UIView beginAnimations:nil context:NULL];
+        sender.imageView.transform = CGAffineTransformMakeRotation(M_PI);
+        [UIView setAnimationDuration:0.4];
+        [UIView commitAnimations];
     }
-    else
-    {
-        [self textFieldShouldReturn:_txtField_ChatTextBox];
-    }
+//    // if there is nothing in the chatting box need to be sent, hide the keyboard [Yufei Lang 4/12/2012]
+//    // then reset it to a picture like " ^ " [Yufei Lang 4/12/2012]
+//    if ([_txtField_ChatTextBox.text isEqualToString:@""] && [_txtField_ChatTextBox isFirstResponder])
+//    {
+//        [_txtField_ChatTextBox resignFirstResponder];
+//        [sender setImage:[UIImage imageNamed:@"sendButtonUp"] forState:UIControlStateNormal];
+//        
+//        [UIView beginAnimations:nil context:NULL];
+//        sender.imageView.transform = CGAffineTransformMakeRotation(0);
+//        [UIView setAnimationDuration:0.2];
+//        [UIView commitAnimations];
+//    }
+//    
+//    // if txtField is not first responder (keyboard is not showing) but nothing to say [Yufei Lang 4/12/2012]
+//    // set first responder (show key board) [Yufei Lang 4/12/2012]
+//    // then reset it to a picture like " V " [Yufei Lang 4/12/2012]
+//    else if ([_txtField_ChatTextBox.text isEqualToString:@""] && ![_txtField_ChatTextBox isFirstResponder])
+//    {
+//#warning set button to a pic like "V"
+//        [_txtField_ChatTextBox becomeFirstResponder];
+//        [sender setImage:[UIImage imageNamed:@"sendButtonUp"] forState:UIControlStateNormal];
+//        
+//        [UIView beginAnimations:nil context:NULL];
+//        sender.imageView.transform = CGAffineTransformMakeRotation(M_PI);
+//        [UIView setAnimationDuration:0.2];
+//        [UIView commitAnimations];
+//    }
+//    else
+//    {
+//        [self textFieldShouldReturn:_txtField_ChatTextBox];
+//    }
 }
 
 - (IBAction)btnClicked_OnBattleGrid:(UIButton *)sender 

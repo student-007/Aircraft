@@ -77,6 +77,7 @@ typedef enum
 // properties - IBOutlet chatting field [Yufei Lang 4/10/2012]
 @property (strong, nonatomic) IBOutlet UITextView *textView_InfoView;
 @property (strong, nonatomic) IBOutlet UITextField *txtField_ChatTextBox;
+@property (strong, nonatomic) IBOutlet UIButton *btnSendButton;
 
 // properties -  battle fields buttons[Yufei Lang 4/5/2012]
 @property (strong, nonatomic) NSMutableArray *arryMyBattleFieldLabels;
