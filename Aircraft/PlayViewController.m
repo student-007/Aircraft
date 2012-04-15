@@ -279,7 +279,9 @@
             default:
                 break;
         }
-        UIImageView *imgView = [touch.view.subviews objectAtIndex:iIndexOfSubview];
+        UIImageView *imgView = [touch.view.subviews objectAtIndex:iIndexOfSubview + 1];
+#warning check if user selected a aircraft instead of aircraft holder img, but using frame size is dangers
+        NSAssert(imgView.frame.size.width, @"50");
         [_tempAircraftView setFrame:CGRectMake(imgView.frame.origin.x, 
                                                [touch locationInView:self.view].y, 
                                                imgView.frame.size.width, 
@@ -320,8 +322,14 @@
     if (touch != NULL) 
     {
         CGPoint currentPoint = [touch locationInView:self.view];
-        //currentPoint.y -= _tempAircraftView.frame.size.height / 2.0; // in case moving down [Yufei Lang 4/9/2012]
         _tempAircraftView.center = currentPoint;
+        
+        // in case moving down, which user wants to remove the aircraft [Yufei Lang 4/9/2012]
+        // make aircraft like dispearing [Yufei Lang 4/14/2012]
+        if (currentPoint.y > 290)
+            _tempAircraftView.alpha = 0.2;
+        else
+            _tempAircraftView.alpha = 0.7;
     }
 }
 
@@ -389,7 +397,8 @@
                 [_tempAircraftView setFrame:_tempFrame];
         }
         // if user wants to remove this aircraft [Yufei Lang 4/14/2012]
-        else if (_tempAircraftView.frame.origin.y > 280)
+        // see if user move their finger under the battle field which is 290 px place [Yufei Lang 4/14/2012]
+        else if (_tempAircraftView.center.y > 290)
         {
             [_tempAircraftView removeFromSuperview];
             _iNumberOfAircraftsPlaced--;

@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0C11E5C1153A41C000873587 /* AircraftHolder.png in Resources */ = {isa = PBXBuildFile; fileRef = 0C11E5C0153A41C000873587 /* AircraftHolder.png */; };
 		0C45EB46153A2E1F00DC7C98 /* sendButtonUp.png in Resources */ = {isa = PBXBuildFile; fileRef = 0C45EB45153A2E1F00DC7C98 /* sendButtonUp.png */; };
 		0C6C1E5115363D2A00F9ECF9 /* UIView_BattleField.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C6C1E5015363D2A00F9ECF9 /* UIView_BattleField.m */; };
 		0C6F06DC15372D3D00D9BF2D /* MBProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C6F06DB15372D3D00D9BF2D /* MBProgressHUD.m */; };
@@ -47,6 +48,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		0C11E5C0153A41C000873587 /* AircraftHolder.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = AircraftHolder.png; sourceTree = "<group>"; };
 		0C45EB45153A2E1F00DC7C98 /* sendButtonUp.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = sendButtonUp.png; sourceTree = "<group>"; };
 		0C6C1E4F15363D2A00F9ECF9 /* UIView_BattleField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UIView_BattleField.h; sourceTree = "<group>"; };
 		0C6C1E5015363D2A00F9ECF9 /* UIView_BattleField.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIView_BattleField.m; sourceTree = "<group>"; };
@@ -138,6 +140,7 @@
 			isa = PBXGroup;
 			children = (
 				0C7D7E8A153A0A0B009CA1D1 /* BattleFieldBarEnemyField.png */,
+				0C11E5C0153A41C000873587 /* AircraftHolder.png */,
 				0C45EB45153A2E1F00DC7C98 /* sendButtonUp.png */,
 				0C95CAAA153A2CF600C595D6 /* sendButtonSend.png */,
 				0C7D7E8B153A0A0B009CA1D1 /* BattleFieldBarMyField.png */,
@@ -343,6 +346,7 @@
 				0C7D7E8D153A0A0B009CA1D1 /* BattleFieldBarMyField.png in Resources */,
 				0C95CAAB153A2CF600C595D6 /* sendButtonSend.png in Resources */,
 				0C45EB46153A2E1F00DC7C98 /* sendButtonUp.png in Resources */,
+				0C11E5C1153A41C000873587 /* AircraftHolder.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
