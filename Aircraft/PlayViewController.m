@@ -179,9 +179,12 @@
 //}
 
 #pragma touches actions
-
+// the following delegates are used when user tapping placed aircrafts, means replacing an aircraft [Yufei Lang 4/14/2012]
+// called from TapDetectingImageView [Yufei Lang 4/14/2012]
 - (void)delegateTouchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
 {
+    [self resignFirstResponsWhenTouching];
+    
     // if all set which mean the "done" button has been clicked, then do not allow adjust aircraft's position [Yufei Lang 4/10/2012]
     if (!_isPlacingAircraftsReady)
     {
@@ -203,7 +206,6 @@
     if (!_isPlacingAircraftsReady)
     {
         [self touchesMoved:touches withEvent:event];
-        NSLog(@"touch moved_delegate");
     }
 }
 
@@ -498,8 +500,22 @@
     if ([textField.text isEqualToString:@""]) {
         return YES;
     }
-    if (_isGettingPaired) 
+    
+    // checking by conditions before send a message [Yufei Lang 4/14/2012]
+    // user will also been noticed [Yufei Lang 4/14/2012]
+    if (![_socketConn isConnect])
     {
+        [self sendTextView:_textView_InfoView Message:@"Sorry commander, there is no connection." 
+               AsCharacter:[_arryCharacterString objectAtIndex:CharacterAdjutant]];
+        return YES;
+    }
+    else if (_isGettingPaired) 
+    {
+        if (!_isGamingContinuing) {
+            [self sendTextView:_textView_InfoView Message:@"Sorry commander, seems like game is over." 
+                   AsCharacter:[_arryCharacterString objectAtIndex:CharacterAdjutant]];
+        }
+        
         CTransmissionStructure *tempStr = [[CTransmissionStructure alloc] initWithFlag:@"chat" andDetail:textField.text andNumberRow:0 andNumberCol:0];
         if([_socketConn sendMsgAsTransStructure:tempStr])
         {
@@ -511,16 +527,12 @@
                    AsCharacter:[_arryCharacterString objectAtIndex:CharacterAdjutant]];
         }
     } 
-    else if (![_socketConn isConnect])
-    {
-        [self sendTextView:_textView_InfoView Message:@"Sorry commander, there is no connection." 
-               AsCharacter:[_arryCharacterString objectAtIndex:CharacterAdjutant]];
-    }
     else 
     {
         [self sendTextView:_textView_InfoView Message:@"Sorry commander, you can't send msg to nobody, I am still looking for your competitor." 
                AsCharacter:[_arryCharacterString objectAtIndex:CharacterAdjutant]];
     }
+    
     return YES;
 }
 
@@ -582,6 +594,8 @@
 // execute when received a END GAME message from socket connection [Yufei Lang 3/12/2012]
 - (void)recvEndGameMessage: (CTransmissionStructure *)transStr
 {
+    _isGamingContinuing = NO;
+    
     NSString *strCharacter = [_arryCharacterString objectAtIndex:CharacterAdjutant];
     
     if ([transStr.strDetail isEqualToString:MSG_END_GAME_YOU_WON])
@@ -589,6 +603,9 @@
         [self sendTextView:_textView_InfoView Message:@"Congratulations! You won!" 
                AsCharacter:strCharacter];
         [_socketConn closeConnection];
+        
+        UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Congratulations!" message:@"You Won!\ue312" delegate:nil cancelButtonTitle:@"Yeah!!" otherButtonTitles: nil];
+        [alert show];
     }
     
     if ([transStr.strDetail isEqualToString:MSG_END_GAME_YOU_LOST])
@@ -596,6 +613,9 @@
         [self sendTextView:_textView_InfoView Message:@"I'am so sorry, You lost." 
                AsCharacter:strCharacter];
         [_socketConn closeConnection];
+        
+        UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Sorry." message:@"You just lost.\ue107!" delegate:nil cancelButtonTitle:@"so what?!" otherButtonTitles: nil];
+        [alert show];
     }
 }
 
@@ -1026,7 +1046,7 @@
 
 // pop my self, back to master view controller [Yufei Lang 4/5/2012]
 - (IBAction)btnClicked_OnExit:(id)sender {
-    if (_isGettingPaired)
+    if (_isGettingPaired && _isGamingContinuing)
     {
         UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Are you sure?" message:@"Existing now will lose the game." delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Exit", nil];
         [alert show];
