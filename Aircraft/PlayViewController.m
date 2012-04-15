@@ -413,9 +413,7 @@
 
 - (BOOL)checkAircraft:(TapDetectingImageView *)aircraftView inNewFrame:(CGRect)frame canFitGrid: (int [10][10])grid 
 {
-    [self print:grid];
     // allow non-accurate placing [Yufei Lang 4/14/2012]
-    
     int X = frame.origin.x / 29;
     int Y = frame.origin.y / 29;
     for (int row = 0; row < 5; row ++) 
@@ -1164,8 +1162,9 @@
 
 // button function changed, should be show/hide or keyboard. [Yufei Lang 4/12/2012]
 // member the action name is INCORRENT [Yufei Lang 4/12/2012]
-- (IBAction)btnClicked_SendChatMsg:(UIButton *)sender // INCORRENT name, should show/hide keyboard [Yufei Lang 4/12/2012]
-{
+/*********INCORRENT name**********/
+- (IBAction)btnClicked_SendChatMsg:(UIButton *)sender // INCORRENT name, should be show/hide keyboard [Yufei Lang 4/12/2012]
+{/*********INCORRENT name**********/
     if ([_txtField_ChatTextBox isFirstResponder]) 
     {
         [self resignFirstResponsWhenTouching];
@@ -1179,42 +1178,12 @@
         [UIView setAnimationDuration:0.4];
         [UIView commitAnimations];
     }
-//    // if there is nothing in the chatting box need to be sent, hide the keyboard [Yufei Lang 4/12/2012]
-//    // then reset it to a picture like " ^ " [Yufei Lang 4/12/2012]
-//    if ([_txtField_ChatTextBox.text isEqualToString:@""] && [_txtField_ChatTextBox isFirstResponder])
-//    {
-//        [_txtField_ChatTextBox resignFirstResponder];
-//        [sender setImage:[UIImage imageNamed:@"sendButtonUp"] forState:UIControlStateNormal];
-//        
-//        [UIView beginAnimations:nil context:NULL];
-//        sender.imageView.transform = CGAffineTransformMakeRotation(0);
-//        [UIView setAnimationDuration:0.2];
-//        [UIView commitAnimations];
-//    }
-//    
-//    // if txtField is not first responder (keyboard is not showing) but nothing to say [Yufei Lang 4/12/2012]
-//    // set first responder (show key board) [Yufei Lang 4/12/2012]
-//    // then reset it to a picture like " V " [Yufei Lang 4/12/2012]
-//    else if ([_txtField_ChatTextBox.text isEqualToString:@""] && ![_txtField_ChatTextBox isFirstResponder])
-//    {
-//#warning set button to a pic like "V"
-//        [_txtField_ChatTextBox becomeFirstResponder];
-//        [sender setImage:[UIImage imageNamed:@"sendButtonUp"] forState:UIControlStateNormal];
-//        
-//        [UIView beginAnimations:nil context:NULL];
-//        sender.imageView.transform = CGAffineTransformMakeRotation(M_PI);
-//        [UIView setAnimationDuration:0.2];
-//        [UIView commitAnimations];
-//    }
-//    else
-//    {
-//        [self textFieldShouldReturn:_txtField_ChatTextBox];
-//    }
 }
 
+// attack competitor [Yufei Lang 4/14/2012]
 - (IBAction)btnClicked_OnBattleGrid:(UIButton *)sender 
 {
-    if (_isGamingContinuing && _isCompetitorReady && _isPlacingAircraftsReady && _isMyturn)
+    if (_isGamingContinuing && _isCompetitorReady && _isPlacingAircraftsReady && _isMyturn && [sender.titleLabel.text isEqualToString:@""])
     {
         int X = sender.frame.origin.x / 29;
         int Y = sender.frame.origin.y / 29;
