@@ -505,16 +505,19 @@
     // user will also been noticed [Yufei Lang 4/14/2012]
     if (![_socketConn isConnect])
     {
+        // have paired, but game is not continuing [Yufei Lang 4/14/2012]
+        if (!_isGamingContinuing && _isGettingPaired) 
+        {
+            [self sendTextView:_textView_InfoView Message:@"Sorry commander, seems like game is over." 
+                   AsCharacter:[_arryCharacterString objectAtIndex:CharacterAdjutant]];
+        }
+        
         [self sendTextView:_textView_InfoView Message:@"Sorry commander, there is no connection." 
                AsCharacter:[_arryCharacterString objectAtIndex:CharacterAdjutant]];
         return YES;
     }
     else if (_isGettingPaired) 
     {
-        if (!_isGamingContinuing) {
-            [self sendTextView:_textView_InfoView Message:@"Sorry commander, seems like game is over." 
-                   AsCharacter:[_arryCharacterString objectAtIndex:CharacterAdjutant]];
-        }
         
         CTransmissionStructure *tempStr = [[CTransmissionStructure alloc] initWithFlag:@"chat" andDetail:textField.text andNumberRow:0 andNumberCol:0];
         if([_socketConn sendMsgAsTransStructure:tempStr])
