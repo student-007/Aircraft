@@ -98,10 +98,5 @@ typedef enum
 // actions [Yufei Lang 4/5/2012]
 
 // methods [Yufei Lang 4/5/2012]
-- (void)initAllViews;
-- (void)loadPage: (UIView *)viewPage toScrollView: (UIScrollView *) scrollView;
-- (void)removeAircraft:(TapDetectingImageView *)aircraftView withOldFrame:(CGRect)frame fromGrid:(int [10][10])grid ;
-- (BOOL)checkAircraft:(TapDetectingImageView *)aircraftView canFitGrid: (int [10][10])grid;
-- (BOOL)checkAircraft:(TapDetectingImageView *)aircraftView inNewFrame:(CGRect)frame canFitGrid: (int [10][10])grid;
-- (void)fillBattleFieldGrid: (int [10][10])grid withAircraft:(TapDetectingImageView *)aircraftView;
+
 @end

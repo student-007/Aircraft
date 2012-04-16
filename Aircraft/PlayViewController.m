@@ -36,8 +36,13 @@
 @interface PlayViewController()
 - (void)sendTextView: (UITextView *)textView Message: (NSString *)strMessage AsCharacter: (NSString *)character;
 - (void)initGridInBattleFieldView:(UIView *)viewBattleField WithButtonsWillBeStoredInArray: (NSMutableArray *) arry2D_Buttons;
-- (void)initGridInBattleFieldView:(UIView *)viewBattleField WithLabelsWillBeStoredInArray: (NSMutableArray *) arry2D_Buttons;
+- (void)initGridInBattleFieldView:(UIView *)viewBattleField WithLabelsWillBeStoredInArray: (NSMutableArray *) arry2D_Lables;
+- (void)loadPage: (UIView *)viewPage toScrollView: (UIScrollView *) scrollView;
 - (void)print: (int[10][10]) intArry2D;
+- (void)initAllViews;
+- (void)removeAircraft:(TapDetectingImageView *)aircraftView withOldFrame:(CGRect)frame fromGrid:(int [10][10])grid ;
+- (BOOL)checkAircraft:(TapDetectingImageView *)aircraftView inNewFrame:(CGRect)frame canFitGrid: (int [10][10])grid;
+- (void)fillBattleFieldGrid: (int [10][10])grid withAircraft:(TapDetectingImageView *)aircraftView;
 @end
 
 @implementation PlayViewController
@@ -509,7 +514,7 @@
             [self sendTextView:_textView_InfoView Message:@"Sorry commander, seems like game is over." 
                    AsCharacter:[_arryCharacterString objectAtIndex:CharacterAdjutant]];
         }
-        
+        else
         [self sendTextView:_textView_InfoView Message:@"Sorry commander, there is no connection." 
                AsCharacter:[_arryCharacterString objectAtIndex:CharacterAdjutant]];
         return YES;
