@@ -1082,6 +1082,12 @@
                 [alert show];
                 return;
             }
+            else if (!_isGettingPaired)
+            {
+                [self sendTextView:_textView_InfoView Message:@"Please wait for a competitor." AsCharacter:[_arryCharacterString objectAtIndex:CharacterAdjutant]];
+                return;
+            }
+            
             _isPlacingAircraftsReady = YES;
             
             // set title to ready, and make it gray color like disabled [Yufei Lang 4/14/2012]
