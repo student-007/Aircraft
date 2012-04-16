@@ -13,6 +13,9 @@
 		0C6F06DC15372D3D00D9BF2D /* MBProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C6F06DB15372D3D00D9BF2D /* MBProgressHUD.m */; };
 		0C6F33DD153CB98100277BCF /* HowToPlay.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C6F33DB153CB98100277BCF /* HowToPlay.m */; };
 		0C6F33DE153CB98100277BCF /* HowToPlay.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0C6F33DC153CB98100277BCF /* HowToPlay.xib */; };
+		0C6F33E3153CCB0E00277BCF /* step_1.png in Resources */ = {isa = PBXBuildFile; fileRef = 0C6F33E0153CCB0E00277BCF /* step_1.png */; };
+		0C6F33E4153CCB0E00277BCF /* step_2.png in Resources */ = {isa = PBXBuildFile; fileRef = 0C6F33E1153CCB0E00277BCF /* step_2.png */; };
+		0C6F33E5153CCB0E00277BCF /* step_3.png in Resources */ = {isa = PBXBuildFile; fileRef = 0C6F33E2153CCB0E00277BCF /* step_3.png */; };
 		0C70400C1532365B00B7F91F /* TapDetectingImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C70400B1532365B00B7F91F /* TapDetectingImageView.m */; };
 		0C7131B2152E2C8F0001BFEF /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0C7131B1152E2C8F0001BFEF /* UIKit.framework */; };
 		0C7131B4152E2C8F0001BFEF /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0C7131B3152E2C8F0001BFEF /* Foundation.framework */; };
@@ -63,6 +66,9 @@
 		0C6F33DA153CB98100277BCF /* HowToPlay.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HowToPlay.h; sourceTree = "<group>"; };
 		0C6F33DB153CB98100277BCF /* HowToPlay.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HowToPlay.m; sourceTree = "<group>"; };
 		0C6F33DC153CB98100277BCF /* HowToPlay.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = HowToPlay.xib; sourceTree = "<group>"; };
+		0C6F33E0153CCB0E00277BCF /* step_1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = step_1.png; sourceTree = "<group>"; };
+		0C6F33E1153CCB0E00277BCF /* step_2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = step_2.png; sourceTree = "<group>"; };
+		0C6F33E2153CCB0E00277BCF /* step_3.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = step_3.png; sourceTree = "<group>"; };
 		0C70400A1532365B00B7F91F /* TapDetectingImageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TapDetectingImageView.h; path = ../TapDetectingImageView.h; sourceTree = "<group>"; };
 		0C70400B1532365B00B7F91F /* TapDetectingImageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TapDetectingImageView.m; path = ../TapDetectingImageView.m; sourceTree = "<group>"; };
 		0C7131AD152E2C8F0001BFEF /* Aircraft.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Aircraft.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -152,6 +158,9 @@
 		0C711A241533473F00D2020B /* Images */ = {
 			isa = PBXGroup;
 			children = (
+				0C6F33E0153CCB0E00277BCF /* step_1.png */,
+				0C6F33E1153CCB0E00277BCF /* step_2.png */,
+				0C6F33E2153CCB0E00277BCF /* step_3.png */,
 				0CF95678153CAE31009BCCDF /* howToPlay.png */,
 				0CF95674153CA3D2009BCCDF /* target.png */,
 				0C7D7E8A153A0A0B009CA1D1 /* BattleFieldBarEnemyField.png */,
@@ -380,6 +389,9 @@
 				0CF95681153CB598009BCCDF /* Default.png in Resources */,
 				0CF95683153CB59E009BCCDF /* Default@2x.png in Resources */,
 				0C6F33DE153CB98100277BCF /* HowToPlay.xib in Resources */,
+				0C6F33E3153CCB0E00277BCF /* step_1.png in Resources */,
+				0C6F33E4153CCB0E00277BCF /* step_2.png in Resources */,
+				0C6F33E5153CCB0E00277BCF /* step_3.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

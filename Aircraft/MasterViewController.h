@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "PlayViewController.h"
+#import "HowToPlay.h"
 
 @class DetailViewController;
 
