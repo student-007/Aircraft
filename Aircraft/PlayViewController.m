@@ -1188,7 +1188,7 @@
 // attack competitor [Yufei Lang 4/14/2012]
 - (IBAction)btnClicked_OnBattleGrid:(UIButton *)sender 
 {
-    if (_isGamingContinuing && _isCompetitorReady && _isPlacingAircraftsReady && _isMyturn && [sender.titleLabel.text isEqualToString:@""])
+    if (_isGamingContinuing && _isCompetitorReady && _isPlacingAircraftsReady && _isMyturn && sender.titleLabel.text == nil)
     {
         int X = sender.frame.origin.x / 29;
         int Y = sender.frame.origin.y / 29;
