@@ -75,8 +75,8 @@
     if (_isFirstConnecting)
         [_delegate updateProgressHudWithWorkingStatus:YES WithPercentageInFloat:0.5f WithAMessage:@"Connecting to destination..."];
     
-    NSTimer *timer = [NSTimer timerWithTimeInterval:5.0f target:self selector:@selector(connectTimeOut) userInfo:nil repeats:NO];
-    [timer fire];
+    NSThread *thTimeOut = [[NSThread alloc] initWithTarget:self selector:@selector(connectTimeOut) object:nil];
+    [thTimeOut start];
     
     _iConn = connect(_iSockfd, (struct sockaddr *)&_their_addr, sizeof(struct sockaddr)); // making the connection to the socket [Yufei Lang 4/5/2012]
     
@@ -194,6 +194,7 @@
 
 - (void)connectTimeOut
 {
+    [NSThread sleepForTimeInterval:5.0f];
     if (_iConn == -1) 
         [_delegate updateProgressHudWithWorkingStatus:NO WithPercentageInFloat:0.0f WithAMessage:@"Time out for connecting."];
 }
