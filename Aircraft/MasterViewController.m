@@ -34,7 +34,9 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-	_arryTableContent = [NSArray arrayWithObjects:@"Play Online", @"How to Play", nil];
+    NSArray *arrySection1 = [[NSArray alloc] initWithObjects:@"Play Online", nil];
+    NSArray *arrySection2 = [[NSArray alloc] initWithObjects:@"How to Play", nil];
+	_arryTableContent = [NSMutableArray arrayWithObjects:arrySection1, arrySection2, nil];
 }
 
 - (void)viewDidUnload
@@ -73,41 +75,44 @@
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return 60;
+    return 75;
 }
 
 // Customize the number of sections in the table view.
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    return 2;
+    return [_arryTableContent count];
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    if (section == 0)
-        return _arryTableContent.count;
-    else if (section == 1)
-        return 1;// login or sign up [Yufei Lang 4/5/2012]
-    else
-        return 0;// error
+    return [[_arryTableContent objectAtIndex:section] count];
 }
 
 // Customize the appearance of table view cells.
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    static NSString *CellIdentifier = @"MsterViewCell";
+    static NSString *CellIdentifier = @"LauchingGameCell";
     
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     if (cell == nil) {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
         cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
     }
-
-    if (indexPath.section == 0) {
-        cell.textLabel.text = [_arryTableContent objectAtIndex:indexPath.row];
+    
+    // 1 section 1st row, show detail [Yufei Lang 4/16/2012]
+    if (indexPath.section == 0 && indexPath.row == 0) {
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:@"LauchingGameCell_1st"];
+        cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+        cell.detailTextLabel.text = @"play with random player";
+        cell.imageView.image = [UIImage imageNamed:@"target.png"];
     }
-    else if (indexPath.section == 1)
-        cell.textLabel.text = NSLocalizedString(@"Login/SignUp", @"Login/SignUp");
+    
+    if (indexPath.section == 1 && indexPath.row == 0) {
+        cell.imageView.image = [UIImage imageNamed:@"howToPlay.png"];
+    }
+
+    cell.textLabel.text = [[_arryTableContent objectAtIndex:indexPath.section] objectAtIndex:indexPath.row];
     
     return cell;
 }

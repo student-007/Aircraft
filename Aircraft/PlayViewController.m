@@ -786,6 +786,9 @@
             // send user a message, says you lost [Yufei Lang 4/12/2012]
             [self sendTextView:_textView_InfoView Message:@"I'am so sorry, You lost." AsCharacter:[_arryCharacterString objectAtIndex:CharacterAdjutant]];
             
+            UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Sorry." message:@"You just lost.\ue107!" delegate:nil cancelButtonTitle:@"so what?!" otherButtonTitles: nil];
+            [alert show];
+            
             // send competitor a message [Yufei Lang 4/12/2012]
             CTransmissionStructure *tempStr = [[CTransmissionStructure alloc] initWithFlag:MSG_FLAG_END_GAME andDetail:MSG_END_GAME_YOU_WON andNumberRow:0 andNumberCol:0];
             
@@ -867,6 +870,8 @@
         ++_iNumberOfEnemyAircraftDestoried;
         if (_iNumberOfEnemyAircraftDestoried == 3) {
             [self sendTextView:_textView_InfoView Message:@"Congratulations! You won!" AsCharacter:[_arryCharacterString objectAtIndex:CharacterAdjutant]];
+            UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Congratulations!" message:@"You Won!\ue312" delegate:nil cancelButtonTitle:@"Yeah!!" otherButtonTitles: nil];
+            [alert show];
             CTransmissionStructure *tempStr = [[CTransmissionStructure alloc] initWithFlag:MSG_FLAG_END_GAME andDetail:MSG_END_GAME_YOU_LOST andNumberRow:0 andNumberCol:0];
             if([_socketConn sendMsgAsTransStructure:tempStr])
                 [_socketConn closeConnection];

@@ -43,5 +43,6 @@
 
 
 @protocol CSocketConnection <NSObject>
+- (void)sendTextView: (UITextView *)textView Message: (NSString *)strMessage AsCharacter: (NSString *)character;
 - (void)updateProgressHudWithWorkingStatus: (BOOL)status WithPercentageInFloat: (float)fPercentage WithAMessage: (NSString *)msg;
 @end

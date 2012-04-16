@@ -122,6 +122,7 @@
         if (_isFirstConnecting)
         {
             [_delegate updateProgressHudWithWorkingStatus:NO WithPercentageInFloat:0.0f WithAMessage:@"failed connecting destination."];
+            [_delegate sendTextView:nil Message:@"Failed making connection. Will you please try again." AsCharacter:@"system"];
         }
         return @"Connect to host failed.";
     }
@@ -129,6 +130,9 @@
 
 - (BOOL)isConnect
 {
+    if (_iConn == -1) {
+        return NO;
+    }
     CTransmissionStructure *tempStr = [[CTransmissionStructure alloc] initWithFlag:MSG_FLAG_CONNECTION andDetail:@"" andNumberRow:0 andNumberCol:0];
     NSString *strJsonString = [tempStr convertMyselfToJsonString];
     NSData *data = [strJsonString dataUsingEncoding:NSASCIIStringEncoding];
