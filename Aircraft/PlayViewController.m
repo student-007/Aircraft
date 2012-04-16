@@ -795,6 +795,8 @@
             // close the socket connection [Yufei Lang 4/12/2012]
             if([_socketConn sendMsgAsTransStructure:tempStr])
                 [_socketConn closeConnection];
+            
+            _isGamingContinuing = NO;
         }
         
         // update the UI [Yufei Lang 4/12/2012]
@@ -875,6 +877,8 @@
             CTransmissionStructure *tempStr = [[CTransmissionStructure alloc] initWithFlag:MSG_FLAG_END_GAME andDetail:MSG_END_GAME_YOU_LOST andNumberRow:0 andNumberCol:0];
             if([_socketConn sendMsgAsTransStructure:tempStr])
                 [_socketConn closeConnection];
+            
+            _isGamingContinuing = NO;
         }
         
         // if already is main thread, execute normally
