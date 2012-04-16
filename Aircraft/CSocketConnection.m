@@ -53,6 +53,7 @@
 {
     if (_isFirstConnecting)
         [_delegate updateProgressHudWithWorkingStatus:YES WithPercentageInFloat:0.2f WithAMessage:@"Preparing connection..."];
+    
     if ((_iSockfd = socket(AF_INET, SOCK_STREAM, 0)) == -1) {
         if (_isFirstConnecting)
         {
@@ -73,7 +74,12 @@
     
     if (_isFirstConnecting)
         [_delegate updateProgressHudWithWorkingStatus:YES WithPercentageInFloat:0.5f WithAMessage:@"Connecting to destination..."];
+    
+    NSTimer *timer = [NSTimer timerWithTimeInterval:5.0f target:self selector:@selector(connectTimeOut) userInfo:nil repeats:NO];
+    [timer fire];
+    
     _iConn = connect(_iSockfd, (struct sockaddr *)&_their_addr, sizeof(struct sockaddr)); // making the connection to the socket [Yufei Lang 4/5/2012]
+    
     if (_iConn != -1) // sucessed making connection [Yufei Lang 4/5/2012]
     {
         NSMutableString *strReadString = [[NSMutableString alloc] init]; // need a string to recv [Yufei Lang 4/5/2012]
@@ -184,6 +190,12 @@
         [_transmissionStructure fillWithJSONString:strReadString];
         [[NSNotificationCenter defaultCenter] postNotificationName: NewMSGComesFromHost object:_transmissionStructure];
     }
+}
+
+- (void)connectTimeOut
+{
+    if (_iConn == -1) 
+        [_delegate updateProgressHudWithWorkingStatus:NO WithPercentageInFloat:0.0f WithAMessage:@"Time out for connecting."];
 }
 
 @end
