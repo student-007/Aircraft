@@ -34,7 +34,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-	_arryTableContent = [NSArray arrayWithObjects:@"Play Online", @"Play Offline", @"How to Play", nil];
+	_arryTableContent = [NSArray arrayWithObjects:@"Play Online", @"How to Play", nil];
 }
 
 - (void)viewDidUnload

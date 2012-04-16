@@ -1090,6 +1090,9 @@
             
             _isPlacingAircraftsReady = YES;
             
+            // show enemy field, ready to shoot [Yufei Lang 4/15/2012]
+            [self btnClicked_GoToEnemyField:nil];
+            
             // set title to ready, and make it gray color like disabled [Yufei Lang 4/14/2012]
             [sender setTitle:@"Ready!" forState:UIControlStateNormal];
             [sender setTitleColor:[UIColor grayColor] forState:UIControlStateNormal];
