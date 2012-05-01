@@ -13,6 +13,8 @@
 
 //@synthesize detailViewController = _detailViewController;
 @synthesize arryTableContent = _arryTableContent;
+@synthesize howToPlay = _howToPlay;
+@synthesize playView = _playView;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -37,10 +39,14 @@
     NSArray *arrySection1 = [[NSArray alloc] initWithObjects:@"Play Online", nil];
     NSArray *arrySection2 = [[NSArray alloc] initWithObjects:@"How to Play", nil];
 	_arryTableContent = [NSMutableArray arrayWithObjects:arrySection1, arrySection2, nil];
+    
+    self.howToPlay = [[HowToPlay alloc] initWithNibName:@"HowToPlay" bundle:nil];
+    self.playView = [[PlayViewController alloc] initWithNibName:@"PlayViewController" bundle:nil];
 }
 
 - (void)viewDidUnload
 {
+    self.arryTableContent = nil;
     [super viewDidUnload];
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
@@ -49,6 +55,7 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
+    [self.navigationController setNavigationBarHidden:NO animated:YES];
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -159,15 +166,11 @@
 {
     if (indexPath.section == 0 && indexPath.row == 0) 
     {
-    PlayViewController *playView = [[PlayViewController alloc] initWithNibName:@"PlayViewController" bundle:nil];
-    [self.navigationController pushViewController:playView animated:YES];
-    [self.navigationController setNavigationBarHidden:YES animated:YES];
+        [self.navigationController pushViewController:self.playView animated:YES];
     }
     if (indexPath.section == 1 && indexPath.row == 0) 
     {
-        HowToPlay *howToPlay = [[HowToPlay alloc] initWithNibName:@"HowToPlay" bundle:nil];
-        [self.navigationController pushViewController:howToPlay animated:YES];
-        [self.navigationController setNavigationBarHidden:YES animated:YES];
+        [self.navigationController pushViewController:self.howToPlay animated:YES];
     }
     //    [tableView deselectRowAtIndexPath:indexPath animated:YES];// leave it there for now [Yufei Lang 4/5/2012]
 //    if (!self.detailViewController) {

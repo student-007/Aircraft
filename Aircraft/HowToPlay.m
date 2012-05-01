@@ -67,6 +67,12 @@
     [_pageControl addTarget:self action:@selector(changePage:) forControlEvents:UIControlEventValueChanged];
 }
 
+- (void)viewWillAppear:(BOOL)animated {
+	[super viewWillAppear:animated];
+    
+	[self.navigationController setNavigationBarHidden:YES animated:YES];
+}
+
 -(void)scrollViewDidScroll:(UIScrollView *)scrollView
 {
     // the following is to display those dots in the pageControl in a right place [Yufei Lang]
@@ -92,6 +98,9 @@
 {
     [self setScrollView_HowToPlay:nil];
     [self setPageControl:nil];
+    self.step_1 = nil;
+    self.step_2 = nil;
+    self.step_3 = nil;
     [super viewDidUnload];
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
@@ -105,7 +114,6 @@
 
 - (IBAction)btnClicked_GoBack:(UIButton *)sender 
 {
-    [self.navigationController setNavigationBarHidden:NO animated:YES];
     [self.navigationController popViewControllerAnimated:YES];
 }
 
