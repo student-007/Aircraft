@@ -13,7 +13,7 @@
 @property (nonatomic, strong) UIImageView *step_1;
 @property (nonatomic, strong) UIImageView *step_2;
 @property (nonatomic, strong) UIImageView *step_3;
-@property (strong, nonatomic) IBOutlet UIScrollView *scrollView_HowToPlay;
-@property (strong, nonatomic) IBOutlet UIPageControl *pageControl;
+@property (weak, nonatomic) IBOutlet UIScrollView *scrollView_HowToPlay;
+@property (weak, nonatomic) IBOutlet UIPageControl *pageControl;
 
 @end

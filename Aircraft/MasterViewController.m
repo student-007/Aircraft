@@ -39,9 +39,6 @@
     NSArray *arrySection1 = [[NSArray alloc] initWithObjects:@"Play Online", nil];
     NSArray *arrySection2 = [[NSArray alloc] initWithObjects:@"How to Play", nil];
 	_arryTableContent = [NSMutableArray arrayWithObjects:arrySection1, arrySection2, nil];
-    
-    self.howToPlay = [[HowToPlay alloc] initWithNibName:@"HowToPlay" bundle:nil];
-    self.playView = [[PlayViewController alloc] initWithNibName:@"PlayViewController" bundle:nil];
 }
 
 - (void)viewDidUnload
@@ -166,10 +163,14 @@
 {
     if (indexPath.section == 0 && indexPath.row == 0) 
     {
+        self.playView = nil;
+        self.playView = [[PlayViewController alloc] initWithNibName:@"PlayViewController" bundle:nil];
         [self.navigationController pushViewController:self.playView animated:YES];
     }
     if (indexPath.section == 1 && indexPath.row == 0) 
     {
+        self.howToPlay = nil;
+        self.howToPlay = [[HowToPlay alloc] initWithNibName:@"HowToPlay" bundle:nil];
         [self.navigationController pushViewController:self.howToPlay animated:YES];
     }
     //    [tableView deselectRowAtIndexPath:indexPath animated:YES];// leave it there for now [Yufei Lang 4/5/2012]

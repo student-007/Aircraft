@@ -57,34 +57,34 @@ typedef enum
 
 
 // properties -  IBOutlet views [Yufei Lang 4/5/2012]
-@property (strong, nonatomic) IBOutlet UIScrollView *scrollView_BattleField;
-@property (strong, nonatomic) IBOutlet UIView *view_AircraftHolder;
-@property (strong, nonatomic) IBOutlet UIView *view_ToolsHolder;
-@property (strong, nonatomic) IBOutlet UIView *view_ChatFeild;
-@property (strong, nonatomic) IBOutlet UIView_BattleField *view_MyBattleField;
-@property (strong, nonatomic) IBOutlet UIView_BattleField *view_EnemyBattleField;
+@property (weak, nonatomic) IBOutlet UIScrollView *scrollView_BattleField;
+@property (weak, nonatomic) IBOutlet UIView *view_AircraftHolder;
+@property (weak, nonatomic) IBOutlet UIView *view_ToolsHolder;
+@property (weak, nonatomic) IBOutlet UIView *view_ChatFeild;
+@property (weak, nonatomic) IBOutlet UIView_BattleField *view_MyBattleField;
+@property (weak, nonatomic) IBOutlet UIView_BattleField *view_EnemyBattleField;
 
 // properties - IBOutlet aircrafts images in holder [Yufei Lang 4/5/2012]
-@property (strong, nonatomic) IBOutlet TapDetectingImageView *imgView_AircraftUp;
-@property (strong, nonatomic) IBOutlet TapDetectingImageView *imgView_AircraftDown;
-@property (strong, nonatomic) IBOutlet TapDetectingImageView *imgView_AircraftLeft;
-@property (strong, nonatomic) IBOutlet TapDetectingImageView *imgView_AircraftRight;
+@property (weak, nonatomic) IBOutlet TapDetectingImageView *imgView_AircraftUp;
+@property (weak, nonatomic) IBOutlet TapDetectingImageView *imgView_AircraftDown;
+@property (weak, nonatomic) IBOutlet TapDetectingImageView *imgView_AircraftLeft;
+@property (weak, nonatomic) IBOutlet TapDetectingImageView *imgView_AircraftRight;
 
 // properties - IBOutlet battle fields background [Yufei Lang 4/5/2012]
-@property (strong, nonatomic) IBOutlet UIImageView *imgView_MyBattleFieldBackground;
-@property (strong, nonatomic) IBOutlet UIImageView *imgView_EnemyBattleFieldBackground;
+@property (weak, nonatomic) IBOutlet UIImageView *imgView_MyBattleFieldBackground;
+@property (weak, nonatomic) IBOutlet UIImageView *imgView_EnemyBattleFieldBackground;
 
 // properties - IBOutlet chatting field [Yufei Lang 4/10/2012]
-@property (strong, nonatomic) IBOutlet UITextView *textView_InfoView;
-@property (strong, nonatomic) IBOutlet UITextField *txtField_ChatTextBox;
-@property (strong, nonatomic) IBOutlet UIButton *btnSendButton;
+@property (weak, nonatomic) IBOutlet UITextView *textView_InfoView;
+@property (weak, nonatomic) IBOutlet UITextField *txtField_ChatTextBox;
+@property (weak, nonatomic) IBOutlet UIButton *btnSendButton;
 
 // properties -  battle fields buttons[Yufei Lang 4/5/2012]
 @property (strong, nonatomic) NSMutableArray *arryMyBattleFieldLabels;
 @property (strong, nonatomic) NSMutableArray *arryEmenyBattleFieldButtons;
 
 // makr whose turn it is [Yufei Lang 4/12/2012]
-@property (strong, nonatomic) IBOutlet UILabel *lbl_WhoseTurn;
+@property (weak, nonatomic) IBOutlet UILabel *lbl_WhoseTurn;
 
 // properties - socket connection [Yufei Lang 4/12/2012]
 @property (strong, nonatomic) CSocketConnection *socketConn;
