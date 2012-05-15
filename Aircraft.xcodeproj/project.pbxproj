@@ -54,6 +54,8 @@
 		0CF95679153CAE31009BCCDF /* howToPlay.png in Resources */ = {isa = PBXBuildFile; fileRef = 0CF95678153CAE31009BCCDF /* howToPlay.png */; };
 		0CF95681153CB598009BCCDF /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = 0CF95680153CB598009BCCDF /* Default.png */; };
 		0CF95683153CB59E009BCCDF /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0CF95682153CB59E009BCCDF /* Default@2x.png */; };
+		D2F8B7611562D55B008306DA /* icon.png in Resources */ = {isa = PBXBuildFile; fileRef = D2F8B75F1562D55B008306DA /* icon.png */; };
+		D2F8B7621562D55B008306DA /* icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D2F8B7601562D55B008306DA /* icon@2x.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -129,6 +131,8 @@
 		0CF95678153CAE31009BCCDF /* howToPlay.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = howToPlay.png; sourceTree = "<group>"; };
 		0CF95680153CB598009BCCDF /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Default.png; sourceTree = "<group>"; };
 		0CF95682153CB59E009BCCDF /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default@2x.png"; sourceTree = "<group>"; };
+		D2F8B75F1562D55B008306DA /* icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon.png; sourceTree = "<group>"; };
+		D2F8B7601562D55B008306DA /* icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon@2x.png"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -180,6 +184,8 @@
 		0C7131A2152E2C8E0001BFEF = {
 			isa = PBXGroup;
 			children = (
+				D2F8B75F1562D55B008306DA /* icon.png */,
+				D2F8B7601562D55B008306DA /* icon@2x.png */,
 				0CF95682153CB59E009BCCDF /* Default@2x.png */,
 				0CF95680153CB598009BCCDF /* Default.png */,
 				0C7131B7152E2C8F0001BFEF /* Aircraft */,
@@ -392,6 +398,8 @@
 				0C6F33E3153CCB0E00277BCF /* step_1.png in Resources */,
 				0C6F33E4153CCB0E00277BCF /* step_2.png in Resources */,
 				0C6F33E5153CCB0E00277BCF /* step_3.png in Resources */,
+				D2F8B7611562D55B008306DA /* icon.png in Resources */,
+				D2F8B7621562D55B008306DA /* icon@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
