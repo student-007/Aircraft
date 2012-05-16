@@ -29,8 +29,8 @@
     if (self) {
         self.strFlag = strFlag;
         self.strDetail = strDetail;
-        _iRow = [[NSNumber alloc] initWithInt:iRow];
-        _iCol =  [[NSNumber alloc] initWithInt:iCol];
+        self.iRow = [[NSNumber alloc] initWithInt:iRow];
+        self.iCol =  [[NSNumber alloc] initWithInt:iCol];
     }
     return self;
 }
@@ -39,13 +39,16 @@
 {
     NSDictionary *dict = [strJson JSONValue]; // convert json string into a dictionary [Yufei Lang 4/5/2012]
     
-    if (dict != NULL) {
-        _strFlag = [dict objectForKey:@"strFlag"];
-        _strDetail = [dict objectForKey:@"strDetail"];
-        _iRow = [dict objectForKey:@"iRow"];
-        _iCol = [dict objectForKey:@"iCol"];
+    if (dict != NULL) 
+    {
+        self.strFlag = [dict objectForKey:@"strFlag"];
+        self.strDetail = [dict objectForKey:@"strDetail"];
+        self.iRow = [dict objectForKey:@"iRow"];
+        self.iCol = [dict objectForKey:@"iCol"];
         return YES; // successed [Yufei Lang 4/5/2012]
-    } else {
+    } 
+    else 
+    {
         return NO; // error when resolving json string [Yufei Lang 4/5/2012]
     }
 }

@@ -71,7 +71,8 @@ CGPoint midpointBetweenPoints(CGPoint a, CGPoint b);
         multipleTouches = NO;
         _isTouchingAircraftBody = NO;
         
-        // making a path just like aircraft, use for detecting whether user is tapping in the aircraft or not(the aircraft but in the view) [Yufei Lang 4/9/2012]
+        // making a path shape just like aircraft, 
+        // use for detecting whether user is tapping in the aircraft body or not(the aircraft but in the view) [Yufei Lang]
         _pathRef_AircraftUp=CGPathCreateMutable();
         CGPathMoveToPoint(_pathRef_AircraftUp, NULL, 0, 29);
         CGPathAddLineToPoint(_pathRef_AircraftUp, NULL, 58, 29);

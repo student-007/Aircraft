@@ -38,7 +38,7 @@
 - (void)initGridInBattleFieldView:(UIView *)viewBattleField WithButtonsWillBeStoredInArray: (NSMutableArray *) arry2D_Buttons;
 - (void)initGridInBattleFieldView:(UIView *)viewBattleField WithLabelsWillBeStoredInArray: (NSMutableArray *) arry2D_Lables;
 - (void)loadPage: (UIView *)viewPage toScrollView: (UIScrollView *) scrollView;
-- (void)print: (int[10][10]) intArry2D;
+// - (void)print: (int[10][10]) intArry2D;
 - (void)initAllViews;
 - (void)removeAircraft:(TapDetectingImageView *)aircraftView withOldFrame:(CGRect)frame fromGrid:(int [10][10])grid ;
 - (BOOL)checkAircraft:(TapDetectingImageView *)aircraftView inNewFrame:(CGRect)frame canFitGrid: (int [10][10])grid;
@@ -81,9 +81,9 @@
         _iNumberOfAircraftsPlaced = 0;
         _iNumberOfMineAircraftDestried = 0;
         _iNumberOfEnemyAircraftDestoried = 0;
-        _arryMyBattleFieldLabels = [[NSMutableArray alloc] init];
-        _arryEmenyBattleFieldButtons = [[NSMutableArray alloc] init];
-        _arryCharacterString = [[NSArray alloc] initWithObjects:@"Adjutant", @"Me", @"Competitor", nil];
+        self.arryMyBattleFieldLabels = [[NSMutableArray alloc] init];
+        self.arryEmenyBattleFieldButtons = [[NSMutableArray alloc] init];
+        self.arryCharacterString = [NSArray arrayWithObjects:@"Adjutant", @"Me", @"Competitor", nil];
     }
     return self;
 }
@@ -91,40 +91,40 @@
 - (void)initAllViews
 {
     // set up scroll view [Yufei Lang 4/5/2012]
-    _scrollView_BattleField.pagingEnabled = YES; // enable paging [Yufei Lang 4/5/2012]
-    _scrollView_BattleField.showsHorizontalScrollIndicator = NO; // disable scroll indicator [Yufei Lang 4/5/2012]
-    _scrollView_BattleField.showsVerticalScrollIndicator = NO;
-    [_scrollView_BattleField setDelegate:self]; // set delegate to self in order to respond scroll actions [Yufei Lang 4/5/2012]
-    _scrollView_BattleField.contentSize = CGSizeMake(_view_MyBattleField.bounds.size.width + _view_EnemyBattleField.bounds.size.width, 1);
-    [self loadPage:_view_MyBattleField toScrollView:_scrollView_BattleField]; // load my/enemy field into scroll view [Yufei Lang 4/5/2012]
-    [self loadPage:_view_EnemyBattleField toScrollView:_scrollView_BattleField];
-    [self.view addSubview:_scrollView_BattleField];
+    self.scrollView_BattleField.pagingEnabled = YES; // enable paging [Yufei Lang 4/5/2012]
+    self.scrollView_BattleField.showsHorizontalScrollIndicator = NO; // disable scroll indicator [Yufei Lang 4/5/2012]
+    self.scrollView_BattleField.showsVerticalScrollIndicator = NO;
+    [self.scrollView_BattleField setDelegate:self]; // set delegate to self in order to respond scroll actions [Yufei Lang 4/5/2012]
+    self.scrollView_BattleField.contentSize = CGSizeMake(_view_MyBattleField.bounds.size.width + _view_EnemyBattleField.bounds.size.width, 1);
+    [self loadPage:_view_MyBattleField toScrollView:self.scrollView_BattleField]; // load my/enemy field into scroll view [Yufei Lang 4/5/2012]
+    [self loadPage:_view_EnemyBattleField toScrollView:self.scrollView_BattleField];
+    [self.view addSubview:self.scrollView_BattleField];
     
     // load images into aircraft holders [Yufei Lang 4/5/2012]
-    [_imgView_AircraftUp setImage:[UIImage imageNamed:@"Aircraft.png"]];
-    [_imgView_AircraftDown setImage:[UIImage imageNamed:@"Aircraft.png"]];
-    [_imgView_AircraftLeft setImage:[UIImage imageNamed:@"Aircraft.png"]];
-    [_imgView_AircraftRight setImage:[UIImage imageNamed:@"Aircraft.png"]];
+    [self.imgView_AircraftUp setImage:[UIImage imageNamed:@"Aircraft.png"]];
+    [self.imgView_AircraftDown setImage:[UIImage imageNamed:@"Aircraft.png"]];
+    [self.imgView_AircraftLeft setImage:[UIImage imageNamed:@"Aircraft.png"]];
+    [self.imgView_AircraftRight setImage:[UIImage imageNamed:@"Aircraft.png"]];
     
     // rotation & set 2d int array within the image view [Yufei Lang 4/5/2012]
-    [_imgView_AircraftUp setAircraftWithDirection:Up];
-    [_imgView_AircraftDown setAircraftWithDirection:Down];
-    [_imgView_AircraftRight setAircraftWithDirection:Right];
-    [_imgView_AircraftLeft setAircraftWithDirection:Left];
+    [self.imgView_AircraftUp setAircraftWithDirection:Up];
+    [self.imgView_AircraftDown setAircraftWithDirection:Down];
+    [self.imgView_AircraftRight setAircraftWithDirection:Right];
+    [self.imgView_AircraftLeft setAircraftWithDirection:Left];
     
     // release CGMutablePathRef in the images [Yufei Lang 4/10/2012]
-    [_imgView_AircraftUp aircraftPlaced];
-    [_imgView_AircraftDown aircraftPlaced];
-    [_imgView_AircraftLeft aircraftPlaced];
-    [_imgView_AircraftRight aircraftPlaced];
+    [self.imgView_AircraftUp aircraftPlaced];
+    [self.imgView_AircraftDown aircraftPlaced];
+    [self.imgView_AircraftLeft aircraftPlaced];
+    [self.imgView_AircraftRight aircraftPlaced];
     
     // load image to battle field background [Yufei Lang 4/6/2012]
-    [_imgView_MyBattleFieldBackground setImage:[UIImage imageNamed:@"blueSky"]];
-    [_imgView_EnemyBattleFieldBackground setImage:[UIImage imageNamed:@"blueSky"]];
+    [self.imgView_MyBattleFieldBackground setImage:[UIImage imageNamed:@"blueSky"]];
+    [self.imgView_EnemyBattleFieldBackground setImage:[UIImage imageNamed:@"blueSky"]];
     
     // init two battle fields with buttons [Yufei Lang 4/6/2012]
-    [self initGridInBattleFieldView:_view_MyBattleField WithLabelsWillBeStoredInArray:_arryMyBattleFieldLabels];
-    [self initGridInBattleFieldView:_view_EnemyBattleField WithButtonsWillBeStoredInArray:_arryEmenyBattleFieldButtons];
+    [self initGridInBattleFieldView:self.view_MyBattleField WithLabelsWillBeStoredInArray:self.arryMyBattleFieldLabels];
+    [self initGridInBattleFieldView:self.view_EnemyBattleField WithButtonsWillBeStoredInArray:self.arryEmenyBattleFieldButtons];
 
 }
 
@@ -173,7 +173,7 @@
 {
     int iPageCount = scrollView.subviews.count;
     viewPage.frame = CGRectMake(viewPage.bounds.size.width * iPageCount, 0, viewPage.bounds.size.width, viewPage.bounds.size.height);
-    [_scrollView_BattleField addSubview:viewPage];
+    [self.scrollView_BattleField addSubview:viewPage];
 }
 
 
@@ -199,7 +199,7 @@
         _tempAircraftView = (TapDetectingImageView*)touch.view;
         
         // disable scroll view's scrolling availability [Yufei Lang 4/6/2012]
-        _scrollView_BattleField.scrollEnabled = NO;
+        self.scrollView_BattleField.scrollEnabled = NO;
         
         [self touchesBegan:touches withEvent:event];
     }
@@ -220,7 +220,7 @@
     if (!_isPlacingAircraftsReady)
     {
         // able scroll view's scrolling availability [Yufei Lang 4/6/2012]
-        _scrollView_BattleField.scrollEnabled = YES;
+        self.scrollView_BattleField.scrollEnabled = YES;
         NSLog(@"touch ended_delegate");
         [self touchesEnded:touches withEvent:event];
     }
@@ -256,11 +256,11 @@
     }
     
     // when add new aircraft [Yufei Lang 4/10/2012]
-    touch = [[event touchesForView:_view_AircraftHolder] anyObject];
+    touch = [[event touchesForView:self.view_AircraftHolder] anyObject];
     if (touch != NULL && [touch locationInView:touch.view].x < (50 * 4)) // act only when touches aircrafts [Yufei Lang 4/6/2012]
     {
         _tempAircraftView = [[TapDetectingImageView alloc] initWithImage:[UIImage imageNamed:@"Aircraft.png"]];
-        int iIndexOfSubview = [touch locationInView:_view_AircraftHolder].x / 50;
+        int iIndexOfSubview = [touch locationInView:self.view_AircraftHolder].x / 50;
         if (iIndexOfSubview >= 4) return; // in case of "done" button disabled tapping done button area will act[Yufei Lang 4/6/2012]
         switch (iIndexOfSubview) {
             case 0:
@@ -344,7 +344,7 @@
 {
     
     // when placing a new aircraft [Yufei Lang 4/6/2012]
-    UITouch *touch = [[event touchesForView:_view_AircraftHolder] anyObject];
+    UITouch *touch = [[event touchesForView:self.view_AircraftHolder] anyObject];
     
     if (touch != NULL) 
     {
@@ -366,7 +366,7 @@
             if (_iNumberOfAircraftsPlaced < 3 && [self checkAircraft:_tempAircraftView inNewFrame:newFrame canFitGrid:_myGrid]) 
             {
                 _tempAircraftView.delegate = self;
-                [_view_MyBattleField addSubview:_tempAircraftView];
+                [self.view_MyBattleField addSubview:_tempAircraftView];
                 [_tempAircraftView setFrame:newFrame];
                 _iNumberOfAircraftsPlaced++;
                 [self fillBattleFieldGrid:_myGrid withAircraft:_tempAircraftView];
@@ -512,11 +512,11 @@
         if (!_isGamingContinuing && _isGettingPaired) 
         {
             [self sendTextView:_textView_InfoView Message:@"Sorry commander, seems like game is over." 
-                   AsCharacter:[_arryCharacterString objectAtIndex:CharacterAdjutant]];
+                   AsCharacter:[self.arryCharacterString objectAtIndex:CharacterAdjutant]];
         }
         else
         [self sendTextView:_textView_InfoView Message:@"Sorry commander, there is no connection." 
-               AsCharacter:[_arryCharacterString objectAtIndex:CharacterAdjutant]];
+               AsCharacter:[self.arryCharacterString objectAtIndex:CharacterAdjutant]];
         return YES;
     }
     else if (_isGettingPaired) 
@@ -525,18 +525,18 @@
         CTransmissionStructure *tempStr = [[CTransmissionStructure alloc] initWithFlag:@"chat" andDetail:textField.text andNumberRow:0 andNumberCol:0];
         if([_socketConn sendMsgAsTransStructure:tempStr])
         {
-            [self sendTextView:_textView_InfoView Message:textField.text AsCharacter:[_arryCharacterString objectAtIndex:CharacterMe]];
+            [self sendTextView:_textView_InfoView Message:textField.text AsCharacter:[self.arryCharacterString objectAtIndex:CharacterMe]];
             textField.text = @"";
         }
         else {
             [self sendTextView:_textView_InfoView Message:@"Sorry commander, there is a problem while sending your message." 
-                   AsCharacter:[_arryCharacterString objectAtIndex:CharacterAdjutant]];
+                   AsCharacter:[self.arryCharacterString objectAtIndex:CharacterAdjutant]];
         }
     } 
     else 
     {
         [self sendTextView:_textView_InfoView Message:@"Sorry commander, you can't send msg to nobody, I am still looking for your competitor." 
-               AsCharacter:[_arryCharacterString objectAtIndex:CharacterAdjutant]];
+               AsCharacter:[self.arryCharacterString objectAtIndex:CharacterAdjutant]];
     }
     
     return YES;
@@ -602,7 +602,7 @@
 {
     _isGamingContinuing = NO;
     
-    NSString *strCharacter = [_arryCharacterString objectAtIndex:CharacterAdjutant];
+    NSString *strCharacter = [self.arryCharacterString objectAtIndex:CharacterAdjutant];
     
     if ([transStr.strDetail isEqualToString:MSG_END_GAME_YOU_WON])
     {
@@ -629,7 +629,7 @@
 - (void)recvStatusMessage: (CTransmissionStructure *)transStr
 {
     // since it is a status message, we use "adjutant" as the speaking character
-    NSString *strCharacter = [_arryCharacterString objectAtIndex:CharacterAdjutant];
+    NSString *strCharacter = [self.arryCharacterString objectAtIndex:CharacterAdjutant];
     
     // when waiting for a competitor [Yufei Lang 4/12/2012]
     if ([transStr.strDetail isEqualToString:MSG_FLAG_STATUS_WAITING])
@@ -641,17 +641,17 @@
         if ([NSThread isMainThread])
         {
             if (_isMyturn) 
-                _lbl_WhoseTurn.text = TURN_OF_MINE;
+                self.lbl_WhoseTurn.text = TURN_OF_MINE;
             else
-                _lbl_WhoseTurn.text = TURN_OF_COMPETITOR;
+                self.lbl_WhoseTurn.text = TURN_OF_COMPETITOR;
         }
         else 
         {
             dispatch_async(dispatch_get_main_queue(), ^{
                 if (_isMyturn) 
-                    _lbl_WhoseTurn.text = TURN_OF_MINE;
+                    self.lbl_WhoseTurn.text = TURN_OF_MINE;
                 else
-                    _lbl_WhoseTurn.text = TURN_OF_COMPETITOR;
+                    self.lbl_WhoseTurn.text = TURN_OF_COMPETITOR;
             });
         }
     }
@@ -663,9 +663,9 @@
         _isGamingContinuing = YES;
         
         [self sendTextView:_textView_InfoView Message:@"Found your competitor, ready to go!" 
-               AsCharacter:[_arryCharacterString objectAtIndex:CharacterAdjutant]];  
+               AsCharacter:[self.arryCharacterString objectAtIndex:CharacterAdjutant]];  
         [self sendTextView:_textView_InfoView Message:@"Commander, please drag and release to place 3 aircrafts." 
-               AsCharacter:[_arryCharacterString objectAtIndex:CharacterAdjutant]];
+               AsCharacter:[self.arryCharacterString objectAtIndex:CharacterAdjutant]];
     }
     
     // when competitor placed all 3 aircraft [Yufei Lang 4/12/2012]
@@ -681,7 +681,7 @@
 - (void)recvChatMessage: (CTransmissionStructure *)transStr
 {
     // since it is a status message, we use "Competitor" as the speaking character
-    NSString *strCharacter = [_arryCharacterString objectAtIndex:CharacterCompetitor];
+    NSString *strCharacter = [self.arryCharacterString objectAtIndex:CharacterCompetitor];
     
     // update the text view for chatting information [Yufei Lang 4/12/2012]
     [self sendTextView:_textView_InfoView Message:transStr.strDetail AsCharacter:strCharacter];
@@ -697,18 +697,18 @@
     if ([NSThread isMainThread])
     {
         if (_isMyturn) 
-            _lbl_WhoseTurn.text = TURN_OF_MINE;
+            self.lbl_WhoseTurn.text = TURN_OF_MINE;
         else
-            _lbl_WhoseTurn.text = TURN_OF_COMPETITOR;
+            self.lbl_WhoseTurn.text = TURN_OF_COMPETITOR;
     }
     else 
     {
         // if not main thread, get main thread in order to update UI elements
         dispatch_async(dispatch_get_main_queue(), ^{
             if (_isMyturn) 
-                _lbl_WhoseTurn.text = TURN_OF_MINE;
+                self.lbl_WhoseTurn.text = TURN_OF_MINE;
             else
-                _lbl_WhoseTurn.text = TURN_OF_COMPETITOR;
+                self.lbl_WhoseTurn.text = TURN_OF_COMPETITOR;
         });
     }
     
@@ -738,7 +738,7 @@
         // if already is main thread, execute normally
         if ([NSThread isMainThread])
         {
-            UILabel *lbl = [[_arryMyBattleFieldLabels objectAtIndex:transStr.iRow.intValue] 
+            UILabel *lbl = [[self.arryMyBattleFieldLabels objectAtIndex:transStr.iRow.intValue] 
                              objectAtIndex:transStr.iCol.intValue];
             lbl.text = ATTACK_MISS;
         }
@@ -746,7 +746,7 @@
         {
             // if not main thread, get main thread in order to update UI elements
             dispatch_async(dispatch_get_main_queue(), ^{
-                UILabel *lbl = [[_arryMyBattleFieldLabels objectAtIndex:transStr.iRow.intValue] 
+                UILabel *lbl = [[self.arryMyBattleFieldLabels objectAtIndex:transStr.iRow.intValue] 
                                  objectAtIndex:transStr.iCol.intValue];
                 lbl.text = ATTACK_MISS;
             });
@@ -759,7 +759,7 @@
         // if already is main thread, execute normally
         if ([NSThread isMainThread])
         {
-            UILabel *lbl = [[_arryMyBattleFieldLabels objectAtIndex:transStr.iRow.intValue] 
+            UILabel *lbl = [[self.arryMyBattleFieldLabels objectAtIndex:transStr.iRow.intValue] 
                              objectAtIndex:transStr.iCol.intValue];
             lbl.text = ATTACK_HIT;
         }
@@ -767,7 +767,7 @@
         {
             // if not main thread, get main thread in order to update UI elements
             dispatch_async(dispatch_get_main_queue(), ^{
-                UILabel *lbl = [[_arryMyBattleFieldLabels objectAtIndex:transStr.iRow.intValue] 
+                UILabel *lbl = [[self.arryMyBattleFieldLabels objectAtIndex:transStr.iRow.intValue] 
                                  objectAtIndex:transStr.iCol.intValue];
                 lbl.text = ATTACK_HIT;
             });
@@ -784,7 +784,7 @@
         if (_iNumberOfMineAircraftDestried == 3) 
         {
             // send user a message, says you lost [Yufei Lang 4/12/2012]
-            [self sendTextView:_textView_InfoView Message:@"I'am so sorry, You lost." AsCharacter:[_arryCharacterString objectAtIndex:CharacterAdjutant]];
+            [self sendTextView:_textView_InfoView Message:@"I'am so sorry, You lost." AsCharacter:[self.arryCharacterString objectAtIndex:CharacterAdjutant]];
             
             UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Sorry." message:@"You just lost.\ue107!" delegate:nil cancelButtonTitle:@"so what?!" otherButtonTitles: nil];
             [alert show];
@@ -803,7 +803,7 @@
         // if already is main thread, execute normally
         if ([NSThread isMainThread])
         {
-            UILabel *lbl = [[_arryMyBattleFieldLabels objectAtIndex:transStr.iRow.intValue] 
+            UILabel *lbl = [[self.arryMyBattleFieldLabels objectAtIndex:transStr.iRow.intValue] 
                              objectAtIndex:transStr.iCol.intValue];
             lbl.text = ATTACK_DIE;
         }
@@ -811,7 +811,7 @@
         {
             // if not main thread, get main thread in order to update UI elements
             dispatch_async(dispatch_get_main_queue(), ^{
-                UILabel *lbl = [[_arryMyBattleFieldLabels objectAtIndex:transStr.iRow.intValue] 
+                UILabel *lbl = [[self.arryMyBattleFieldLabels objectAtIndex:transStr.iRow.intValue] 
                                  objectAtIndex:transStr.iCol.intValue];
                 lbl.text = ATTACK_DIE;
             });
@@ -828,7 +828,7 @@
         // if already is main thread, execute normally
         if ([NSThread isMainThread])
         {
-            UIButton *btn = [[_arryEmenyBattleFieldButtons objectAtIndex:transStr.iRow.intValue] 
+            UIButton *btn = [[self.arryEmenyBattleFieldButtons objectAtIndex:transStr.iRow.intValue] 
                              objectAtIndex:transStr.iCol.intValue];
             [btn setTitle:ATTACK_MISS forState:UIControlStateNormal];
         }
@@ -836,7 +836,7 @@
         {
             // if not main thread, get main thread in order to update UI elements
             dispatch_async(dispatch_get_main_queue(), ^{
-                UIButton *btn = [[_arryEmenyBattleFieldButtons objectAtIndex:transStr.iRow.intValue] 
+                UIButton *btn = [[self.arryEmenyBattleFieldButtons objectAtIndex:transStr.iRow.intValue] 
                                  objectAtIndex:transStr.iCol.intValue];
                 [btn setTitle:ATTACK_MISS forState:UIControlStateNormal];
             });
@@ -849,7 +849,7 @@
         // if already is main thread, execute normally
         if ([NSThread isMainThread])
         {
-            UIButton *btn = [[_arryEmenyBattleFieldButtons objectAtIndex:transStr.iRow.intValue] 
+            UIButton *btn = [[self.arryEmenyBattleFieldButtons objectAtIndex:transStr.iRow.intValue] 
                              objectAtIndex:transStr.iCol.intValue];
             [btn setTitle:ATTACK_HIT forState:UIControlStateNormal];
         }
@@ -857,7 +857,7 @@
         {
             // if not main thread, get main thread in order to update UI elements
             dispatch_async(dispatch_get_main_queue(), ^{
-                UIButton *btn = [[_arryEmenyBattleFieldButtons objectAtIndex:transStr.iRow.intValue] 
+                UIButton *btn = [[self.arryEmenyBattleFieldButtons objectAtIndex:transStr.iRow.intValue] 
                                  objectAtIndex:transStr.iCol.intValue];
                 [btn setTitle:ATTACK_HIT forState:UIControlStateNormal];
             });
@@ -871,7 +871,7 @@
         // then close the connection [Yufei Lang 4/12/2012]
         ++_iNumberOfEnemyAircraftDestoried;
         if (_iNumberOfEnemyAircraftDestoried == 3) {
-            [self sendTextView:_textView_InfoView Message:@"Congratulations! You won!" AsCharacter:[_arryCharacterString objectAtIndex:CharacterAdjutant]];
+            [self sendTextView:_textView_InfoView Message:@"Congratulations! You won!" AsCharacter:[self.arryCharacterString objectAtIndex:CharacterAdjutant]];
             UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Congratulations!" message:@"You Won!\ue312" delegate:nil cancelButtonTitle:@"Yeah!!" otherButtonTitles: nil];
             [alert show];
             CTransmissionStructure *tempStr = [[CTransmissionStructure alloc] initWithFlag:MSG_FLAG_END_GAME andDetail:MSG_END_GAME_YOU_LOST andNumberRow:0 andNumberCol:0];
@@ -884,7 +884,7 @@
         // if already is main thread, execute normally
         if ([NSThread isMainThread])
         {
-            UIButton *btn = [[_arryEmenyBattleFieldButtons objectAtIndex:transStr.iRow.intValue] 
+            UIButton *btn = [[self.arryEmenyBattleFieldButtons objectAtIndex:transStr.iRow.intValue] 
                              objectAtIndex:transStr.iCol.intValue];
             [btn setTitle:ATTACK_DIE forState:UIControlStateNormal];
         }
@@ -892,7 +892,7 @@
         {
             // if not main thread, get main thread in order to update UI elements
             dispatch_async(dispatch_get_main_queue(), ^{
-                UIButton *btn = [[_arryEmenyBattleFieldButtons objectAtIndex:transStr.iRow.intValue] 
+                UIButton *btn = [[self.arryEmenyBattleFieldButtons objectAtIndex:transStr.iRow.intValue] 
                                  objectAtIndex:transStr.iCol.intValue];
                 [btn setTitle:ATTACK_DIE forState:UIControlStateNormal];
             });
@@ -940,12 +940,12 @@
     if ([NSThread isMainThread])
     {
         if (status) {
-            _progressHud.labelText = msg;
-            _progressHud.progress = fPercentage;
+            self.progressHud.labelText = msg;
+            self.progressHud.progress = fPercentage;
         } else {
-            _progressHud.labelText = msg;
-            _progressHud.progress = fPercentage;
-            [_progressHud hide:YES afterDelay:1.5];
+            self.progressHud.labelText = msg;
+            self.progressHud.progress = fPercentage;
+            [self.progressHud hide:YES afterDelay:1.5];
         }
     }
     else 
@@ -953,12 +953,12 @@
         // if not main thread, get main thread in order to update UI elements
         dispatch_async(dispatch_get_main_queue(), ^{
             if (status) {
-                _progressHud.labelText = msg;
-                _progressHud.progress = fPercentage;
+                self.progressHud.labelText = msg;
+                self.progressHud.progress = fPercentage;
             } else {
-                _progressHud.labelText = msg;
-                _progressHud.progress = fPercentage;
-                [_progressHud hide:YES afterDelay:1.5];
+                self.progressHud.labelText = msg;
+                self.progressHud.progress = fPercentage;
+                [self.progressHud hide:YES afterDelay:1.5];
             }
         });
     }
@@ -969,9 +969,9 @@
 #pragma mark - own function - make socket connection
 - (void)makeSocketConnection
 {
-    _socketConn = [[CSocketConnection alloc] init];
-    _socketConn.delegate = self;
-    [_socketConn makeConnection];
+    self.socketConn = [[CSocketConnection alloc] init];
+    self.socketConn.delegate = self;
+    [self.socketConn makeConnection];
 }
 
 #pragma mark - View lifecycle
@@ -984,18 +984,18 @@
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(newMsgComes:) name:NewMSGComesFromHost object:nil];
     
-    // setting all  delegates [Yufei Lang 4/12/2012]
-    _txtField_ChatTextBox.delegate = self;   
-    _view_MyBattleField.delegate = self;
-    _view_EnemyBattleField.delegate = self;
+    // setting all delegates [Yufei Lang 4/12/2012]
+    self.txtField_ChatTextBox.delegate = self;   
+    self.view_MyBattleField.delegate = self;
+    self.view_EnemyBattleField.delegate = self;
     
        
     // froze the screen for connecting to host [Yufei Lang 4/12/2012]
-    _progressHud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-    _progressHud.mode = MBProgressHUDModeAnnularDeterminate;
+    self.progressHud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    self.progressHud.mode = MBProgressHUDModeAnnularDeterminate;
        
     NSThread *th = [[NSThread alloc]initWithTarget:self selector:@selector(makeSocketConnection) object:nil];
-    th.name = @"thread for making connection";
+    //th.name = @"thread for making connection";
     [th start];
 }
 
@@ -1005,18 +1005,32 @@
     [self setView_AircraftHolder:nil];
     [self setView_ToolsHolder:nil];
     [self setView_ChatFeild:nil];
+    [self setView_MyBattleField:nil];
+    [self setView_EnemyBattleField:nil];
+    
     [self setImgView_AircraftUp:nil];
     [self setImgView_AircraftDown:nil];
     [self setImgView_AircraftLeft:nil];
     [self setImgView_AircraftRight:nil];
-    [self setView_MyBattleField:nil];
-    [self setView_EnemyBattleField:nil];
+    
     [self setImgView_MyBattleFieldBackground:nil];
     [self setImgView_EnemyBattleFieldBackground:nil];
-    [self setTxtField_ChatTextBox:nil];
+    
     [self setTextView_InfoView:nil];
-    [self setLbl_WhoseTurn:nil];
+    [self setTxtField_ChatTextBox:nil];
     [self setBtnSendButton:nil];
+    
+    [self setArryMyBattleFieldLabels:nil];
+    [self setArryEmenyBattleFieldButtons:nil];
+    
+    [self setLbl_WhoseTurn:nil];
+    
+    [self setSocketConn:nil];
+    
+    [self setArryCharacterString:nil];
+    
+    [self setProgressHud:nil];
+    
     [super viewDidUnload];
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
@@ -1053,27 +1067,36 @@
 
 // slide in to enemy field [Yufei Lang 4/5/2012]
 - (IBAction)btnClicked_GoToEnemyField:(id)sender {
-    [_scrollView_BattleField scrollRectToVisible:CGRectMake(_view_MyBattleField.bounds.size.width, 0, 
+    [self.scrollView_BattleField scrollRectToVisible:CGRectMake(_view_MyBattleField.bounds.size.width, 0, 
                                                             _view_EnemyBattleField.bounds.size.width, 
                                                             _view_EnemyBattleField.bounds.size.height) animated:YES];
 }
 
 // slide in to my field [Yufei Lang 4/5/2012]
 - (IBAction)btnClick_GoToMyField:(id)sender {
-    [_scrollView_BattleField scrollRectToVisible:CGRectMake(0, 0, 
+    [self.scrollView_BattleField scrollRectToVisible:CGRectMake(0, 0, 
                                                             _view_MyBattleField.bounds.size.width, 
                                                             _view_MyBattleField.bounds.size.height) animated:YES];
 }
 
 // pop my self, back to master view controller [Yufei Lang 4/5/2012]
 - (IBAction)btnClicked_OnExit:(id)sender {
+    // if game is running, show user a alert
     if (_isGettingPaired && _isGamingContinuing)
     {
         UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Are you sure?" message:@"Existing now will lose the game." delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Exit", nil];
         [alert show];
     }
+    // if game is not running, exit 
     else
     {
+        // release all subviews(aircrafts)'s pathRef of scroll view
+        for (TapDetectingImageView * aircraft in self.view_MyBattleField.subviews) {
+            if ([aircraft isKindOfClass:[TapDetectingImageView class]]) {
+                [aircraft aircraftPlaced];
+            }
+        }
+        
         [_socketConn closeConnection];
         [self.navigationController setNavigationBarHidden:NO animated:YES];
         [self.navigationController popViewControllerAnimated:YES];
@@ -1085,7 +1108,7 @@
 {   
     if (_socketConn.iConn == -1 || ![_socketConn isConnect]) {
         [self sendTextView:_textView_InfoView Message:@"why bother, there's no connection. Will you start a new online game?" 
-               AsCharacter:[_arryCharacterString objectAtIndex:CharacterAdjutant]];
+               AsCharacter:[self.arryCharacterString objectAtIndex:CharacterAdjutant]];
     }
     else
     {
@@ -1099,7 +1122,7 @@
             }
             else if (!_isGettingPaired)
             {
-                [self sendTextView:_textView_InfoView Message:@"Please wait for a competitor." AsCharacter:[_arryCharacterString objectAtIndex:CharacterAdjutant]];
+                [self sendTextView:_textView_InfoView Message:@"Please wait for a competitor." AsCharacter:[self.arryCharacterString objectAtIndex:CharacterAdjutant]];
                 return;
             }
             
@@ -1113,9 +1136,9 @@
             [sender setTitleColor:[UIColor grayColor] forState:UIControlStateNormal];
             
             if (_isMyturn) 
-                _lbl_WhoseTurn.text = TURN_OF_MINE;
+                self.lbl_WhoseTurn.text = TURN_OF_MINE;
             else
-                _lbl_WhoseTurn.text = TURN_OF_COMPETITOR;
+                self.lbl_WhoseTurn.text = TURN_OF_COMPETITOR;
             
             // set up a new animation block [Yufei Lang 4/5/2012]
             [UIView beginAnimations:nil context:NULL];
@@ -1219,28 +1242,28 @@
         CTransmissionStructure *attackStr = [[CTransmissionStructure alloc] initWithFlag:MSG_FLAG_ATTACK andDetail:@"" andNumberRow:Y andNumberCol:X];
         if (![_socketConn sendMsgAsTransStructure:attackStr])
             [self sendTextView:_textView_InfoView Message:@"Can't send attack msg, please try again." 
-                   AsCharacter:[_arryCharacterString objectAtIndex:CharacterAdjutant]];
+                   AsCharacter:[self.arryCharacterString objectAtIndex:CharacterAdjutant]];
 
         _isMyturn = NO;
         if (_isMyturn) 
-            _lbl_WhoseTurn.text = TURN_OF_MINE;
+            [self.lbl_WhoseTurn setText:TURN_OF_MINE];
         else
-            _lbl_WhoseTurn.text = TURN_OF_COMPETITOR;
+            [self.lbl_WhoseTurn setText:TURN_OF_COMPETITOR];
     }
 }
 
-- (void)print: (int[10][10]) intArry2D
-{
-    for (int row = 0; row < 10; row ++) 
-    {
-        NSMutableString *str = [[NSMutableString alloc] init];
-        for (int col = 0; col < 10; col ++) 
-        {
-             //[arryNumberInRow addObject:[NSNumber numberWithInt:intArry2D[row][col]]];
-            [str appendFormat:@"%d, ", intArry2D[row][col]];
-        }
-        NSLog(@"%@\n", str);
-    }
-}
+//- (void)print: (int[10][10]) intArry2D
+//{
+//    for (int row = 0; row < 10; row ++) 
+//    {
+//        NSMutableString *str = [[NSMutableString alloc] init];
+//        for (int col = 0; col < 10; col ++) 
+//        {
+//             //[arryNumberInRow addObject:[NSNumber numberWithInt:intArry2D[row][col]]];
+//            [str appendFormat:@"%d, ", intArry2D[row][col]];
+//        }
+//        NSLog(@"%@\n", str);
+//    }
+//}
 
 @end

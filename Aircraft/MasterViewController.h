@@ -16,8 +16,9 @@
 {
     
 }
+// whats in section one. play online or play with computer or  how to play
+@property (strong, nonatomic) NSArray *arryTableContent;
 
-@property (strong, nonatomic) NSMutableArray *arryTableContent;// whats in section one. play online or play with computer or  how to play
 @property (strong, nonatomic) HowToPlay *howToPlay;
 @property (strong, nonatomic) PlayViewController *playView;
 

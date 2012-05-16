@@ -21,6 +21,7 @@
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         self.title = NSLocalizedString(@"Aircraft", @"MasterViewTitle");
+        [self.navigationController.navigationBar setTintColor:[UIColor blueColor]];
     }
     return self;
 }
@@ -36,14 +37,16 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    NSArray *arrySection1 = [[NSArray alloc] initWithObjects:@"Play Online", nil];
-    NSArray *arrySection2 = [[NSArray alloc] initWithObjects:@"How to Play", nil];
-	_arryTableContent = [NSMutableArray arrayWithObjects:arrySection1, arrySection2, nil];
+	self.arryTableContent = [NSArray arrayWithObjects:
+                             [NSArray arrayWithObject:@"Play Online"], 
+                             [NSArray arrayWithObject:@"How to Play"], nil];
 }
 
 - (void)viewDidUnload
 {
     self.arryTableContent = nil;
+    self.howToPlay = nil;
+    self.playView = nil;
     [super viewDidUnload];
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
@@ -51,8 +54,9 @@
 
 - (void)viewWillAppear:(BOOL)animated
 {
-    [super viewWillAppear:animated];
     [self.navigationController setNavigationBarHidden:NO animated:YES];
+    
+    [super viewWillAppear:animated];
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -85,12 +89,12 @@
 // Customize the number of sections in the table view.
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    return [_arryTableContent count];
+    return [self.arryTableContent count];
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return [[_arryTableContent objectAtIndex:section] count];
+    return [[self.arryTableContent objectAtIndex:section] count];
 }
 
 // Customize the appearance of table view cells.
@@ -104,11 +108,11 @@
         cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
     }
     
-    // 1 section 1st row, show detail [Yufei Lang 4/16/2012]
+    // 1 section 1st row, show detail which require subtitle style [Yufei Lang 4/16/2012]
     if (indexPath.section == 0 && indexPath.row == 0) {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:@"LauchingGameCell_1st"];
         cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-        cell.detailTextLabel.text = @"play with random player";
+        [cell.detailTextLabel setText:@"play with random player"];
         cell.imageView.image = [UIImage imageNamed:@"target.png"];
     }
     
@@ -116,7 +120,7 @@
         cell.imageView.image = [UIImage imageNamed:@"howToPlay.png"];
     }
 
-    cell.textLabel.text = [[_arryTableContent objectAtIndex:indexPath.section] objectAtIndex:indexPath.row];
+    [cell.textLabel setText:[[self.arryTableContent objectAtIndex:indexPath.section] objectAtIndex:indexPath.row]];
     
     return cell;
 }
@@ -173,11 +177,6 @@
         self.howToPlay = [[HowToPlay alloc] initWithNibName:@"HowToPlay" bundle:nil];
         [self.navigationController pushViewController:self.howToPlay animated:YES];
     }
-    //    [tableView deselectRowAtIndexPath:indexPath animated:YES];// leave it there for now [Yufei Lang 4/5/2012]
-//    if (!self.detailViewController) {
-//        self.detailViewController = [[DetailViewController alloc] initWithNibName:@"DetailViewController" bundle:nil];
-//    }
-//    [self.navigationController pushViewController:self.detailViewController animated:YES];
 }
 
 @end

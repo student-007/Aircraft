@@ -22,7 +22,7 @@
 
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
 {
-    [_delegate resignFirstResponsWhenTouching];
+    [self.delegate resignFirstResponsWhenTouching];
 }
 
 @end

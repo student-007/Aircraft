@@ -44,27 +44,27 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+
+    self.step_1 = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"step_1.png"]];
+    self.step_2 = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"step_2.png"]];
+    self.step_3 = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"step_3.png"]];
     
-    _step_1 = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, 280, 336)];
-    [_step_1 setImage:[UIImage imageNamed:@"step_1.png"]];
-    _step_2 = [[UIImageView alloc]initWithFrame:CGRectMake(280, 0, 280, 336)];
-    [_step_2 setImage:[UIImage imageNamed:@"step_2.png"]];
-    _step_3 = [[UIImageView alloc]initWithFrame:CGRectMake(560, 0, 280, 336)];
-    [_step_3 setImage:[UIImage imageNamed:@"step_3.png"]];    
-    
+    [self.step_1 setFrame:CGRectMake(0, 0, 280, 336)];
+    [self.step_2 setFrame:CGRectMake(280, 0, 280, 336)];
+    [self.step_3 setFrame:CGRectMake(560, 0, 280, 336)];   
     
     // set up scroll view [Yufei Lang 4/5/2012]
-    _scrollView_HowToPlay.pagingEnabled = YES; // enable paging [Yufei Lang 4/5/2012]
-    _scrollView_HowToPlay.showsHorizontalScrollIndicator = NO; // disable scroll indicator [Yufei Lang 4/5/2012]
-    _scrollView_HowToPlay.showsVerticalScrollIndicator = NO;
-    [_scrollView_HowToPlay setDelegate:self]; // set delegate to self in order to respond scroll actions [Yufei Lang 4/5/2012]
-    _scrollView_HowToPlay.contentSize = CGSizeMake(_step_1.bounds.size.width * 3, 1);
+    self.scrollView_HowToPlay.pagingEnabled = YES; // enable paging [Yufei Lang 4/5/2012]
+    self.scrollView_HowToPlay.showsHorizontalScrollIndicator = NO; // disable scroll indicator [Yufei Lang 4/5/2012]
+    self.scrollView_HowToPlay.showsVerticalScrollIndicator = NO;
+    self.scrollView_HowToPlay.delegate = self; // set delegate to self in order to respond scroll actions [Yufei Lang 4/5/2012]
+    self.scrollView_HowToPlay.contentSize = CGSizeMake(_step_1.bounds.size.width * 3, 1);
     
-    [_scrollView_HowToPlay addSubview:_step_1];    
-    [_scrollView_HowToPlay addSubview:_step_2];
-    [_scrollView_HowToPlay addSubview:_step_3];
+    [self.scrollView_HowToPlay addSubview:_step_1];    
+    [self.scrollView_HowToPlay addSubview:_step_2];
+    [self.scrollView_HowToPlay addSubview:_step_3];
 
-    [_pageControl addTarget:self action:@selector(changePage:) forControlEvents:UIControlEventValueChanged];
+    [self.pageControl addTarget:self action:@selector(changePage:) forControlEvents:UIControlEventValueChanged];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -80,7 +80,7 @@
     
     // when a page past half of it, it will be considered as next page (dot) [Yufei Lang]
     int page = floor((scrollView.contentOffset.x - pageWidth / 2) / pageWidth) + 1;
-    _pageControl.currentPage = page;
+    self.pageControl.currentPage = page;
 }
 
 - (void)changePage:(UIPageControl *)sender
@@ -88,10 +88,10 @@
 	int page = sender.currentPage;
 	
 	// update the scroll view to the appropriate page, when user touch the pageController [Yufei Lang]
-    CGRect rectFrame = _scrollView_HowToPlay.frame;
+    CGRect rectFrame = self.scrollView_HowToPlay.frame;
     rectFrame.origin.x = rectFrame.size.width * page;
     rectFrame.origin.y = 0;
-    [_scrollView_HowToPlay scrollRectToVisible:rectFrame animated:YES];
+    [self.scrollView_HowToPlay scrollRectToVisible:rectFrame animated:YES];
 }
 
 - (void)viewDidUnload
