@@ -10,8 +10,8 @@
 
 #define MSG_FLAG_CONNECTION     @"connectionTest"
 
-#define STR_HOST_NAME           @"192.168.53.9"
-#define I_PORT                  5180
+#define STR_HOST_NAME           @"10.1.10.10"
+#define I_PORT                  51800
 #define I_BLOCK_SIZE            512
 
 @implementation CSocketConnection
@@ -78,7 +78,8 @@
     NSThread *thTimeOut = [[NSThread alloc] initWithTarget:self selector:@selector(connectTimeOut) object:nil];
     [thTimeOut start];
     
-    _iConn = connect(_iSockfd, (struct sockaddr *)&_their_addr, sizeof(struct sockaddr)); // making the connection to the socket [Yufei Lang 4/5/2012]
+    // making the connection to the socket [Yufei Lang]
+    _iConn = connect(_iSockfd, (struct sockaddr *)&_their_addr, sizeof(struct sockaddr)); 
     
     if (_iConn != -1) // sucessed making connection [Yufei Lang 4/5/2012]
     {
@@ -89,10 +90,12 @@
             [_delegate updateProgressHudWithWorkingStatus:YES WithPercentageInFloat:0.6f WithAMessage:@"Receiving data..."];
         do 
         {
-            iByteRecved = recv(_iSockfd, chReadBuffer, sizeof(chReadBuffer), 0); // recv data from socket then write to chReadBuffer. [Yufei Lang 4/5/2012]
+            // recv data from socket then write to chReadBuffer. [Yufei Lang]
+            iByteRecved = recv(_iSockfd, chReadBuffer, sizeof(chReadBuffer), 0); 
             [strReadString appendFormat:[NSString stringWithCString:chReadBuffer encoding:NSASCIIStringEncoding]];
         } 
-        while (iByteRecved == I_BLOCK_SIZE); // if recved all data, end the loop [Yufei Lang 4/5/2012]
+        // if recved all data, end the loop [Yufei Lang]
+        while (iByteRecved == I_BLOCK_SIZE); 
         if (_isFirstConnecting)
         {
             [_delegate updateProgressHudWithWorkingStatus:YES WithPercentageInFloat:0.8f WithAMessage:@"Data received..."];
@@ -184,7 +187,7 @@
                 // if socket is disconnected, close it, make loop stop.
                 _isGameContinuing = NO;
                 close(_iSockfd);
-                _transmissionStructure.strFlag = @"status";
+                _transmissionStructure.strFlag = @"comptorLeft";
                 _transmissionStructure.strDetail = @"Your competitor quit the game.";
                 [[NSNotificationCenter defaultCenter] postNotificationName: NewMSGComesFromHost object:_transmissionStructure];
                 return;
