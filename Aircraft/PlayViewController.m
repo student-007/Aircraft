@@ -13,7 +13,7 @@
 #define MSG_FLAG_STATUS                 @"status"
 #define MSG_FLAG_CHAT                   @"chat"
 #define MSG_FLAG_END_GAME               @"endGame"
-#define MSG_FLAG_COMPTOR_LEFT           @"comptorLeft"
+#define MSG_FLAG_COMPTOR_LEFT           @"competitorLeft"
 #define MSG_FLAG_ATTACK                 @"attack"
 #define MSG_FLAG_ATTACK_RESULT          @"attackResult"
 
@@ -605,15 +605,13 @@
     
     NSString *strCharacter = [self.arryCharacterString objectAtIndex:CharacterAdjutant];
     
-    if ([transStr.strDetail isEqualToString:MSG_FLAG_COMPTOR_LEFT])
-    {
-        [self sendTextView:_textView_InfoView Message:@"Your competitor has left the game! You won!" 
-               AsCharacter:strCharacter];
-        [_socketConn closeConnection];
-        
-        UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Competitor left!" message:@"You Won!\ue312" delegate:nil cancelButtonTitle:@"Yeah!!" otherButtonTitles: nil];
-        [alert show];
-    }
+    [self sendTextView:_textView_InfoView Message:@"Your competitor has left the game! You won!" 
+           AsCharacter:strCharacter];
+    [_socketConn closeConnection];
+    
+    UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Competitor left!" message:@"You Won!\ue312" delegate:nil cancelButtonTitle:@"Yeah!!" otherButtonTitles: nil];
+    [alert show];
+    
 }
 
 // execute when received a END GAME message from socket connection [Yufei Lang 3/12/2012]
@@ -1079,7 +1077,7 @@
 {
     if (buttonIndex != 0) // if exit anyway [Yufei Lang 4/12/2012]
     {
-        CTransmissionStructure *attackStr = [[CTransmissionStructure alloc] initWithFlag:MSG_FLAG_END_GAME andDetail:MSG_END_GAME_YOU_WON andNumberRow:0 andNumberCol:0];
+        CTransmissionStructure *attackStr = [[CTransmissionStructure alloc] initWithFlag:MSG_FLAG_COMPTOR_LEFT andDetail:MSG_END_GAME_YOU_WON andNumberRow:0 andNumberCol:0];
         [_socketConn sendMsgAsTransStructure:attackStr];
         [_socketConn closeConnection];
         [self.navigationController setNavigationBarHidden:NO animated:YES];

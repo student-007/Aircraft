@@ -85,17 +85,17 @@
     {
         NSMutableString *strReadString = [[NSMutableString alloc] init]; // need a string to recv [Yufei Lang 4/5/2012]
         char chReadBuffer[I_BLOCK_SIZE] = {0}; // a char* recv transmission block [Yufei Lang 4/5/2012]
-        int iByteRecved = 0; // how many bytes recved [Yufei Lang 4/5/2012]
+        _iByteRecved = 0; // how many bytes recved [Yufei Lang 4/5/2012]
         if (_isFirstConnecting)
             [_delegate updateProgressHudWithWorkingStatus:YES WithPercentageInFloat:0.6f WithAMessage:@"Receiving data..."];
         do 
         {
             // recv data from socket then write to chReadBuffer. [Yufei Lang]
-            iByteRecved = recv(_iSockfd, chReadBuffer, sizeof(chReadBuffer), 0); 
+            _iByteRecved = recv(_iSockfd, chReadBuffer, sizeof(chReadBuffer), 0); 
             [strReadString appendFormat:[NSString stringWithCString:chReadBuffer encoding:NSASCIIStringEncoding]];
         } 
         // if recved all data, end the loop [Yufei Lang]
-        while (iByteRecved == I_BLOCK_SIZE); 
+        while (_iByteRecved == I_BLOCK_SIZE); 
         if (_isFirstConnecting)
         {
             [_delegate updateProgressHudWithWorkingStatus:YES WithPercentageInFloat:0.8f WithAMessage:@"Data received..."];
@@ -187,7 +187,7 @@
                 // if socket is disconnected, close it, make loop stop.
                 _isGameContinuing = NO;
                 close(_iSockfd);
-                _transmissionStructure.strFlag = @"comptorLeft";
+                _transmissionStructure.strFlag = @"competitorLeft";
                 _transmissionStructure.strDetail = @"Your competitor quit the game.";
                 [[NSNotificationCenter defaultCenter] postNotificationName: NewMSGComesFromHost object:_transmissionStructure];
                 return;
@@ -202,7 +202,7 @@
 - (void)connectTimeOut
 {
     [NSThread sleepForTimeInterval:5.0f];
-    if (_iConn == -1) 
+    if (_iConn == -1 || _iByteRecved == 0) 
         [_delegate updateProgressHudWithWorkingStatus:NO WithPercentageInFloat:0.0f WithAMessage:@"Time out for connecting."];
 }
 

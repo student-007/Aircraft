@@ -23,6 +23,7 @@
     struct sockaddr_in _their_addr;         // Socket address, internet style [Yufei Lang 4/5/2012]
     BOOL _isFirstConnecting;
     BOOL _isGameContinuing;
+    int _iByteRecved;
     CTransmissionStructure *_transmissionStructure;
 }
 
