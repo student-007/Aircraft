@@ -13,6 +13,7 @@
 #define MSG_FLAG_STATUS                 @"status"
 #define MSG_FLAG_CHAT                   @"chat"
 #define MSG_FLAG_END_GAME               @"endGame"
+#define MSG_FLAG_COMPTOR_LEFT           @"comptorLeft"
 #define MSG_FLAG_ATTACK                 @"attack"
 #define MSG_FLAG_ATTACK_RESULT          @"attackResult"
 
@@ -287,7 +288,7 @@
                 break;
         }
         UIImageView *imgView = [touch.view.subviews objectAtIndex:iIndexOfSubview + 1];
-#warning check if user selected a aircraft instead of aircraft holder img, but using frame size is dangers
+//#warning check if user selected a aircraft instead of aircraft holder img, but using frame size is dangers
         NSAssert(imgView.frame.size.width, @"50");
         [_tempAircraftView setFrame:CGRectMake(imgView.frame.origin.x, 
                                                [touch locationInView:self.view].y, 
@@ -597,6 +598,24 @@
     }
 }
 
+//execute when received a left message
+- (void)recvLeftGameMessage: (CTransmissionStructure *)transStr
+{
+    _isGamingContinuing = NO;
+    
+    NSString *strCharacter = [self.arryCharacterString objectAtIndex:CharacterAdjutant];
+    
+    if ([transStr.strDetail isEqualToString:MSG_FLAG_COMPTOR_LEFT])
+    {
+        [self sendTextView:_textView_InfoView Message:@"Your competitor has left the game! You won!" 
+               AsCharacter:strCharacter];
+        [_socketConn closeConnection];
+        
+        UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Competitor left!" message:@"You Won!\ue312" delegate:nil cancelButtonTitle:@"Yeah!!" otherButtonTitles: nil];
+        [alert show];
+    }
+}
+
 // execute when received a END GAME message from socket connection [Yufei Lang 3/12/2012]
 - (void)recvEndGameMessage: (CTransmissionStructure *)transStr
 {
@@ -620,7 +639,7 @@
                AsCharacter:strCharacter];
         [_socketConn closeConnection];
         
-        UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Sorry." message:@"You just lost.\ue107!" delegate:nil cancelButtonTitle:@"so what?!" otherButtonTitles: nil];
+        UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Sorry." message:@"You just lost.\ue107" delegate:nil cancelButtonTitle:@"so what?!" otherButtonTitles: nil];
         [alert show];
     }
 }
@@ -910,6 +929,11 @@
     if ([tempStructure.strFlag isEqualToString:MSG_FLAG_END_GAME]) 
     {
         [self recvEndGameMessage: tempStructure];
+    }
+    
+    if ([tempStructure.strFlag isEqualToString:MSG_FLAG_COMPTOR_LEFT]) 
+    {
+        [self recvLeftGameMessage: tempStructure];
     }
     
     if ([tempStructure.strFlag isEqualToString:MSG_FLAG_STATUS]) 
